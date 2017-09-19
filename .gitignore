@@ -1,0 +1,65 @@
+# In repository we don't need to have:
+# Compiled object files
+*.o
+
+# Generated MOC, resource and UI files
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+Makefile
+Makefile.*
+*.pro.user
+
+# .log files (usually created by QtTest - thanks to VestniK)
+*.log
+
+# Built windows .exe and linux binaries
+# NOTE: PROJECT is a your project's name, analog of PROJECT.exe in Linux
+*.exe
+*.dll
+
+# Windows-specific files
+Thumbs.db
+desktop.ini
+# Mac-specific things (thanks to Michael Aaron Safyan)
+.DS_Store
+
+# Editors temporary files 
+*~
+*.bak
+
+# Failed patch
+*.orig
+*.rej
+
+#Carbide project files
+*.project
+*.cproject
+*.settings
+plugin_commonU.def
+
+#Visual Studio files
+*.sln
+*.vcproj
+*.suo
+*.ncb
+*.user
+
+#from qt git
+*.dylib
+*.so.*
+*.so
+*.so.debug
+.cd.rc
+*.swp
+core
+*.Debug
+*.Release
+*.pdb
+*.idb
+*.ib_pdb_index
+config.pri
+config.in
+.qmake.cache
+
+*.qm
