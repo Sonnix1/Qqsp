@@ -92,7 +92,7 @@
 	};
 
 	#ifdef _UNICODE
-		#define QSP_FMT2(x) L##x
+		#define QSP_FMT2(x) u##x
 		#define QSP_FMT(x) QSP_FMT2(x)
 	#else
 		typedef char QSP_CHAR;

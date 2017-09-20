@@ -15,6 +15,9 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#ifndef DECLARATIONS_H
+#define DECLARATIONS_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -22,8 +25,7 @@
 #include <time.h>
 #include <limits.h>
 #include <string.h>
-#include <wchar.h>
-#include <wctype.h>
+#include <uchar.h>
 
 /* MEMWATCH */
 
@@ -132,3 +134,5 @@
 	#define QSP_DELIMS QSP_FMT(" \t&'\"()[]=!<>+-/*:,{}")
 
 #endif
+
+#endif // DECLARATIONS_H
