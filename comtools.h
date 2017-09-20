@@ -12,7 +12,7 @@ public:
     static QString HtmlizeWhitespaces(const QString& str);
     static QString ProceedAsPlain(const QString& str);
     static QString GetAppPath();
-    static QString qspStrToQt(const QSPString& str);
+    static QString qspStrToQt(const QSP_CHAR *str);
 };
 
 #endif

@@ -150,8 +150,11 @@ QString QSPTools::GetAppPath()
     return QCoreApplication::applicationDirPath();
 }
 
-QString QSPTools::qspStrToQt(const QSPString &str)
+QString QSPTools::qspStrToQt(const QSP_CHAR *str)
 {
     //return QString::fromWCharArray(str.Str, (int)(str.End - str.Str));
-    return QString::fromUtf16(str.Str, (int)(str.End - str.Str));
+    if(str == 0)
+        return QString("");
+    else
+        return QString::fromUtf16(str);
 }

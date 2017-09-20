@@ -81,43 +81,42 @@ void MainWindow::EnableControls(bool status, bool isExtended)
 
 void MainWindow::ApplyParams()
 {
-    int numVal;
-    QSPString strVal;
-    QColor setBackColor, setFontColor, setLinkColor;
-    QString setFontName;
-    int setFontSize;
+//    int numVal;
+//	QSP_CHAR *strVal;
+//	wxColour setBackColor, setFontColor, setLinkColor;
+//	wxString setFontName;
+//	int setFontSize;
     bool isRefresh = false;
-    // --------------
-    setBackColor = ((QSPGetVarValues(QSP_STATIC_STR(QSP_FMT("BCOLOR")), 0, &numVal, &strVal) && numVal) ? QColor(numVal) : m_backColor); //TODO: check how wxColour(int) is handled
-    if (setBackColor != _mainDescTextBox->GetBackgroundColour())
-    {
-        if (ApplyBackColor(setBackColor)) isRefresh = true;
-    }
-    // --------------
-    setFontColor = ((QSPGetVarValues(QSP_STATIC_STR(QSP_FMT("FCOLOR")), 0, &numVal, &strVal) && numVal) ? QColor(numVal) : m_fontColor);
-    if (setFontColor != _mainDescTextBox->GetForegroundColour())
-    {
-        if (ApplyFontColor(setFontColor)) isRefresh = true;
-    }
-    // --------------
-    setLinkColor = ((QSPGetVarValues(QSP_STATIC_STR(QSP_FMT("LCOLOR")), 0, &numVal, &strVal) && numVal) ? QColor(numVal) : m_linkColor);
-    if (setLinkColor != _mainDescTextBox->GetLinkColor())
-    {
-        if (ApplyLinkColor(setLinkColor)) isRefresh = true;
-    }
-    // --------------
+//	// --------------
+//	setBackColor = ((QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal) && numVal) ? wxColour(numVal) : m_backColor);
+//	if (setBackColor != m_desc->GetBackgroundColour())
+//	{
+//		if (ApplyBackColor(setBackColor)) isRefresh = true;
+//	}
+//	// --------------
+//	setFontColor = ((QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal) && numVal) ? wxColour(numVal) : m_fontColor);
+//	if (setFontColor != m_desc->GetForegroundColour())
+//	{
+//		if (ApplyFontColor(setFontColor)) isRefresh = true;
+//	}
+//	// --------------
+//	setLinkColor = ((QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal) && numVal) ? wxColour(numVal) : m_linkColor);
+//	if (setLinkColor != m_desc->GetLinkColor())
+//	{
+//		if (ApplyLinkColor(setLinkColor)) isRefresh = true;
+//	}
+//	// --------------
 //	if (m_isUseFontSize)
 //		setFontSize = m_fontSize;
 //	else
-//		setFontSize = ((QSPGetVarValues(QSP_STATIC_STR(QSP_FMT("FSIZE")), 0, &numVal, &strVal) && numVal) ? numVal : m_fontSize);
-//	if (setFontSize != _mainDescTextBox->GetTextFont().GetPointSize())
+//		setFontSize = ((QSPGetVarValues(QSP_FMT("FSIZE"), 0, &numVal, &strVal) && numVal) ? numVal : m_fontSize);
+//	if (setFontSize != m_desc->GetTextFont().GetPointSize())
 //	{
 //		if (ApplyFontSize(setFontSize)) isRefresh = true;
 //	}
 //	// --------------
-//	setFontName = ((QSPGetVarValues(QSP_STATIC_STR(QSP_FMT("FNAME")), 0, &numVal, &strVal) &&
-//		strVal.Str && strVal.Str != strVal.End) ? wxString(strVal.Str, strVal.End) : m_fontName);
-//	if (!setFontName.IsSameAs(_mainDescTextBox->GetTextFont().GetFaceName(), false))
+//	setFontName = ((QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal) && strVal && *strVal) ? wxString(strVal) : m_fontName);
+//	if (!setFontName.IsSameAs(m_desc->GetTextFont().GetFaceName(), false))
 //	{
 //		if (ApplyFontName(setFontName))
 //			isRefresh = true;
@@ -126,7 +125,7 @@ void MainWindow::ApplyParams()
 //			if (ApplyFontName(m_fontName)) isRefresh = true;
 //		}
 //	}
-    // --------------
+//	// --------------
     if (isRefresh) RefreshUI();
 }
 
@@ -187,22 +186,22 @@ void MainWindow::ShowError()
 {
     bool oldIsProcessEvents;
     QString errorMessage;
-    QSPString loc;
+    QSP_CHAR *loc;
     int code, actIndex, line;
     if (m_isQuit) return;
     QSPGetLastErrorData(&code, &loc, &actIndex, &line);
-    QSPString desc = QSPGetErrorDesc(code);
-    if (loc.Str)
+    QString desc = QSPTools::qspStrToQt(QSPGetErrorDesc(code));
+    if (loc)
         errorMessage = QString("Location: %1\nArea: %2\nLine: %3\nCode: %4\nDesc: %5")
                 .arg(QSPTools::qspStrToQt(loc))
                 .arg(actIndex < 0 ? QString("on visit") : QString("on action"))
                 .arg(line)
                 .arg(code)
-                .arg(QSPTools::qspStrToQt(desc));
+                .arg(desc);
     else
         errorMessage = QString("Code: %1\nDesc: %2")
                 .arg(code)
-                .arg(QSPTools::qspStrToQt(desc));
+                .arg(desc);
     QMessageBox dialog(QMessageBox::Critical, tr("Error"), errorMessage, QMessageBox::Ok, this);
     oldIsProcessEvents = m_isProcessEvents;
     m_isProcessEvents = false;
@@ -515,7 +514,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::OpenGameFile(const QString &path)
 {
-    if (QSPLoadGameWorld(qspStringFromQString(path), QSP_TRUE))
+    if (QSPLoadGameWorld(qspStringFromQString(path)))
     {
         m_isGameOpened = true;
         QFileInfo file(path);
