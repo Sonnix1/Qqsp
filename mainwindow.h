@@ -69,6 +69,10 @@ public:
     bool IsQuit() const { return m_isQuit; }
     bool IsKeyPressedWhileDisabled() const { return m_keyPressedWhileDisabled; }
 
+    QColor GetLinkColor() { return m_linkColor; }
+    QColor GetBackgroundColour() { return m_backColor; }
+    QColor GetForegroundColour() { return m_fontColor; }
+
     void SetShowPlainText(bool isPlain);
 
 private:

@@ -30,12 +30,12 @@ public:
     void SetTextFont(const QFont& font);
     QFont GetTextFont() const { return m_font; }
     QString GetText() const { return m_text; }
-    void SetLinkColor(const QColor& clr);
+    bool SetLinkColor(const QColor &colour);
     QColor GetLinkColor() { return m_linkColor; }
     void SetGamePath(const QString& path);
     void SetBackgroundImage(const QPixmap& bmpBg);
     QColor GetBackgroundColour();
-    QColor GetForegroundColour();
+    QColor GetForegroundColour(); //text color
     bool SetBackgroundColour(const QColor& colour);
     bool SetForegroundColour(const QColor& colour);
     void SetShowPlainText(bool isPlain);

@@ -146,7 +146,7 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
         m_frame->GetDesc()->LoadBackImage(m_gamePath + QSPTools::qspStrToQt(strVal));
 	else
         m_frame->GetDesc()->LoadBackImage(QString(""));
-	// -------------------------------
+    // -------------------------------
 	if (isRedraw)
 	{
 		m_frame->ApplyParams(); //Moved to inside avoid constant update?

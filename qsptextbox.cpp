@@ -2,6 +2,8 @@
 
 #include <QFileInfo>
 #include <QPalette>
+#include <QAbstractScrollArea>
+#include <QScrollBar>
 
 #include "comtools.h"
 
@@ -10,6 +12,8 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     //SetBorders(5);
     m_isUseHtml = false;
     showPlainText = false;
+    m_linkColor = palette().color(QPalette::Link);
+    setOpenLinks(false);
 //	m_font = *wxNORMAL_FONT;
 //	m_outFormat = wxString::Format(
 //		wxT("<HTML><META HTTP-EQUIV = \"Content-Type\" CONTENT = \"text/html; charset=%s\">")
@@ -43,8 +47,7 @@ void QspTextBox::RefreshUI(bool isScroll)
         setPlainText(text);
     else
         setHtml(text);
-    //TODO: scroll
-//	if (isScroll) Scroll(0, 0x7FFFFFFF);
+    if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
 void QspTextBox::LoadBackImage(const QString& fileName)
@@ -93,19 +96,20 @@ void QspTextBox::SetTextFont(const QFont& font)
     }
 }
 
-void QspTextBox::SetLinkColor(const QColor& clr)
+bool QspTextBox::SetLinkColor(const QColor &colour)
 {
     //QPalette p = palette();
     //p.setBrush( QPalette::Link, clr);
     //setPalette( p );
-    if(m_linkColor != clr)
+    if(m_linkColor != colour)
     {
-        QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }").arg(clr.name());
+        QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }").arg(colour.name());
         document()->setDefaultStyleSheet(sheet);
-        m_linkColor = clr;
+        m_linkColor = colour;
+        RefreshUI();
+        return true;
     }
-    //update();
-    RefreshUI();
+    return false;
 }
 
 void QspTextBox::SetGamePath(const QString &path)
@@ -114,34 +118,49 @@ void QspTextBox::SetGamePath(const QString &path)
     setSearchPaths(QStringList(path));
 }
 
+//TODO:
 void QspTextBox::SetBackgroundImage(const QPixmap& bmpBg)
 {
     m_bmpBg = bmpBg;
     //CalcImageSize();
 }
 
-//TODO: this
 //Returns the background colour of the window.
 QColor QspTextBox::GetBackgroundColour()
 {
-    return QColor(Qt::black);
+    return textBackgroundColor();
 }
 
 //The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change their colour only partially or even not at all.
 QColor QspTextBox::GetForegroundColour()
 {
-    return QColor(Qt::black);
+    return textColor();
 }
 
 //Returns true if the colour was really changed, false if it was already set to this colour and nothing was done.
 bool QspTextBox::SetBackgroundColour(const QColor &colour)
 {
-    return true;
+    if(textBackgroundColor() != colour)
+    {
+        //QPalette p = palette();
+        //p.setColor(QPalette::Base, colour);
+        //setPalette(p);
+        setTextBackgroundColor(colour);
+        RefreshUI();
+        return true;
+    }
+    return false;
 }
 
 bool QspTextBox::SetForegroundColour(const QColor &colour)
 {
-    return true;
+    if(textColor() != colour)
+    {
+        setTextColor(colour);
+        RefreshUI();
+        return true;
+    }
+    return false;
 }
 
 void QspTextBox::SetShowPlainText(bool isPlain)

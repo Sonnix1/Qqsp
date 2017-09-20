@@ -32,9 +32,12 @@ public:
     void SetIsShowNums(bool isShow);
     void SetTextFont(const QFont& font);
     QFont GetTextFont() const { return m_font; }
-    void SetLinkColor(const QColor& clr);
+    bool SetLinkColor(const QColor &colour);
     QColor GetLinkColor();
-    QColor GetTextColour(); //GetForegroundColour()
+    QColor GetBackgroundColour();
+    QColor GetForegroundColour(); //text color
+    bool SetBackgroundColour(const QColor& colour);
+    bool SetForegroundColour(const QColor& colour);
     void SetGamePath(const QString& path) { m_path = path; }
     void SetSelection(int selection);
     void SetShowPlainText(bool isPlain);
@@ -58,6 +61,8 @@ private:
     QStringList m_newImages;
     QStringList m_newDescs;
     QColor m_linkColor;
+    QColor m_textColor;
+    QColor m_backgroundColor;
     bool showPlainText;
 };
 

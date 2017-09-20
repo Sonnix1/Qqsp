@@ -5,6 +5,7 @@
 #include <QList>
 #include <QFileInfo>
 #include <QScrollBar>
+#include <QPalette>
 
 #include "comtools.h"
 
@@ -16,8 +17,10 @@ QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
     m_isUseHtml = false;
     m_isShowNums = false;
     showPlainText = false;
+    m_linkColor = palette().color(QPalette::Link);
+    m_textColor = palette().color(QPalette::Text);
+    m_backgroundColor = palette().color(QPalette::Window);
 //	SetStandardFonts(m_font.GetPointSize(), fontName, fontName);
-//	SetSelectionBackground(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
 }
 
 QspListBox::~QspListBox()
@@ -73,6 +76,7 @@ void QspListBox::SetIsHtml(bool isHtml)
 
 void QspListBox::SetIsShowNums(bool isShow)
 {
+    return;
     if (m_isShowNums != isShow)
     {
         m_isShowNums = isShow;
@@ -92,9 +96,16 @@ void QspListBox::SetTextFont(const QFont& font)
 //	}
 }
 
-void QspListBox::SetLinkColor(const QColor& clr)
+bool QspListBox::SetLinkColor(const QColor &colour)
 {
-//	RefreshUI();
+    if(m_linkColor != colour)
+    {
+        m_linkColor = colour;
+        createList();
+        //RefreshUI();
+        return true;
+    }
+    return false;
 }
 
 QColor QspListBox::GetLinkColor()
@@ -102,9 +113,36 @@ QColor QspListBox::GetLinkColor()
     return m_linkColor;
 }
 
-QColor QspListBox::GetTextColour()
+QColor QspListBox::GetBackgroundColour()
 {
-    return QColor(Qt::black);
+    return m_backgroundColor;
+}
+
+QColor QspListBox::GetForegroundColour()
+{
+    return m_textColor;
+}
+
+bool QspListBox::SetBackgroundColour(const QColor &colour)
+{
+    if(m_backgroundColor != colour)
+    {
+        m_backgroundColor = colour;
+        createList();
+        return true;
+    }
+    return false;
+}
+
+bool QspListBox::SetForegroundColour(const QColor &colour)
+{
+    if(m_textColor != colour)
+    {
+        m_textColor = colour;
+        createList();
+        return true;
+    }
+    return false;
 }
 
 void QspListBox::SetSelection(int selection)
@@ -163,7 +201,14 @@ void QspListBox::createList()
         addItem(item);
         QspTextBox *item_widget;
         item_widget = new QspTextBox(this);
+
         item_widget->SetIsHtml(m_isUseHtml);
+        item_widget->SetShowPlainText(showPlainText);
+
+        item_widget->SetLinkColor(m_linkColor);
+        item_widget->SetBackgroundColour(m_backgroundColor);
+        item_widget->SetForegroundColour(m_textColor);
+
         item_widget->SetGamePath(m_path);
         //item_widget->setMaximumHeight(800);
         item_widget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -180,7 +225,6 @@ void QspListBox::createList()
         item_widget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
         item_widget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
 
-        item_widget->SetShowPlainText(showPlainText);
         item_widget->SetText(item_tmp);
 
         //QSize sizehint = QSize(item->sizeHint().width(), font_metrics.height()*2 + item_widget->frameWidth()*2);
@@ -213,7 +257,7 @@ QString QspListBox::formatItem(int itemIndex)
             isImage = true;
         }
     }
-    QString color(QSPTools::GetHexColor(GetTextColour()));
+    QString color(QSPTools::GetHexColor(GetForegroundColour()));
     QString formatedText;
     if(isImage)
     {

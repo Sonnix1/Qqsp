@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QThread>
 #include <QCursor>
+#include <QPalette>
 
 #include "callbacks_gui.h"
 #include "comtools.h"
@@ -49,6 +50,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(_mainDescTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
     setCentralWidget(_mainDescTextBox);
 
+    m_linkColor = palette().color(QPalette::Link);
+    m_fontColor = palette().color(QPalette::Text);
+    m_backColor = palette().color(QPalette::Window);
+
     m_imgView = new QspImgCanvas(this);
 
     CreateDockWindows();
@@ -81,31 +86,31 @@ void MainWindow::EnableControls(bool status, bool isExtended)
 
 void MainWindow::ApplyParams()
 {
-//    int numVal;
-//	QSP_CHAR *strVal;
-//	wxColour setBackColor, setFontColor, setLinkColor;
+    int numVal;
+    QSP_CHAR *strVal;
+    QColor setBackColor, setFontColor, setLinkColor;
 //	wxString setFontName;
 //	int setFontSize;
     bool isRefresh = false;
-//	// --------------
-//	setBackColor = ((QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal) && numVal) ? wxColour(numVal) : m_backColor);
-//	if (setBackColor != m_desc->GetBackgroundColour())
-//	{
-//		if (ApplyBackColor(setBackColor)) isRefresh = true;
-//	}
-//	// --------------
-//	setFontColor = ((QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal) && numVal) ? wxColour(numVal) : m_fontColor);
-//	if (setFontColor != m_desc->GetForegroundColour())
-//	{
-//		if (ApplyFontColor(setFontColor)) isRefresh = true;
-//	}
-//	// --------------
-//	setLinkColor = ((QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal) && numVal) ? wxColour(numVal) : m_linkColor);
-//	if (setLinkColor != m_desc->GetLinkColor())
-//	{
-//		if (ApplyLinkColor(setLinkColor)) isRefresh = true;
-//	}
-//	// --------------
+    // --------------
+    setBackColor = ((QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_backColor);
+    if (setBackColor != _mainDescTextBox->GetBackgroundColour())
+    {
+        if (ApplyBackColor(setBackColor)) isRefresh = true;
+    }
+    // --------------
+    setFontColor = ((QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_fontColor);
+    if (setFontColor != _mainDescTextBox->GetForegroundColour())
+    {
+        if (ApplyFontColor(setFontColor)) isRefresh = true;
+    }
+    // --------------
+    setLinkColor = ((QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_linkColor);
+    if (setLinkColor != _mainDescTextBox->GetLinkColor())
+    {
+        if (ApplyLinkColor(setLinkColor)) isRefresh = true;
+    }
+    // --------------
 //	if (m_isUseFontSize)
 //		setFontSize = m_fontSize;
 //	else
@@ -231,17 +236,35 @@ void MainWindow::RefreshUI()
 
 bool MainWindow::ApplyFontColor(const QColor &color)
 {
-    return true;
+    m_fontColor = color;
+    _mainDescTextBox->SetForegroundColour(color);
+    _descTextBox->SetForegroundColour(color);
+    _objectsListBox->SetForegroundColour(color);
+    _actionsListBox->SetForegroundColour(color);
+    return false;
 }
 
 bool MainWindow::ApplyBackColor(const QColor &color)
 {
-    return true;
+    m_backColor = color;
+    QPalette p = palette();
+    p.setColor(QPalette::Base, color);
+    setPalette(p);
+    _mainDescTextBox->SetBackgroundColour(color);
+    _descTextBox->SetBackgroundColour(color);
+    _objectsListBox->SetBackgroundColour(color);
+    _actionsListBox->SetBackgroundColour(color);
+    return false;
 }
 
 bool MainWindow::ApplyLinkColor(const QColor &color)
 {
-    return true;
+    m_linkColor = color;
+    _mainDescTextBox->SetLinkColor(color);
+    _descTextBox->SetLinkColor(color);
+    _objectsListBox->SetLinkColor(color);
+    _actionsListBox->SetLinkColor(color);
+    return false;
 }
 
 void MainWindow::LoadSettings()
@@ -535,6 +558,7 @@ void MainWindow::OpenGameFile(const QString &path)
         //UpdateTitle();
         EnableControls(true);
         m_savedGamePath.clear();
+        ApplyParams();
     }
     else
         ShowError();
@@ -555,6 +579,8 @@ void MainWindow::OnRestartGame()
     if(m_isGameOpened)
         if (!QSPRestartGame(QSP_TRUE))
             ShowError();
+        else
+            ApplyParams();
 }
 
 void MainWindow::OnOpenSavedGame()
@@ -567,6 +593,8 @@ void MainWindow::OnOpenSavedGame()
         SetLastPath(QFileInfo(path).canonicalPath());
         if (!QSPOpenSavedGame(qspStringFromQString(path), QSP_TRUE))
             ShowError();
+        else
+            ApplyParams();
     }
 }
 
