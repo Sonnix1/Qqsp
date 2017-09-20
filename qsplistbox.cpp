@@ -187,8 +187,8 @@ void QspListBox::createList()
         //QSize sizehint = item_widget->sizeHint();
         //sizehint.setHeight(item_widget->document()->size().toSize().height());
         //sizehint.setHeight(item_widget->heightForWidth(this->width()));
-        item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - item_widget->frameWidth()*2);
-        QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - item_widget->frameWidth()*2, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
+        item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4);
+        QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
         item->setSizeHint(sizehint);
         setItemWidget(item, item_widget);
     }
