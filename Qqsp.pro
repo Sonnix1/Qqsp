@@ -17,9 +17,9 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 CONFIG += c++14
 #CONFIG += c11
 #QMAKE_CXXFLAGS+= -std=c++14
-QMAKE_CFLAGS += -std=c11 -fshort-wchar
+QMAKE_CFLAGS += -std=c11
 
-INCLUDEPATH += $$PWD/qsp/qsp/bindings/default/
+INCLUDEPATH += $$PWD/qsp/bindings/default/
 #INCLUDEPATH += $$PWD/qsp/qsp/
 #INCLUDEPATH += $$PWD/qsp/qsp/onig/
 
@@ -51,76 +51,76 @@ DEFINES += NOT_RUBY
 #DEFINES += EXPORT
 
 SOURCES += \
-    qsp/qsp/actions.c \
-    qsp/qsp/errors.c \
-    qsp/qsp/callbacks.c \
-    qsp/qsp/game.c \
-    qsp/qsp/codetools.c \
-    qsp/qsp/coding.c \
-    qsp/qsp/locations.c \
-    qsp/qsp/mathops.c \
-    qsp/qsp/common.c \
-    qsp/qsp/memwatch.c \
-    qsp/qsp/objects.c \
-    qsp/qsp/playlist.c \
-    qsp/qsp/time.c \
-    qsp/qsp/towlower.c \
-    qsp/qsp/towupper.c \
-    qsp/qsp/regexp.c \
-    qsp/qsp/statements.c \
-    qsp/qsp/variables.c \
-    qsp/qsp/variant.c \
-    qsp/qsp/menu.c \
-    qsp/qsp/text.c \
-    qsp/qsp/onig/regcomp.c \
-    qsp/qsp/onig/regenc.c \
-    qsp/qsp/onig/regerror.c \
-    qsp/qsp/onig/regexec.c \
-    qsp/qsp/onig/regparse.c \
-    qsp/qsp/onig/regtrav.c \
-    qsp/qsp/onig/regversion.c \
-    qsp/qsp/onig/st.c \
-    qsp/qsp/onig/regsyntax.c \
-    qsp/qsp/onig/enc/ascii.c \
-    qsp/qsp/onig/enc/cp1251.c \
-    qsp/qsp/onig/enc/koi8_r.c \
-    qsp/qsp/onig/enc/unicode.c \
-    qsp/qsp/onig/enc/utf16_be.c \
-    qsp/qsp/onig/enc/utf16_le.c \
-    qsp/qsp/onig/enc/utf32_be.c \
-    qsp/qsp/onig/enc/utf32_le.c \
-    qsp/qsp/bindings/default/default_callbacks.c \
-    qsp/qsp/bindings/default/default_control.c \
-    qsp/qsp/bindings/default/default_platform.c
+    qsp/actions.c \
+    qsp/callbacks.c \
+    qsp/codetools.c \
+    qsp/coding.c \
+    qsp/common.c \
+    qsp/errors.c \
+    qsp/game.c \
+    qsp/locations.c \
+    qsp/mathops.c \
+    qsp/memwatch.c \
+    qsp/menu.c \
+    qsp/objects.c \
+    qsp/playlist.c \
+    qsp/statements.c \
+    qsp/text.c \
+    qsp/time.c \
+    qsp/towlower.c \
+    qsp/towupper.c \
+    qsp/variables.c \
+    qsp/variant.c \
+    qsp/onig/regcomp.c \
+    qsp/onig/regenc.c \
+    qsp/onig/regerror.c \
+    qsp/onig/regexec.c \
+    qsp/onig/regparse.c \
+    qsp/onig/regsyntax.c \
+    qsp/onig/regtrav.c \
+    qsp/onig/regversion.c \
+    qsp/onig/st.c \
+    qsp/onig/enc/ascii.c \
+    qsp/onig/enc/cp1251.c \
+    qsp/onig/enc/koi8_r.c \
+    qsp/onig/enc/unicode.c \
+    qsp/onig/enc/utf16_be.c \
+    qsp/onig/enc/utf16_le.c \
+    qsp/onig/enc/utf32_be.c \
+    qsp/onig/enc/utf32_le.c \
+    qsp/bindings/default/default_callbacks.c \
+    qsp/bindings/default/default_coding.c \
+    qsp/bindings/default/default_control.c
 
 HEADERS += \
-    qsp/qsp/actions.h \
-    qsp/qsp/callbacks.h \
-    qsp/qsp/errors.h \
-    qsp/qsp/game.h \
-    qsp/qsp/codetools.h \
-    qsp/qsp/locations.h \
-    qsp/qsp/coding.h \
-    qsp/qsp/mathops.h \
-    qsp/qsp/menu.h \
-    qsp/qsp/objects.h \
-    qsp/qsp/time.h \
-    qsp/qsp/playlist.h \
-    qsp/qsp/regexp.h \
-    qsp/qsp/statements.h \
-    qsp/qsp/variables.h \
-    qsp/qsp/variant.h \
-    qsp/qsp/common.h \
-    qsp/qsp/declarations.h \
-    qsp/qsp/memwatch.h \
-    qsp/qsp/text.h \
-    qsp/qsp/onig/config.h \
-    qsp/qsp/onig/oniguruma.h \
-    qsp/qsp/onig/regenc.h \
-    qsp/qsp/onig/regint.h \
-    qsp/qsp/onig/regparse.h \
-    qsp/qsp/onig/st.h \
-    qsp/qsp/bindings/default/qsp_default.h
+    qsp/actions.h \
+    qsp/callbacks.h \
+    qsp/codetools.h \
+    qsp/coding.h \
+    qsp/common.h \
+    qsp/declarations.h \
+    qsp/errors.h \
+    qsp/game.h \
+    qsp/locations.h \
+    qsp/mathops.h \
+    qsp/memwatch.h \
+    qsp/menu.h \
+    qsp/objects.h \
+    qsp/playlist.h \
+    qsp/qsp.h \
+    qsp/statements.h \
+    qsp/text.h \
+    qsp/time.h \
+    qsp/variables.h \
+    qsp/variant.h \
+    qsp/onig/config.h \
+    qsp/onig/oniguruma.h \
+    qsp/onig/regenc.h \
+    qsp/onig/regint.h \
+    qsp/onig/regparse.h \
+    qsp/onig/st.h \
+    qsp/bindings/bindings_config.h \
+    qsp/bindings/default/qsp_default.h
 
 isEmpty(TARGET_EXT) {
     win32 {
@@ -155,4 +155,4 @@ win32|macx {
     QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
 }
 
-win32:RC_ICONS += qsp/players/classic/qspgui/misc/icons/logo.ico
+#win32:RC_ICONS += qsp/players/classic/qspgui/misc/icons/logo.ico
