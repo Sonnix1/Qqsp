@@ -276,9 +276,9 @@ int qspSplitStr(QSP_CHAR *str, QSP_CHAR *delim, QSP_CHAR ***res)
 		newStr = (QSP_CHAR *)malloc((allocChars + 1) * sizeof(QSP_CHAR));
 		qspStrNCopy(newStr, curPos, allocChars);
 		newStr[allocChars] = 0;
-		if (++count > bufSize)
+        if (++count >= bufSize)
 		{
-			bufSize += 16;
+            bufSize = count + 16;
 			ret = (QSP_CHAR **)realloc(ret, bufSize * sizeof(QSP_CHAR *));
 		}
 		ret[count - 1] = newStr;
