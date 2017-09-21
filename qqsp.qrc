@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/gfx">
+        <file alias="menu/about">icons/about.xpm</file>
+        <file alias="menu/exit">icons/exit.xpm</file>
+        <file alias="menu/new">icons/new.xpm</file>
+        <file alias="menu/open">icons/open.xpm</file>
+        <file>icons/qsp-logo-512.png</file>
+        <file>icons/qsp-logo-vector.svg</file>
+        <file alias="menu/statusopen">icons/statusopen.xpm</file>
+        <file alias="menu/statussave">icons/statussave.xpm</file>
+        <file alias="menu/windowmode">icons/windowmode.xpm</file>
+        <file alias="logo">icons/logo.png</file>
+    </qresource>
+</RCC>

@@ -9,6 +9,7 @@
 #include <QCursor>
 #include <QPalette>
 #include <QFontDialog>
+#include <QIcon>
 
 #include "callbacks_gui.h"
 #include "comtools.h"
@@ -18,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     resize(600, 450);
     setMinimumSize(240, 180);
     setWindowTitle(QSP_LOGO);
+    setWindowIcon(QIcon(":/gfx/logo"));
     setUnifiedTitleAndToolBarOnMac(true);
     setDockNestingEnabled(true);
 
@@ -37,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     mainToolBar->setVisible(false);
     mainToolBar->setWindowTitle("ToolBar");
 
-    //SetIcon(QIcon(logo));
     //DragAcceptFiles(true);
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()));
@@ -410,12 +411,12 @@ void MainWindow::CreateMenuBar()
     _fileMenu = menuBar()->addMenu(tr("&Quest"));
 
     // Open item
-    action = _fileMenu->addAction(QIcon(":/menu/open"), tr("Open game..."),
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/open"), tr("Open game..."),
         this, SLOT(OnOpenGame()), QKeySequence(Qt::ALT + Qt::Key_O));
     mainToolBar->addAction(action);
 
     // New game item
-    action = _fileMenu->addAction(QIcon(":/menu/new"),tr("Restart game"),
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/new"),tr("Restart game"),
         this, SLOT(OnRestartGame()), QKeySequence(Qt::ALT + Qt::Key_N));
     mainToolBar->addAction(action);
 
@@ -423,7 +424,7 @@ void MainWindow::CreateMenuBar()
     mainToolBar->addSeparator();
 
     // Exit item
-    action = _fileMenu->addAction(QIcon(":/menu/exit"), tr("Exit"),
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/exit"), tr("Exit"),
         this, SLOT(close()), QKeySequence(Qt::ALT + Qt::Key_X));
     mainToolBar->addAction(action);
     //------------------------------------------------------------------
@@ -432,11 +433,11 @@ void MainWindow::CreateMenuBar()
     _gameMenu = menuBar()->addMenu(tr("&Game"));
 
     // Open saved game item
-    action =  _gameMenu->addAction(QIcon(":/menu/statusopen"), tr("Open saved game..."),
+    action =  _gameMenu->addAction(QIcon(":/gfx/menu/statusopen"), tr("Open saved game..."),
         this, SLOT(OnOpenSavedGame()), QKeySequence(Qt::CTRL + Qt::Key_O));
     mainToolBar->addAction(action);
     // Save game item
-    action =  _gameMenu->addAction(QIcon(":/menu/statussave"), tr("Save game..."),
+    action =  _gameMenu->addAction(QIcon(":/gfx/menu/statussave"), tr("Save game..."),
         this, SLOT(OnSaveGame()), QKeySequence(Qt::CTRL + Qt::Key_S));
     mainToolBar->addAction(action);
     //------------------------------------------------------------------
@@ -493,7 +494,7 @@ void MainWindow::CreateMenuBar()
         this, SLOT(OnChangeSoundVolume()), QKeySequence(Qt::ALT + Qt::Key_V));
 
     // Window / Fullscreen mode item
-    _settingsMenu->addAction(QIcon(":/menu/windowmode"), tr("Window / Fullscreen mode"),
+    _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"),
         this, SLOT(OnToggleWinMode()), QKeySequence(Qt::ALT + Qt::Key_Enter));
 
     _settingsMenu->addSeparator();
@@ -519,7 +520,7 @@ void MainWindow::CreateMenuBar()
     QMenu* helpMenu(menuBar()->addMenu(tr("&Help")));
 
     // About item
-    action =  helpMenu->addAction(QIcon(":/menu/about"), tr("About..."),
+    action =  helpMenu->addAction(QIcon(":/gfx/menu/about"), tr("About..."),
         this, SLOT(OnAbout()), QKeySequence(Qt::CTRL + Qt::Key_H));
     mainToolBar->addAction(action);
 }

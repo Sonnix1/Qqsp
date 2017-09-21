@@ -122,6 +122,9 @@ HEADERS += \
     qsp/bindings/bindings_config.h \
     qsp/bindings/default/qsp_default.h
 
+RESOURCES += \
+    qqsp.qrc
+
 isEmpty(TARGET_EXT) {
     win32 {
         TARGET_CUSTOM_EXT = .exe
@@ -155,4 +158,4 @@ win32|macx {
     QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
 }
 
-#win32:RC_ICONS += qsp/players/classic/qspgui/misc/icons/logo.ico
+win32:RC_ICONS += icons/logo.ico
