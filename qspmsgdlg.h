@@ -24,7 +24,7 @@ public:
     QspMsgDlg(const QString &caption = "", const QString &text = "", QWidget *parent = 0);
     QspMsgDlg(const QColor& backColor,
               const QColor& fontColor,
-              const QFont& font,
+              const QFont& new_font,
               const QString& caption,
               const QString& text,
               bool isHtml,

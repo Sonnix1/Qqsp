@@ -21,7 +21,6 @@ public:
     ~QspListBox();
 
     // Methods
-    void SetStandardFonts(const QFont& font);
     void RefreshUI();
     void BeginItems();
     void AddItem(const QString& image, const QString& desc);
@@ -30,14 +29,14 @@ public:
     // Accessors
     void SetIsHtml(bool isHtml);
     void SetIsShowNums(bool isShow);
-    void SetTextFont(const QFont& font);
+    void SetTextFont(const QFont& new_font);
     QFont GetTextFont() const { return m_font; }
-    bool SetLinkColor(const QColor &colour);
+    bool SetLinkColor(const QColor &color);
     QColor GetLinkColor();
-    QColor GetBackgroundColour();
-    QColor GetForegroundColour(); //text color
-    bool SetBackgroundColour(const QColor& colour);
-    bool SetForegroundColour(const QColor& colour);
+    QColor GetBackgroundColor();
+    QColor GetForegroundColor(); //text color
+    bool SetBackgroundColor(const QColor& color);
+    bool SetForegroundColor(const QColor& color);
     void SetGamePath(const QString& path) { m_path = path; }
     void SetSelection(int selection);
     void SetShowPlainText(bool isPlain);

@@ -76,10 +76,10 @@ void QspImgCanvas::RefreshUI()
     //		Refresh();
 }
 
-bool QspImgCanvas::SetBackgroundColour(const QColor &color)
+bool QspImgCanvas::SetBackgroundColor(const QColor &color)
 {
-    //wxWindow::SetBackgroundColour(color);
-    //m_animation->SetBackgroundColour(color);
+    //wxWindow::SetBackgroundColor(color);
+    //m_animation->SetBackgroundColor(color);
     return true;
 }
 

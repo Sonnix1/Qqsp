@@ -12,6 +12,7 @@
 #include <QAction>
 #include <QToolBar>
 #include <QStatusBar>
+#include <QFont>
 
 #include "qsptextbox.h"
 #include "qsplistbox.h"
@@ -70,8 +71,8 @@ public:
     bool IsKeyPressedWhileDisabled() const { return m_keyPressedWhileDisabled; }
 
     QColor GetLinkColor() { return m_linkColor; }
-    QColor GetBackgroundColour() { return m_backColor; }
-    QColor GetForegroundColour() { return m_fontColor; }
+    QColor GetBackgroundColor() { return m_backColor; }
+    QColor GetForegroundColor() { return m_fontColor; }
 
     void SetShowPlainText(bool isPlain);
 
@@ -87,7 +88,7 @@ private:
     void UpdateTitle();
     void ReCreateGUI();
     void RefreshUI();
-//    void ApplyFont(const wxFont& font);
+    void ApplyFont(const QFont& new_font);
 //    bool ApplyFontSize(int size);
 //    bool ApplyFontName(const wxString& name);
     bool ApplyFontColor(const QColor& color);
@@ -127,6 +128,7 @@ private:
     QColor m_fontColor;
     int m_fontSize;
     QString m_fontName;
+    QFont m_font;
     bool m_isUseFontSize;
     bool m_isProcessEvents;
     bool m_isQuit;

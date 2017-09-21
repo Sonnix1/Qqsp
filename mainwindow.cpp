@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QCursor>
 #include <QPalette>
+#include <QFontDialog>
 
 #include "callbacks_gui.h"
 #include "comtools.h"
@@ -54,6 +55,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_fontColor = palette().color(QPalette::Text);
     m_backColor = palette().color(QPalette::Window);
 
+    m_font = font();
+    m_isUseFontSize = false;
+    m_fontSize = m_font.pointSize();
+
     m_imgView = new QspImgCanvas(this);
 
     CreateDockWindows();
@@ -89,49 +94,46 @@ void MainWindow::ApplyParams()
     int numVal;
     QSP_CHAR *strVal;
     QColor setBackColor, setFontColor, setLinkColor;
-//	wxString setFontName;
-//	int setFontSize;
     bool isRefresh = false;
     // --------------
     setBackColor = ((QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_backColor);
-    if (setBackColor != _mainDescTextBox->GetBackgroundColour())
+    if (setBackColor != m_backColor)
     {
         if (ApplyBackColor(setBackColor)) isRefresh = true;
     }
     // --------------
     setFontColor = ((QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_fontColor);
-    if (setFontColor != _mainDescTextBox->GetForegroundColour())
+    if (setFontColor != m_fontColor)
     {
         if (ApplyFontColor(setFontColor)) isRefresh = true;
     }
     // --------------
     setLinkColor = ((QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_linkColor);
-    if (setLinkColor != _mainDescTextBox->GetLinkColor())
+    if (setLinkColor != m_linkColor)
     {
         if (ApplyLinkColor(setLinkColor)) isRefresh = true;
     }
     // --------------
-//	if (m_isUseFontSize)
-//		setFontSize = m_fontSize;
-//	else
-//		setFontSize = ((QSPGetVarValues(QSP_FMT("FSIZE"), 0, &numVal, &strVal) && numVal) ? numVal : m_fontSize);
-//	if (setFontSize != m_desc->GetTextFont().GetPointSize())
-//	{
-//		if (ApplyFontSize(setFontSize)) isRefresh = true;
-//	}
-//	// --------------
-//	setFontName = ((QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal) && strVal && *strVal) ? wxString(strVal) : m_fontName);
-//	if (!setFontName.IsSameAs(m_desc->GetTextFont().GetFaceName(), false))
-//	{
-//		if (ApplyFontName(setFontName))
-//			isRefresh = true;
-//		else if (!m_fontName.IsSameAs(m_desc->GetTextFont().GetFaceName(), false))
-//		{
-//			if (ApplyFontName(m_fontName)) isRefresh = true;
-//		}
-//	}
-//	// --------------
-    if (isRefresh) RefreshUI();
+    QFont new_font = m_font;
+    if(QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal))
+        if(strVal != 0)
+        {
+            new_font.setFamily(QSPTools::qspStrToQt(strVal));
+        }
+    if(!m_isUseFontSize)
+    {
+        if(QSPGetVarValues(QSP_FMT("FSIZE"), 0, &numVal, &strVal))
+            if(numVal != 0)
+            {
+                new_font.setPointSize(numVal);
+            }
+    }
+    if(new_font != m_font)
+    {
+        ApplyFont(new_font);
+    }
+    // --------------
+    //if (isRefresh) RefreshUI();
 }
 
 void MainWindow::DeleteMenu()
@@ -234,13 +236,22 @@ void MainWindow::RefreshUI()
     m_imgView->RefreshUI();
 }
 
+void MainWindow::ApplyFont(const QFont &new_font)
+{
+    m_font = new_font;
+    _mainDescTextBox->SetTextFont(new_font);
+    _descTextBox->SetTextFont(new_font);
+    _objectsListBox->SetTextFont(new_font);
+    _actionsListBox->SetTextFont(new_font);
+}
+
 bool MainWindow::ApplyFontColor(const QColor &color)
 {
     m_fontColor = color;
-    _mainDescTextBox->SetForegroundColour(color);
-    _descTextBox->SetForegroundColour(color);
-    _objectsListBox->SetForegroundColour(color);
-    _actionsListBox->SetForegroundColour(color);
+    _mainDescTextBox->SetForegroundColor(color);
+    _descTextBox->SetForegroundColor(color);
+    _objectsListBox->SetForegroundColor(color);
+    _actionsListBox->SetForegroundColor(color);
     return false;
 }
 
@@ -250,10 +261,10 @@ bool MainWindow::ApplyBackColor(const QColor &color)
     QPalette p = palette();
     p.setColor(QPalette::Base, color);
     setPalette(p);
-    _mainDescTextBox->SetBackgroundColour(color);
-    _descTextBox->SetBackgroundColour(color);
-    _objectsListBox->SetBackgroundColour(color);
-    _actionsListBox->SetBackgroundColour(color);
+    _mainDescTextBox->SetBackgroundColor(color);
+    _descTextBox->SetBackgroundColor(color);
+    _objectsListBox->SetBackgroundColor(color);
+    _actionsListBox->SetBackgroundColor(color);
     return false;
 }
 

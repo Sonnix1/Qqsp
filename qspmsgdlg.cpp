@@ -1,6 +1,7 @@
 #include "qspmsgdlg.h"
 
 #include <QRect>
+#include <QPalette>
 
 #include "mainwindow.h"
 
@@ -38,20 +39,24 @@ QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *paren
 
 QspMsgDlg::QspMsgDlg(const QColor& backColor,
                      const QColor& fontColor,
-                     const QFont& font,
+                     const QFont& new_font,
                      const QString& caption,
                      const QString& text,
                      bool isHtml,
                      const QString& gamePath,
                      QWidget *parent) : QDialog(parent)
 {
-    //SetBackgroundColour(backColor);
     m_desc.SetGamePath(gamePath);
     m_desc.SetIsHtml(isHtml);
-    m_desc.SetBackgroundColour(backColor);
-    m_desc.SetForegroundColour(fontColor);
-    m_desc.SetTextFont(font);
+    m_desc.SetBackgroundColor(backColor);
+    m_desc.SetForegroundColor(fontColor);
+    m_desc.SetTextFont(new_font);
     m_desc.SetText(text);
+    m_desc.setBackgroundRole(QPalette::NoRole);
+    QPalette p = palette();
+    p.setColor(QPalette::Base, backColor);
+    //p.setColor(QPalette::Window, backColor);
+    setPalette(p);
     //#ifdef __WXMSW__
     //	btnOk->SetBackgroundColour(backColor);
     //	btnOk->SetForegroundColour(fontColor);
@@ -66,7 +71,7 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
     okButton.setGeometry(QRect(10, 130, 100, 20));
     okButton.setText("OK");
     okButton.setDefault(true);
-    okButton.setFont(font);
+    okButton.setFont(new_font);
     okButton.setFocus(Qt::PopupFocusReason);
 
     resize(450,100);

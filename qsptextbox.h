@@ -27,17 +27,17 @@ public:
     // Accessors
     void SetIsHtml(bool isHtml);
     void SetText(const QString& text, bool isScroll = false);
-    void SetTextFont(const QFont& font);
+    void SetTextFont(const QFont& new_font);
     QFont GetTextFont() const { return m_font; }
     QString GetText() const { return m_text; }
-    bool SetLinkColor(const QColor &colour);
+    bool SetLinkColor(const QColor &color);
     QColor GetLinkColor() { return m_linkColor; }
     void SetGamePath(const QString& path);
     void SetBackgroundImage(const QPixmap& bmpBg);
-    QColor GetBackgroundColour();
-    QColor GetForegroundColour(); //text color
-    bool SetBackgroundColour(const QColor& colour);
-    bool SetForegroundColour(const QColor& colour);
+    QColor GetBackgroundColor();
+    QColor GetForegroundColor(); //text color
+    bool SetBackgroundColor(const QColor& color);
+    bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
 
 private:
@@ -56,6 +56,8 @@ private:
     int m_posX;
     int m_posY;
     QColor m_linkColor;
+    QColor m_backColor;
+    QColor m_fontColor;
     bool showPlainText;
 };
 

@@ -13,6 +13,9 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     m_isUseHtml = false;
     showPlainText = false;
     m_linkColor = palette().color(QPalette::Link);
+    m_fontColor = palette().color(QPalette::Text);
+    m_backColor = palette().color(QPalette::Window);
+    m_font = font();
     setOpenLinks(false);
 //	m_font = *wxNORMAL_FONT;
 //	m_outFormat = wxString::Format(
@@ -20,8 +23,6 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
 //		wxT("<BODY><FONT COLOR = #%%s>%%s</FONT></BODY></HTML>"),
 //		wxFontMapper::GetEncodingName(wxLocale::GetSystemEncoding()).wx_str()
 //	);
-//	wxString fontName(m_font.GetFaceName());
-//	SetStandardFonts(m_font.GetPointSize(), fontName, fontName);
 }
 
 QspTextBox::~QspTextBox()
@@ -40,7 +41,7 @@ void QspTextBox::SetIsHtml(bool isHtml)
 
 void QspTextBox::RefreshUI(bool isScroll)
 {
-    QString color(QSPTools::GetHexColor(GetForegroundColour()));
+    QString color(QSPTools::GetHexColor(GetForegroundColor()));
     QString str(QByteArray::fromPercentEncoding(m_text.toUtf8()));
     QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str)));
     //TODO: set colour and font
@@ -87,26 +88,28 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
     }
 }
 
-void QspTextBox::SetTextFont(const QFont& font)
+void QspTextBox::SetTextFont(const QFont& new_font)
 {
-    if (m_font != font)
+    if (m_font != new_font)
     {
-        m_font = font;
-        setFont(font); //TODO: check which one of this to use
-        setCurrentFont(font);
+        m_font = new_font;
+        setFont(new_font); //TODO: check which one of this to use
+        setCurrentFont(new_font);
     }
 }
 
-bool QspTextBox::SetLinkColor(const QColor &colour)
+bool QspTextBox::SetLinkColor(const QColor &color)
 {
     //QPalette p = palette();
     //p.setBrush( QPalette::Link, clr);
     //setPalette( p );
-    if(m_linkColor != colour)
+    //NOTE: From Qt documentation:
+    //Note that we do not use the Link and LinkVisited roles when rendering rich text in Qt, and that we recommend that you use CSS and the QTextDocument::setDefaultStyleSheet() function to alter the appearance of links.
+    if(m_linkColor != color)
     {
-        QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }").arg(colour.name());
+        QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }").arg(color.name());
         document()->setDefaultStyleSheet(sheet);
-        m_linkColor = colour;
+        m_linkColor = color;
         RefreshUI();
         return true;
     }
@@ -126,38 +129,47 @@ void QspTextBox::SetBackgroundImage(const QPixmap& bmpBg)
     //CalcImageSize();
 }
 
-//Returns the background colour of the window.
-QColor QspTextBox::GetBackgroundColour()
+//Returns the background color of the window.
+QColor QspTextBox::GetBackgroundColor()
 {
-    return textBackgroundColor();
+    return m_backColor;
 }
 
 //The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change their colour only partially or even not at all.
-QColor QspTextBox::GetForegroundColour()
+QColor QspTextBox::GetForegroundColor()
 {
-    return textColor();
+    return m_fontColor;
 }
 
-//Returns true if the colour was really changed, false if it was already set to this colour and nothing was done.
-bool QspTextBox::SetBackgroundColour(const QColor &colour)
+//Returns true if the color was really changed, false if it was already set to this color and nothing was done.
+bool QspTextBox::SetBackgroundColor(const QColor &color)
 {
-    if(textBackgroundColor() != colour)
+    if(m_backColor != color)
     {
         //QPalette p = palette();
-        //p.setColor(QPalette::Base, colour);
+        //p.setColor(QPalette::Base, color);
         //setPalette(p);
-        setTextBackgroundColor(colour);
+        m_backColor = color;
+        setTextBackgroundColor(color);
         RefreshUI();
         return true;
     }
     return false;
 }
 
-bool QspTextBox::SetForegroundColour(const QColor &colour)
+bool QspTextBox::SetForegroundColor(const QColor &color)
 {
-    if(textColor() != colour)
+    //TODO: find alternative
+    //NOTE: From Qt documentation
+    //Warning: Do not use this function (void 	setPalette(const QPalette &)) in conjunction with Qt Style Sheets.
+    if(m_fontColor != color)
     {
-        setTextColor(colour);
+        m_fontColor = color;
+        setTextColor(color);
+        QPalette p = palette();
+        p.setColor(QPalette::Text, color);
+        p.setColor(QPalette::WindowText, color);
+        setPalette(p);
         RefreshUI();
         return true;
     }

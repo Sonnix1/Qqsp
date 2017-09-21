@@ -147,9 +147,9 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	else
         m_frame->GetDesc()->LoadBackImage(QString(""));
     // -------------------------------
+    m_frame->ApplyParams();
 	if (isRedraw)
 	{
-		m_frame->ApplyParams(); //Moved to inside avoid constant update?
 		m_frame->EnableControls(false, true);
         //m_frame->Update();
         QCoreApplication::processEvents();
@@ -288,8 +288,8 @@ void QSPCallBacks::Msg(const QSP_CHAR *str)
 {
 	if (m_frame->IsQuit()) return;
 	RefreshInt(QSP_FALSE);
-    QspMsgDlg dialog(m_frame->GetDesc()->GetBackgroundColour(),
-		m_frame->GetDesc()->GetForegroundColour(),
+    QspMsgDlg dialog(m_frame->GetDesc()->GetBackgroundColor(),
+        m_frame->GetDesc()->GetForegroundColor(),
 		m_frame->GetDesc()->GetTextFont(),
         "Info", //caption
         QSPTools::qspStrToQt(str),
@@ -329,8 +329,8 @@ void QSPCallBacks::Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen)
 	RefreshInt(QSP_FALSE);
 //	QSPInputDlg dialog(m_frame,
 //		wxID_ANY,
-//		m_frame->GetDesc()->GetBackgroundColour(),
-//		m_frame->GetDesc()->GetForegroundColour(),
+//		m_frame->GetDesc()->GetBackgroundColor(),
+//		m_frame->GetDesc()->GetForegroundColor(),
 //		m_frame->GetDesc()->GetTextFont(),
 //		_("Input data"),
 //		wxString(text.Str, text.End),

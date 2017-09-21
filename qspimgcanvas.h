@@ -28,7 +28,7 @@ public:
     void RefreshUI();
 
     // Overloaded methods
-    virtual bool SetBackgroundColour(const QColor& color);
+    virtual bool SetBackgroundColor(const QColor& color);
 
 private:
     // Fields

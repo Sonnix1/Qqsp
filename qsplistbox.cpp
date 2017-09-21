@@ -20,17 +20,12 @@ QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
     m_linkColor = palette().color(QPalette::Link);
     m_textColor = palette().color(QPalette::Text);
     m_backgroundColor = palette().color(QPalette::Window);
-//	SetStandardFonts(m_font.GetPointSize(), fontName, fontName);
+    m_font = font();
 }
 
 QspListBox::~QspListBox()
 {
 
-}
-
-void QspListBox::SetStandardFonts(const QFont &font)
-{
-    //	RefreshUI();
 }
 
 void QspListBox::RefreshUI()
@@ -85,22 +80,21 @@ void QspListBox::SetIsShowNums(bool isShow)
     }
 }
 
-void QspListBox::SetTextFont(const QFont& font)
+void QspListBox::SetTextFont(const QFont& new_font)
 {
-//	int fontSize = font.GetPointSize();
-//	wxString fontName(font.GetFaceName());
-//	if (!m_font.GetFaceName().IsSameAs(fontName, false) || m_font.GetPointSize() != fontSize)
-//	{
-//		m_font = font;
-//		SetStandardFonts(fontSize, fontName, fontName);
-//	}
+    if (m_font != new_font)
+    {
+        m_font = new_font;
+        setFont(new_font);
+        createList();
+    }
 }
 
-bool QspListBox::SetLinkColor(const QColor &colour)
+bool QspListBox::SetLinkColor(const QColor &color)
 {
-    if(m_linkColor != colour)
+    if(m_linkColor != color)
     {
-        m_linkColor = colour;
+        m_linkColor = color;
         createList();
         //RefreshUI();
         return true;
@@ -113,32 +107,32 @@ QColor QspListBox::GetLinkColor()
     return m_linkColor;
 }
 
-QColor QspListBox::GetBackgroundColour()
+QColor QspListBox::GetBackgroundColor()
 {
     return m_backgroundColor;
 }
 
-QColor QspListBox::GetForegroundColour()
+QColor QspListBox::GetForegroundColor()
 {
     return m_textColor;
 }
 
-bool QspListBox::SetBackgroundColour(const QColor &colour)
+bool QspListBox::SetBackgroundColor(const QColor &color)
 {
-    if(m_backgroundColor != colour)
+    if(m_backgroundColor != color)
     {
-        m_backgroundColor = colour;
+        m_backgroundColor = color;
         createList();
         return true;
     }
     return false;
 }
 
-bool QspListBox::SetForegroundColour(const QColor &colour)
+bool QspListBox::SetForegroundColor(const QColor &color)
 {
-    if(m_textColor != colour)
+    if(m_textColor != color)
     {
-        m_textColor = colour;
+        m_textColor = color;
         createList();
         return true;
     }
@@ -206,8 +200,9 @@ void QspListBox::createList()
         item_widget->SetShowPlainText(showPlainText);
 
         item_widget->SetLinkColor(m_linkColor);
-        item_widget->SetBackgroundColour(m_backgroundColor);
-        item_widget->SetForegroundColour(m_textColor);
+        item_widget->SetBackgroundColor(m_backgroundColor);
+        item_widget->SetForegroundColor(m_textColor);
+        item_widget->SetTextFont(m_font);
 
         item_widget->SetGamePath(m_path);
         //item_widget->setMaximumHeight(800);
@@ -219,7 +214,7 @@ void QspListBox::createList()
         item_widget->setBackgroundRole(QPalette::NoRole);
         item_widget->setTextInteractionFlags(Qt::NoTextInteraction);
         item_widget->setWordWrapMode(QTextOption::NoWrap);
-        QFontMetrics font_metrics(item_widget->font());
+        //QFontMetrics font_metrics(item_widget->font());
         //item_widget->setFixedHeight(font_metrics.height() + 4* item_widget->frameWidth());
         item_widget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContentsOnFirstShow);
         item_widget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
@@ -257,7 +252,7 @@ QString QspListBox::formatItem(int itemIndex)
             isImage = true;
         }
     }
-    QString color(QSPTools::GetHexColor(GetForegroundColour()));
+    QString color(QSPTools::GetHexColor(GetForegroundColor()));
     QString formatedText;
     if(isImage)
     {
