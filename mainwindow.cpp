@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     mainStatusBar->setVisible(false);
     mainToolBar->setVisible(false);
+    mainToolBar->setWindowTitle("ToolBar");
 
     //SetIcon(QIcon(logo));
     //DragAcceptFiles(true);
@@ -64,6 +65,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     CreateDockWindows();
     //LoadSettings();
     CreateMenuBar();
+
+    showCaptions = true;
+
     m_menu = new QMenu(this);
     connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(OnMenu(QAction*)) );
 
@@ -291,6 +295,7 @@ void MainWindow::LoadSettings()
         showFullScreen();
 
     SetShowPlainText(settings.value("application/isShowPlainText", false).toBool());
+    OnToggleCaptions(settings.value("application/showCaptions", true).toBool());
 
 //    cfg.Read(wxT("Colors/BackColor"), &temp, 0xE0E0E0);
 //	m_backColor = wxColour(temp);
@@ -373,6 +378,9 @@ void MainWindow::SaveSettings()
     settings.setValue("mainWindow/windowState", saveState());
     settings.setValue("mainWindow/isMaximized", maximized);
     settings.setValue("mainWindow/isFullScreen", fullscreen);
+    settings.setValue("mainWindow/showCaptions", showCaptions);
+
+    settings.sync();
 
 
 //    cfg.Write(wxT("Colors/BackColor"), m_backColor.Blue() << 16 | m_backColor.Green() << 8 | m_backColor.Red());
@@ -396,35 +404,43 @@ void MainWindow::SaveSettings()
 
 void MainWindow::CreateMenuBar()
 {
+    QAction* action;
     //------------------------------------------------------------------
     // File menu
     _fileMenu = menuBar()->addMenu(tr("&Quest"));
 
     // Open item
-    _fileMenu->addAction(QIcon(":/menu/open"), tr("Open game..."),
+    action = _fileMenu->addAction(QIcon(":/menu/open"), tr("Open game..."),
         this, SLOT(OnOpenGame()), QKeySequence(Qt::ALT + Qt::Key_O));
+    mainToolBar->addAction(action);
 
     // New game item
-    _fileMenu->addAction(QIcon(":/menu/new"),tr("Restart game"),
+    action = _fileMenu->addAction(QIcon(":/menu/new"),tr("Restart game"),
         this, SLOT(OnRestartGame()), QKeySequence(Qt::ALT + Qt::Key_N));
+    mainToolBar->addAction(action);
 
     _fileMenu->addSeparator();
+    mainToolBar->addSeparator();
 
     // Exit item
-    _fileMenu->addAction(QIcon(":/menu/exit"), tr("Exit"),
+    action = _fileMenu->addAction(QIcon(":/menu/exit"), tr("Exit"),
         this, SLOT(close()), QKeySequence(Qt::ALT + Qt::Key_X));
+    mainToolBar->addAction(action);
     //------------------------------------------------------------------
+    mainToolBar->addSeparator();
     // Game menu
     _gameMenu = menuBar()->addMenu(tr("&Game"));
 
     // Open saved game item
-    _gameMenu->addAction(QIcon(":/menu/statusopen"), tr("Open saved game..."),
+    action =  _gameMenu->addAction(QIcon(":/menu/statusopen"), tr("Open saved game..."),
         this, SLOT(OnOpenSavedGame()), QKeySequence(Qt::CTRL + Qt::Key_O));
-
+    mainToolBar->addAction(action);
     // Save game item
-    _gameMenu->addAction(QIcon(":/menu/statussave"), tr("Save game..."),
+    action =  _gameMenu->addAction(QIcon(":/menu/statussave"), tr("Save game..."),
         this, SLOT(OnSaveGame()), QKeySequence(Qt::CTRL + Qt::Key_S));
+    mainToolBar->addAction(action);
     //------------------------------------------------------------------
+    mainToolBar->addSeparator();
     // Settings menu
     _settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
@@ -432,7 +448,7 @@ void MainWindow::CreateMenuBar()
     _showHideMenu = _settingsMenu->addMenu(tr("Show / Hide"));
 
     // Objects item
-    QAction* action = _objectsWidget->toggleViewAction();
+    action = _objectsWidget->toggleViewAction();
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_1));
     _showHideMenu->addAction(action);
 
@@ -454,12 +470,23 @@ void MainWindow::CreateMenuBar()
     _showHideMenu->addSeparator();
 
     // Captions item
-    _showHideMenu->addAction(tr("Captions"), this, SLOT(OnToggleCaptions()),
-        QKeySequence(Qt::CTRL + Qt::Key_5));
+    action = _showHideMenu->addAction(tr("Captions"));
+    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
+    action->setCheckable(true);
+    if(_objectsWidget->titleBarWidget() == 0)
+        action->setChecked(true);
+    else
+        action->setChecked(false);
+    connect(action, SIGNAL(toggled(bool)), this, SLOT(OnToggleCaptions(bool)));
+
+    // ToolBar
+    action = mainToolBar->toggleViewAction();
+    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+    _showHideMenu->addAction(action);
 
     // Hotkeys for actions item
-    _showHideMenu->addAction(tr("Hotkeys for actions"), this, SLOT(OnToggleHotkeys()),
-        QKeySequence(Qt::CTRL + Qt::Key_6));
+    //_showHideMenu->addAction(tr("Hotkeys for actions"), this, SLOT(OnToggleHotkeys()),
+    //    QKeySequence(Qt::CTRL + Qt::Key_6));
 
     // Sound volume item
     _settingsMenu->addAction(tr("Sound volume..."),
@@ -472,26 +499,29 @@ void MainWindow::CreateMenuBar()
     _settingsMenu->addSeparator();
 
     // Display HTML code as plain text
-    QAction * ActionToggleShowPlainText = _settingsMenu->addAction(tr("Display HTML code as plain text"));
-    ActionToggleShowPlainText->setShortcut(QKeySequence(Qt::ALT + Qt::Key_D));
-    ActionToggleShowPlainText->setCheckable(true);
-    ActionToggleShowPlainText->setChecked(showPlainText);
-    connect(ActionToggleShowPlainText, SIGNAL(toggled(bool)), this, SLOT(OnToggleShowPlainText(bool)));
+    action = _settingsMenu->addAction(tr("Display HTML code as plain text"));
+    action->setShortcut(QKeySequence(Qt::ALT + Qt::Key_D));
+    action->setCheckable(true);
+    action->setChecked(showPlainText);
+    connect(action, SIGNAL(toggled(bool)), this, SLOT(OnToggleShowPlainText(bool)));
 //    _settingsMenu->addAction(tr("Display HTML code as plain text"),
 //        this, SLOT(OnToggleShowPlainText()), QKeySequence(Qt::ALT + Qt::Key_D))->setCheckable(true);
 
     _settingsMenu->addSeparator();
 
     // Options item
-    _settingsMenu->addAction(tr("Options..."),
+    action =  _settingsMenu->addAction(tr("Options..."),
         this, SLOT(OnOptions()), QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_O));
+    //mainToolBar->addAction(action);
     //------------------------------------------------------------------
+    //mainToolBar->addSeparator();
     // Help menu
     QMenu* helpMenu(menuBar()->addMenu(tr("&Help")));
 
     // About item
-    helpMenu->addAction(QIcon(":/menu/about"), tr("About..."),
+    action =  helpMenu->addAction(QIcon(":/menu/about"), tr("About..."),
         this, SLOT(OnAbout()), QKeySequence(Qt::CTRL + Qt::Key_H));
+    mainToolBar->addAction(action);
 }
 
 void MainWindow::CreateDockWindows()
@@ -627,6 +657,41 @@ void MainWindow::OnSaveGame()
         else
             ShowError();
     }
+}
+
+void MainWindow::OnToggleCaptions(bool checked)
+{
+    showCaptions = checked;
+    QWidget* objectsTitleBarWidget = _objectsWidget->titleBarWidget();
+    QWidget* actionsTitleBarWidget = _actionsWidget->titleBarWidget();
+    QWidget* descTitleBarWidget = _descWidget->titleBarWidget();
+    QWidget* inputTitleBarWidget = _inputWidget->titleBarWidget();
+    if(checked == false)
+    {
+        _objectsWidget->setTitleBarWidget(new QWidget(_objectsWidget));
+        _objectsWidget->titleBarWidget()->hide();
+        _actionsWidget->setTitleBarWidget(new QWidget(_actionsWidget));
+        _actionsWidget->titleBarWidget()->hide();
+        _descWidget->setTitleBarWidget(new QWidget(_descWidget));
+        _descWidget->titleBarWidget()->hide();
+        _inputWidget->setTitleBarWidget(new QWidget(_inputWidget));
+        _inputWidget->titleBarWidget()->hide();
+    }
+    else
+    {
+        _objectsWidget->setTitleBarWidget(0);
+        _actionsWidget->setTitleBarWidget(0);
+        _descWidget->setTitleBarWidget(0);
+        _inputWidget->setTitleBarWidget(0);
+    }
+    if(objectsTitleBarWidget)
+        delete objectsTitleBarWidget;
+    if(actionsTitleBarWidget)
+        delete actionsTitleBarWidget;
+    if(descTitleBarWidget)
+        delete descTitleBarWidget;
+    if(inputTitleBarWidget)
+        delete inputTitleBarWidget;
 }
 
 void MainWindow::OnToggleWinMode()

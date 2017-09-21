@@ -137,6 +137,7 @@ private:
     int m_volume;
     int m_menuIndex;
     bool showPlainText;
+    bool showCaptions;
 
 private slots:
     void OnOpenGame();
@@ -145,7 +146,7 @@ private slots:
     void OnSaveGame(); //TODO: add quick save/load
 //    void OnOptions();
 //    void OnAbout();
-//    void OnToggleCaptions();
+    void OnToggleCaptions(bool checked);
 //    void OnToggleHotkeys();
     void OnToggleWinMode();
     void OnToggleShowPlainText(bool checked);
