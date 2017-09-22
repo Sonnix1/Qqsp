@@ -343,9 +343,12 @@ void qspOpenQuest(QSP_CHAR *fileName, QSP_BOOL isAddLocs)
 int qspSaveGameStatusToString(QSP_CHAR **buf)
 {
 	QSP_CHAR *locName;
-	int i, j, len, oldRefreshCount = qspRefreshCount;
+    QSPVar *savedVars;
+    int i, j, len, varsCount, oldRefreshCount = qspRefreshCount;
 	qspExecLocByVarNameWithArgs(QSP_FMT("ONGSAVE"), 0, 0);
 	if (qspRefreshCount != oldRefreshCount || qspErrorNum) return 0;
+    varsCount = qspPrepareLocalVars(&savedVars);
+    if (qspErrorNum) return 0;
 	*buf = 0;
 	qspRefreshPlayList();
 	locName = (qspCurLoc >= 0 ? qspLocs[qspCurLoc].Name : 0);
@@ -401,6 +404,7 @@ int qspSaveGameStatusToString(QSP_CHAR **buf)
 	}
 	len = qspCodeWriteIntVal(buf, len, qspGetVarsCount(), QSP_TRUE);
 	for (i = 0; i < QSP_VARSCOUNT; ++i)
+    {
 		if (qspVars[i].Name)
 		{
 			len = qspCodeWriteIntVal(buf, len, i, QSP_TRUE);
@@ -418,6 +422,13 @@ int qspSaveGameStatusToString(QSP_CHAR **buf)
 				len = qspCodeWriteVal(buf, len, qspVars[i].Indices[j].Str, QSP_TRUE);
 			}
 		}
+    }
+    qspRestoreLocalVars(savedVars, varsCount, qspSavedVarsGroups, qspSavedVarsGroupsCount);
+    if (qspErrorNum)
+    {
+        free(*buf);
+        return 0;
+    }
 	return len;
 }
 
