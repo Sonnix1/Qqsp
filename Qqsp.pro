@@ -60,7 +60,6 @@ SOURCES += \
     qsp/game.c \
     qsp/locations.c \
     qsp/mathops.c \
-    qsp/memwatch.c \
     qsp/menu.c \
     qsp/objects.c \
     qsp/playlist.c \
@@ -103,7 +102,6 @@ HEADERS += \
     qsp/game.h \
     qsp/locations.h \
     qsp/mathops.h \
-    qsp/memwatch.h \
     qsp/menu.h \
     qsp/objects.h \
     qsp/playlist.h \
@@ -124,6 +122,14 @@ HEADERS += \
 
 RESOURCES += \
     qqsp.qrc
+
+#CONFIG += enable-debug
+
+enable-debug {
+  DEFINES += _DEBUG
+  SOURCES += qsp/memwatch.c
+  HEADERS += qsp/memwatch.h
+}
 
 isEmpty(TARGET_EXT) {
     win32 {
