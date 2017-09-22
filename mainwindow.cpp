@@ -727,7 +727,7 @@ void MainWindow::OnTimer()
 void MainWindow::OnLinkClicked(const QUrl &url)
 {
     QString href;
-    href = url.toString();
+    href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
 
     if (href.startsWith("#"))
     {
@@ -737,7 +737,7 @@ void MainWindow::OnLinkClicked(const QUrl &url)
         else
             _descTextBox->setSource(url);
     }
-    else if (href.toUpper().startsWith("EXEC:", Qt::CaseInsensitive))
+    else if (href.startsWith("EXEC:", Qt::CaseInsensitive))
     {
         QString string = href.mid(5);
         if (m_isProcessEvents && !QSPExecString(qspStringFromQString(string), QSP_TRUE))

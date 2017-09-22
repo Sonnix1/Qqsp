@@ -86,13 +86,13 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
 void QspMsgDlg::OnLinkClicked(const QUrl &url)
 {
     QString href;
-    href = url.toString();
+    href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
 
     if (href.startsWith("#"))
     {
         m_desc.setSource(url);
     }
-    else if (href.toUpper().startsWith("EXEC:", Qt::CaseInsensitive)) //NOTE: was not part of original player
+    else if (href.startsWith("EXEC:", Qt::CaseInsensitive)) //NOTE: was not part of original player
     {
         QString string = href.mid(5);
         if (!QSPExecString(qspStringFromQString(string), QSP_TRUE))

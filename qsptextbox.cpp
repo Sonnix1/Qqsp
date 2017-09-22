@@ -42,8 +42,10 @@ void QspTextBox::SetIsHtml(bool isHtml)
 void QspTextBox::RefreshUI(bool isScroll)
 {
     QString color(QSPTools::GetHexColor(GetForegroundColor()));
-    QString str(QByteArray::fromPercentEncoding(m_text.toUtf8()));
-    QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str)));
+    //QString str(QByteArray::fromPercentEncoding(m_text.replace("%", "%25").toUtf8()));
+    //QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str)));
+    QString str = m_text;
+    QString text = str.replace("\r", "").replace("\n", "<br />");
     //TODO: set colour and font
     if(showPlainText)
         setPlainText(text);
