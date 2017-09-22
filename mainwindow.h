@@ -145,7 +145,7 @@ private slots:
     void OnOpenSavedGame();
     void OnSaveGame(); //TODO: add quick save/load
 //    void OnOptions();
-//    void OnAbout();
+    void OnAbout();
     void OnToggleCaptions(bool checked);
 //    void OnToggleHotkeys();
     void OnToggleWinMode();

@@ -670,6 +670,21 @@ void MainWindow::OnSaveGame()
     }
 }
 
+void MainWindow::OnAbout()
+{
+    QPixmap icon = QPixmap(":/gfx/logo");
+    icon = icon.scaledToHeight(64, Qt::SmoothTransformation);
+    QString version(QSPTools::qspStrToQt(QSPGetVersion()));
+    QString libCompiledDate(QSPTools::qspStrToQt(QSPGetCompiledDateTime()));
+    QString guiCompiledDate(tr(__DATE__) + tr(", ") + tr(__TIME__));
+    QString text = (tr("<h2>Qqsp</h2>"
+        "<p>Copyright &copy; 2017, S.</p>"));
+    text += tr("<p>Application version: %1<br>QSP library version: %2<br>Application compilation date: %3<br>Library compilation date: %4</p>").arg(QApplication::applicationVersion(), version, guiCompiledDate, libCompiledDate);
+    QMessageBox dlg(QMessageBox::NoIcon, tr("About"), text, QMessageBox::Ok);
+    dlg.setIconPixmap(icon);
+    dlg.exec();
+}
+
 void MainWindow::OnToggleCaptions(bool checked)
 {
     showCaptions = checked;

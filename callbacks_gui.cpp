@@ -142,7 +142,7 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	// -------------------------------
     //if (QSPGetVarValues(QSP_STATIC_STR(QSP_FMT("BACKIMAGE")), 0, &numVal, &strVal) && strVal.Str && strVal.Str != strVal.End)
     //    m_frame->GetDesc()->LoadBackImage(m_gamePath + QSPTools::qspStrToQt(strVal));
-    if (QSPGetVarValues(QSP_FMT("BACKIMAGE"), 0, &numVal, &strVal) && strVal && *strVal)
+    if (QSPGetVarValues(QSP_FMT("BACKIMAGE"), 0, &numVal, &strVal) && strVal)
         m_frame->GetDesc()->LoadBackImage(m_gamePath + QSPTools::qspStrToQt(strVal));
 	else
         m_frame->GetDesc()->LoadBackImage(QString(""));

@@ -4,6 +4,7 @@
 #include <QPalette>
 #include <QAbstractScrollArea>
 #include <QScrollBar>
+#include <QPainter>
 
 #include "comtools.h"
 
@@ -45,7 +46,15 @@ void QspTextBox::RefreshUI(bool isScroll)
     //QString str(QByteArray::fromPercentEncoding(m_text.replace("%", "%25").toUtf8()));
     //QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str)));
     QString str = m_text;
-    QString text = str.replace("\r", "").replace("\n", "<br />");
+    QString text;
+    if(m_isUseHtml)
+    {
+        text = str.replace("\r", "").replace("\n", "<br>");
+    }
+    else
+    {
+        text = Qt::convertFromPlainText(str);
+    }
     //TODO: set colour and font
     if(showPlainText)
         setPlainText(text);
@@ -124,11 +133,10 @@ void QspTextBox::SetGamePath(const QString &path)
     setSearchPaths(QStringList(path));
 }
 
-//TODO:
 void QspTextBox::SetBackgroundImage(const QPixmap& bmpBg)
 {
     m_bmpBg = bmpBg;
-    //CalcImageSize();
+    CalcImageSize();
 }
 
 //Returns the background color of the window.
@@ -184,25 +192,43 @@ void QspTextBox::SetShowPlainText(bool isPlain)
     RefreshUI();
 }
 
-//void QSPTextBox::CalcImageSize()
-//{
-//    if (m_bmpBg.Ok())
-//    {
-//        int w, h;
-//        GetClientSize(&w, &h);
-//        if (w < 1) w = 1;
-//        if (h < 1) h = 1;
-//        int srcW = m_bmpBg.GetWidth(), srcH = m_bmpBg.GetHeight();
-//        int destW = srcW * h / srcH, destH = srcH * w / srcW;
-//        if (destW > w)
-//            destW = w;
-//        else
-//            destH = h;
-//        m_posX = (w - destW) / 2;
-//        m_posY = (h - destH) / 2;
-//        if (destW > 0 && destH > 0)
-//            m_bmpRealBg = wxBitmap(m_bmpBg.ConvertToImage().Scale(destW, destH));
-//        else
-//            m_bmpRealBg = wxNullBitmap;
-//    }
-//}
+void QspTextBox::CalcImageSize()
+{
+    if (!m_bmpBg.isNull())
+    {
+        int w, h;
+        w = this->childrenRect().width();
+        h = this->childrenRect().height();
+        if (w < 1) w = 1;
+        if (h < 1) h = 1;
+        int srcW = m_bmpBg.width(), srcH = m_bmpBg.height();
+        int destW = srcW * h / srcH, destH = srcH * w / srcW;
+        if (destW > w)
+            destW = w;
+        else
+            destH = h;
+        m_posX = (w - destW) / 2;
+        m_posY = (h - destH) / 2;
+        if (destW > 0 && destH > 0)
+            m_bmpRealBg = m_bmpBg.scaled(destW, destH);
+    }
+}
+
+void QspTextBox::paintEvent(QPaintEvent *e)
+{
+    if (!m_bmpBg.isNull())
+    {
+        QPainter painter(viewport());
+        painter.drawImage(m_posX, m_posY, *(new QImage(m_bmpRealBg.toImage())));
+    }
+    QTextBrowser::paintEvent(e);
+}
+
+void QspTextBox::resizeEvent(QResizeEvent *e)
+{
+    if (!m_bmpBg.isNull())
+    {
+        CalcImageSize();
+    }
+    QTextBrowser::resizeEvent(e);
+}

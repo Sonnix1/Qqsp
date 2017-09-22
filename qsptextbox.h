@@ -43,6 +43,8 @@ public:
 private:
     // Internal methods
     void CalcImageSize();
+    void paintEvent(QPaintEvent *e);
+    void resizeEvent(QResizeEvent *e);
 
     // Fields
     bool m_isUseHtml;
