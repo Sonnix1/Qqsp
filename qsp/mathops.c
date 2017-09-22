@@ -24,7 +24,7 @@
 #include "objects.h"
 #include "statements.h"
 #include "text.h"
-#include "time.h"
+#include "time_qsp.h"
 #include "variables.h"
 
 QSPMathOperation qspOps[qspOpLast_Operation];

@@ -66,7 +66,7 @@ SOURCES += \
     qsp/playlist.c \
     qsp/statements.c \
     qsp/text.c \
-    qsp/time.c \
+    qsp/time_qsp.c \
     qsp/towlower.c \
     qsp/towupper.c \
     qsp/variables.c \
@@ -110,7 +110,7 @@ HEADERS += \
     qsp/qsp.h \
     qsp/statements.h \
     qsp/text.h \
-    qsp/time.h \
+    qsp/time_qsp.h \
     qsp/variables.h \
     qsp/variant.h \
     qsp/onig/config.h \
