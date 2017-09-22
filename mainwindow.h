@@ -13,6 +13,8 @@
 #include <QToolBar>
 #include <QStatusBar>
 #include <QFont>
+#include <QCloseEvent>
+#include <QKeyEvent>
 
 #include "qsptextbox.h"
 #include "qsplistbox.h"
@@ -82,6 +84,7 @@ private:
     void LoadSettings();
     void SaveSettings();
     void closeEvent(QCloseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
     void OpenGameFile(const QString& path);
 
     // Internal methods

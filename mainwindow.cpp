@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setWindowIcon(QIcon(":/gfx/logo"));
     setUnifiedTitleAndToolBarOnMac(true);
     setDockNestingEnabled(true);
+    setFocusPolicy(Qt::StrongFocus);
 
     mainMenuBar = new QMenuBar(this);
     setMenuBar(mainMenuBar);
@@ -505,7 +506,7 @@ void MainWindow::CreateMenuBar()
 
     // Window / Fullscreen mode item
     _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"),
-        this, SLOT(OnToggleWinMode()), QKeySequence(Qt::ALT + Qt::Key_Enter));
+        this, SLOT(OnToggleWinMode()), QKeySequence(Qt::Key_F11));
 
     _settingsMenu->addSeparator();
 
@@ -585,6 +586,53 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
     QCoreApplication::processEvents();
     QMainWindow::closeEvent(event);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    int action = -1;
+    if(event->key() == Qt::Key_1)
+        if(_actionsListBox->count() >= 1)
+            action = 0;
+    if(event->key() == Qt::Key_2)
+        if(_actionsListBox->count() >= 2)
+            action = 1;
+    if(event->key() == Qt::Key_3)
+        if(_actionsListBox->count() >= 3)
+            action = 2;
+    if(event->key() == Qt::Key_4)
+        if(_actionsListBox->count() >= 4)
+            action = 3;
+    if(event->key() == Qt::Key_5)
+        if(_actionsListBox->count() >= 5)
+            action = 4;
+    if(event->key() == Qt::Key_6)
+        if(_actionsListBox->count() >= 6)
+            action = 5;
+    if(event->key() == Qt::Key_7)
+        if(_actionsListBox->count() >= 7)
+            action = 6;
+    if(event->key() == Qt::Key_8)
+        if(_actionsListBox->count() >= 8)
+            action = 7;
+    if(event->key() == Qt::Key_9)
+        if(_actionsListBox->count() >= 9)
+            action = 8;
+    if(event->key() == Qt::Key_0)
+        if(_actionsListBox->count() >= 10)
+            action = 9;
+    if(action != -1)
+    {
+        if (!QSPSetSelActionIndex(action, QSP_TRUE))
+            ShowError();
+        if (!QSPExecuteSelActionCode(QSP_TRUE))
+            ShowError();
+        return;
+    }
+    if(event->key() == Qt::Key_Escape)
+        if(isFullScreen())
+            showNormal();
+    QMainWindow::keyPressEvent(event);
 }
 
 void MainWindow::OpenGameFile(const QString &path)
