@@ -102,18 +102,28 @@ void MainWindow::ApplyParams()
     bool isRefresh = false;
     // --------------
     setBackColor = ((QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_backColor);
+    int col;
+    col = setBackColor.red();
+    setBackColor.setRed(setBackColor.blue());
+    setBackColor.setBlue(col);
     if (setBackColor != m_backColor)
     {
         if (ApplyBackColor(setBackColor)) isRefresh = true;
     }
     // --------------
     setFontColor = ((QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_fontColor);
+    col = setFontColor.red();
+    setFontColor.setRed(setFontColor.blue());
+    setFontColor.setBlue(col);
     if (setFontColor != m_fontColor)
     {
         if (ApplyFontColor(setFontColor)) isRefresh = true;
     }
     // --------------
     setLinkColor = ((QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_linkColor);
+    col = setLinkColor.red();
+    setLinkColor.setRed(setLinkColor.blue());
+    setLinkColor.setBlue(col);
     if (setLinkColor != m_linkColor)
     {
         if (ApplyLinkColor(setLinkColor)) isRefresh = true;
