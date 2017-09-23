@@ -73,11 +73,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_imgView = new QspImgCanvas(this);
     m_imgView->setObjectName(QStringLiteral("m_imgView"));
 
+    perGameConfig = false;
+    autostartLastGame = false;
+
     CreateDockWindows();
-    //LoadSettings();
+    LoadSettings();
     CreateMenuBar();
 
     showCaptions = true;
+    SetLastPath(QApplication::applicationDirPath());
 
     m_menu = new QMenu(this);
     m_menu->setObjectName(QStringLiteral("m_menu"));
@@ -85,6 +89,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     QSPInit();
     QSPCallBacks::Init(this);
+
+    if(autostartLastGame)
+        OpenGameFile(lastGame);
 }
 
 MainWindow::~MainWindow()
@@ -153,6 +160,10 @@ void MainWindow::ApplyParams()
             {
                 new_font.setPointSize(numVal);
             }
+    }
+    else
+    {
+        new_font.setPointSize(m_fontSize);
     }
     if(new_font != m_font)
     {
@@ -302,20 +313,35 @@ bool MainWindow::ApplyLinkColor(const QColor &color)
     return false;
 }
 
-void MainWindow::LoadSettings()
+void MainWindow::LoadSettings(QString filePath)
 {
-    QSettings settings(QApplication::applicationDirPath() + "/config.cfg", QSettings::IniFormat);
+    QSettings *settings;
+    if(filePath.isEmpty())
+        settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName(), this);
+    else
+        settings = new QSettings(filePath, QSettings::IniFormat);
 
-    restoreGeometry(settings.value("mainWindow/geometry").toByteArray());
-    restoreState(settings.value("mainWindow/windowState").toByteArray());
+    restoreGeometry(settings->value("mainWindow/geometry").toByteArray());
+    restoreState(settings->value("mainWindow/windowState").toByteArray());
 
-    if (settings.value("mainWindow/isMaximized", false).toBool())
+    if (settings->value("mainWindow/isMaximized", isMaximized()).toBool())
         showMaximized();
-    if (settings.value("mainWindow/isFullScreen", false).toBool())
+    if (settings->value("mainWindow/isFullScreen", isFullScreen()).toBool())
         showFullScreen();
 
-    SetShowPlainText(settings.value("application/isShowPlainText", false).toBool());
-    OnToggleCaptions(settings.value("application/showCaptions", true).toBool());
+    OnToggleCaptions(settings->value("mainWindow/showCaptions", showCaptions).toBool());
+
+    SetShowPlainText(settings->value("application/isShowPlainText", showPlainText).toBool());
+
+    SetLastPath(settings->value("application/lastPath", GetLastPath()).toString());
+    perGameConfig = settings->value("application/perGameConfig", perGameConfig).toBool();
+
+    m_isUseFontSize = settings->value("application/isUseFontSize", m_isUseFontSize).toBool();
+    m_fontSize = settings->value("application/fontSize", m_fontSize).toInt();
+
+    lastGame = settings->value("application/lastGame", lastGame).toString();
+    autostartLastGame = settings->value("application/autostartLastGame", autostartLastGame).toBool();
+
 
 //    cfg.Read(wxT("Colors/BackColor"), &temp, 0xE0E0E0);
 //	m_backColor = wxColour(temp);
@@ -382,25 +408,39 @@ void MainWindow::LoadSettings()
 //	if (isMaximize) Maximize();
 //	Show();
 //	m_manager->Update();
+    delete settings;
 }
 
-void MainWindow::SaveSettings()
+void MainWindow::SaveSettings(QString filePath)
 {
-    QSettings settings(QApplication::applicationDirPath() + "/config.cfg", QSettings::IniFormat);
+    QSettings *settings;
+    if(filePath.isEmpty())
+        settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName(), this);
+    else
+        settings = new QSettings(filePath, QSettings::IniFormat);
 
     bool maximized = isMaximized();
-    if (maximized) showNormal();
 
     bool fullscreen = isFullScreen();
-    if (fullscreen) showNormal();
 
-    settings.setValue("mainWindow/geometry", saveGeometry());
-    settings.setValue("mainWindow/windowState", saveState());
-    settings.setValue("mainWindow/isMaximized", maximized);
-    settings.setValue("mainWindow/isFullScreen", fullscreen);
-    settings.setValue("mainWindow/showCaptions", showCaptions);
+    settings->setValue("mainWindow/geometry", saveGeometry());
+    settings->setValue("mainWindow/windowState", saveState());
+    settings->setValue("mainWindow/isMaximized", maximized);
+    settings->setValue("mainWindow/isFullScreen", fullscreen);
+    settings->setValue("mainWindow/showCaptions", showCaptions);
 
-    settings.sync();
+    settings->setValue("application/isShowPlainText", showPlainText);
+
+    settings->setValue("application/lastPath", lastPath);
+    settings->setValue("application/perGameConfig", perGameConfig);
+
+    settings->setValue("application/isUseFontSize", m_isUseFontSize);
+    settings->setValue("application/fontSize", m_fontSize);
+
+    settings->setValue("application/lastGame", lastGame);
+    settings->setValue("application/autostartLastGame", autostartLastGame);
+
+    settings->sync();
 
 
 //    cfg.Write(wxT("Colors/BackColor"), m_backColor.Blue() << 16 | m_backColor.Green() << 8 | m_backColor.Red());
@@ -415,11 +455,7 @@ void MainWindow::SaveSettings()
 //	m_transhelper->Save(cfg, wxT("General/Language"));
 //	GetPosition(&x, &y);
 //	GetClientSize(&w, &h);
-//	cfg.Write(wxT("Pos/Left"), x);
-//	cfg.Write(wxT("Pos/Top"), y);
-//	cfg.Write(wxT("Pos/Width"), w);
-//	cfg.Write(wxT("Pos/Height"), h);
-//	cfg.Write(wxT("Pos/Maximize"), isMaximized);
+    delete settings;
 }
 
 void MainWindow::CreateMenuBar()
@@ -513,10 +549,12 @@ void MainWindow::CreateMenuBar()
         this, SLOT(OnChangeSoundVolume()), QKeySequence(Qt::ALT + Qt::Key_V));
 
     // Window / Fullscreen mode item
-    _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"),
+    action = _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"),
         this, SLOT(OnToggleWinMode()), QKeySequence(Qt::Key_F11));
+    mainToolBar->addAction(action);
 
     _settingsMenu->addSeparator();
+    mainToolBar->addSeparator();
 
     // Display HTML code as plain text
     action = _settingsMenu->addAction(tr("Display HTML code as plain text"));
@@ -594,7 +632,9 @@ void MainWindow::CreateDockWindows()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    //SaveSettings();
+    if(!m_configPath.isEmpty())
+        SaveSettings(m_configPath);
+    SaveSettings();
     EnableControls(false, true);
     setVisible(false);
     m_isQuit = true;
@@ -688,31 +728,38 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::OpenGameFile(const QString &path)
 {
-    if (QSPLoadGameWorld(qspStringFromQString(path)))
+    if(!path.isEmpty())
     {
-        m_isGameOpened = true;
-        QFileInfo file(path);
-        QString filePath(file.canonicalPath());
-        if(!filePath.endsWith('/')) filePath+="/";
-        QString configString(filePath + QSP_CONFIG);
-        QFileInfo configStringFile(configString);
-        QString newPath((configStringFile.exists() && configStringFile.isFile()) ? configString : m_configDefPath);
-        if (newPath != m_configPath)
+        if (QSPLoadGameWorld(qspStringFromQString(path)))
         {
-            SaveSettings();
-            m_configPath = newPath;
-            LoadSettings();
+            m_isGameOpened = true;
+            lastGame = path;
+            QFileInfo file(path);
+            QString filePath(file.canonicalPath());
+            if(!filePath.endsWith("/")) filePath+="/";
+            QString configString(filePath + QSP_CONFIG);
+            if (configString != m_configPath && perGameConfig)
+            {
+                if(m_configPath.isEmpty())
+                    SaveSettings();
+                else
+                    SaveSettings(m_configPath);
+                m_configPath = configString;
+                QFileInfo configFile(configString);
+                if(configFile.exists() && configFile.isFile())
+                    LoadSettings(configString);
+            }
+            UpdateGamePath(filePath);
+            OnNewGame();
+            if (m_isQuit) return;
+            //UpdateTitle();
+            EnableControls(true);
+            m_savedGamePath.clear();
+            ApplyParams();
         }
-        UpdateGamePath(filePath);
-        OnNewGame();
-        if (m_isQuit) return;
-        //UpdateTitle();
-        EnableControls(true);
-        m_savedGamePath.clear();
-        ApplyParams();
+        else
+            ShowError();
     }
-    else
-        ShowError();
 }
 
 void MainWindow::ActionsListBoxDoAction(int action)

@@ -25,7 +25,7 @@
 
 #define QSP_LOGO "Quest Soft Player 5"
 #define QSP_APPNAME "qspgui"
-#define QSP_CONFIG "qspgui.cfg"
+#define QSP_CONFIG "qqsp.ini"
 #define QSP_SOUNDPLUGINS "sound"
 #define QSP_MIDIDLS "sound/midi.dls"
 
@@ -64,7 +64,7 @@ public:
     QDockWidget *GetObjectsDock() const { return _objectsWidget; }
 
     QString GetLastPath() { return lastPath; }
-    void SetLastPath(const QString &path) { lastPath = path; } //TODO: save to config
+    void SetLastPath(const QString &path) { lastPath = path; }
 
     QspImgCanvas *GetImgView() const { return m_imgView; }
     QMenu *GetGameMenu() const { return _gameMenu; }
@@ -81,8 +81,8 @@ public:
 private:
     void CreateMenuBar();
     void CreateDockWindows();
-    void LoadSettings();
-    void SaveSettings();
+    void LoadSettings(QString filePath = QString());
+    void SaveSettings(QString filePath = QString());
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void OpenGameFile(const QString& path);
@@ -115,12 +115,14 @@ private:
     QDockWidget*	_descWidget; //m_vars ID_VARSDESC
     QDockWidget*	_inputWidget; //m_input
     QString lastPath; //For QFileDialog
+    QString lastGame;
 
     // Fields
     bool m_isGameOpened;
     QString m_savedGamePath;
     QString m_configPath;
     QString m_configDefPath;
+    bool perGameConfig;
     QTimer *m_timer;
     QspImgCanvas *m_imgView;
     int m_menuItemId;
@@ -130,7 +132,6 @@ private:
     QColor m_fontColor;
     QPalette m_palette;
     int m_fontSize;
-    QString m_fontName;
     QFont m_font;
     bool m_isUseFontSize;
     bool m_isProcessEvents;
@@ -141,6 +142,7 @@ private:
     int m_menuIndex;
     bool showPlainText;
     bool showCaptions;
+    bool autostartLastGame;
 
 private slots:
     void OnOpenGame();
