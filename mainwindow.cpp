@@ -102,7 +102,7 @@ void MainWindow::ApplyParams()
     QColor setBackColor, setFontColor, setLinkColor;
     int col;
     // --------------
-    if(QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal) && numVal)
+    if(QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal))
     {
         setBackColor = QColor::fromRgba(numVal);
         col = setBackColor.red();
@@ -111,7 +111,7 @@ void MainWindow::ApplyParams()
         ApplyBackColor(setBackColor);
     }
     // --------------
-    if(QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal) && numVal)
+    if(QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal))
     {
         setFontColor = QColor::fromRgba(numVal);
         col = setFontColor.red();
@@ -120,7 +120,7 @@ void MainWindow::ApplyParams()
         ApplyFontColor(setFontColor);
     }
     // --------------
-    if(QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal) && numVal)
+    if(QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal))
     {
         setLinkColor = QColor::fromRgba(numVal);
         col = setLinkColor.red();
