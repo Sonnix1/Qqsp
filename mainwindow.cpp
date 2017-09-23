@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setFocusPolicy(Qt::StrongFocus);
     setObjectName(QStringLiteral("MainWindow"));
 
+    m_palette = palette();
+
     mainMenuBar = new QMenuBar(this);
     setMenuBar(mainMenuBar);
     mainMenuBar->setObjectName(QStringLiteral("mainMenuBar"));
@@ -109,6 +111,7 @@ void MainWindow::ApplyParams()
     QSP_CHAR *strVal;
     QColor setBackColor, setFontColor, setLinkColor;
     int col;
+    setPalette(m_palette);
     // --------------
     if(QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal))
     {
@@ -564,7 +567,7 @@ void MainWindow::CreateDockWindows()
     connect(_actionsListBox, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
     connect(_actionsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
     connect(_actionsListBox, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
-    //connect(_actionsListBox, SIGNAL(currentRowChanged(int)), this, SLOT(OnActionChange(int)));
+    connect(_actionsListBox, SIGNAL(SelectionChange(int)), this, SLOT(OnActionChange(int)));
     _actionsWidget->setWidget(_actionsListBox);
 
     // "Additional desc" widget
@@ -644,6 +647,39 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             ShowError();
         return;
     }
+
+    if(event->key() == Qt::Key_Up)
+    {
+        if(_actionsListBox->count()!=0)
+        {
+            int newSel = _actionsListBox->GetSelection() - 1;
+            if(newSel < 0)
+                _actionsListBox->SetSelection(_actionsListBox->count()-1);
+            else
+                _actionsListBox->SetSelection(newSel);
+        }
+        return;
+    }
+    if(event->key() == Qt::Key_Down)
+    {
+        if(_actionsListBox->count()!=0)
+        {
+            int newSel = _actionsListBox->GetSelection() + 1;
+            if(newSel <= 0 || newSel >= _actionsListBox->count())
+                _actionsListBox->SetSelection(0);
+            else
+                _actionsListBox->SetSelection(newSel);
+        }
+        return;
+    }
+    if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+        if(_actionsListBox->GetSelection() != -1)
+        {
+            ActionsListBoxDoAction(_actionsListBox->GetSelection());
+            return;
+        }
+
+
     if(event->key() == Qt::Key_Escape)
         if(isFullScreen())
             showNormal();
@@ -677,6 +713,17 @@ void MainWindow::OpenGameFile(const QString &path)
     }
     else
         ShowError();
+}
+
+void MainWindow::ActionsListBoxDoAction(int action)
+{
+    if(action != -1)
+    {
+        if (!QSPSetSelActionIndex(action, QSP_TRUE))
+            ShowError();
+        if (!QSPExecuteSelActionCode(QSP_TRUE))
+            ShowError();
+    }
 }
 
 void MainWindow::OnOpenGame()
@@ -847,10 +894,7 @@ void MainWindow::OnObjectListBoxItemClicked(QListWidgetItem *itemClicked)
 void MainWindow::OnActionsListBoxItemClicked(QListWidgetItem *itemClicked)
 {
     int action = _actionsListBox->row(itemClicked);
-    if (!QSPSetSelActionIndex(action, QSP_TRUE))
-        ShowError();
-    if (!QSPExecuteSelActionCode(QSP_TRUE))
-        ShowError();
+    ActionsListBoxDoAction(action);
 }
 
 void MainWindow::OnObjectChange(int currentRow)

@@ -16,6 +16,9 @@ class QspListBox : public QListWidget
 {
     Q_OBJECT
 
+signals:
+   void SelectionChange(int selection);
+
 public:
     explicit QspListBox(QWidget *parent = 0);
     ~QspListBox();
@@ -39,6 +42,7 @@ public:
     bool SetForegroundColor(const QColor& color);
     void SetGamePath(const QString& path) { m_path = path; }
     void SetSelection(int selection);
+    int GetSelection() { return oldSelection; }
     void SetShowPlainText(bool isPlain);
 
 private:
@@ -62,7 +66,9 @@ private:
     QColor m_linkColor;
     QColor m_textColor;
     QColor m_backgroundColor;
+    QColor m_selectionColor;
     bool showPlainText;
+    int oldSelection;
 };
 
 #endif // QSPLISTBOX_H

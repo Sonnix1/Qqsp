@@ -13,14 +13,16 @@
 
 QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
 {
-    setSelectionMode(QAbstractItemView::SingleSelection);
+    setSelectionMode(QAbstractItemView::NoSelection);
     m_isUseHtml = false;
     m_isShowNums = false;
     showPlainText = false;
     m_linkColor = palette().color(QPalette::Link);
     m_textColor = palette().color(QPalette::Text);
     m_backgroundColor = palette().color(QPalette::Window);
+    m_selectionColor = palette().color(QPalette::Highlight);
     m_font = font();
+    oldSelection = -1;
 }
 
 QspListBox::~QspListBox()
@@ -141,27 +143,25 @@ bool QspListBox::SetForegroundColor(const QColor &color)
 
 void QspListBox::SetSelection(int selection)
 {
-    if(selection == -1)
-        clearSelection();
-    else
+    if(selection != oldSelection)
     {
-        return;
-        if(selection < count())
-        {
+        if(selection != -1 && selection < count())
             if(item(selection) != 0)
-            {
-                clearSelection();
-                setCurrentItem(item(selection), QItemSelectionModel::SelectCurrent);
-                item(selection)->setSelected(true);
                 scrollToItem(item(selection));
-                //setFocus();//TODO: check if required
-            }
-        }
-        else
+        if(selection != -1)
         {
-            clearSelection();
-            //clearFocus();
+            QListWidgetItem *curItem =item(selection);
+            if (curItem != 0)
+                qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
         }
+        if(oldSelection != -1)
+        {
+            QListWidgetItem *curItem =item(oldSelection);
+            if (curItem != 0)
+                qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_backgroundColor);
+        }
+        oldSelection = selection;
+        emit SelectionChange(selection);
     }
 }
 
@@ -175,11 +175,7 @@ void QspListBox::SetShowPlainText(bool isPlain)
 void QspListBox::createList()
 {
     //clear(); //NOTE: clear() only deletes items but does not delete the widgets belonging to it. The widgets will be deleted if the QListWidget is deleted.
-    bool oldState = blockSignals(true);
-    int selection = -1;
-    QList<QListWidgetItem *> selList = selectedItems();
-    if(selList.size() != 0)
-        selection = row(selList.at(0));
+    //bool oldState = blockSignals(true);
     for(int i = 0; i<count(); i++)
     {
         removeItemWidget(item(i));
@@ -231,9 +227,13 @@ void QspListBox::createList()
         item->setSizeHint(sizehint);
         setItemWidget(item, item_widget);
     }
-    if(selection != -1)
-        SetSelection(selection);
-    blockSignals(oldState);
+    if(oldSelection != -1)
+    {
+        QListWidgetItem *curItem =item(oldSelection);
+        if (curItem != 0)
+            qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
+    }
+    //blockSignals(oldState);
 }
 
 QString QspListBox::formatItem(int itemIndex)

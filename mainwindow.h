@@ -86,6 +86,7 @@ private:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void OpenGameFile(const QString& path);
+    void ActionsListBoxDoAction(int action);
 
     // Internal methods
     void UpdateTitle();
@@ -127,6 +128,7 @@ private:
     QColor m_backColor;
     QColor m_linkColor;
     QColor m_fontColor;
+    QPalette m_palette;
     int m_fontSize;
     QString m_fontName;
     QFont m_font;

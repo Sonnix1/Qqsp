@@ -156,9 +156,9 @@ bool QspTextBox::SetBackgroundColor(const QColor &color)
 {
     if(m_backColor != color)
     {
-        //QPalette p = palette();
-        //p.setColor(QPalette::Base, color);
-        //setPalette(p);
+        QPalette p = palette();
+        p.setColor(QPalette::Base, color);
+        setPalette(p);
         m_backColor = color;
         setTextBackgroundColor(color);
         RefreshUI();
