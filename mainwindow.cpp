@@ -23,12 +23,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setUnifiedTitleAndToolBarOnMac(true);
     setDockNestingEnabled(true);
     setFocusPolicy(Qt::StrongFocus);
+    setObjectName(QStringLiteral("MainWindow"));
 
     mainMenuBar = new QMenuBar(this);
     setMenuBar(mainMenuBar);
+    mainMenuBar->setObjectName(QStringLiteral("mainMenuBar"));
     mainToolBar = new QToolBar(this);
+    mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
     addToolBar(mainToolBar);
     mainStatusBar = new QStatusBar(this);
+    mainStatusBar->setObjectName(QStringLiteral("mainStatusBar"));
     setStatusBar(mainStatusBar);
 
     // Set QMainWindow in the center of desktop
@@ -38,10 +42,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     mainStatusBar->setVisible(false);
     mainToolBar->setVisible(false);
-    mainToolBar->setWindowTitle("ToolBar");
+    mainToolBar->setWindowTitle(tr("ToolBar"));
 
     //DragAcceptFiles(true);
     m_timer = new QTimer(this);
+    m_timer->setObjectName(QStringLiteral("m_timer"));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()));
     //SetOverallVolume(100);
     m_savedGamePath.clear();
@@ -51,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     showPlainText = false;
 
     _mainDescTextBox = new QspTextBox(this);
+    _mainDescTextBox->setObjectName(QStringLiteral("_mainDescTextBox"));
     connect(_mainDescTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
     setCentralWidget(_mainDescTextBox);
 
@@ -63,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_fontSize = m_font.pointSize();
 
     m_imgView = new QspImgCanvas(this);
+    m_imgView->setObjectName(QStringLiteral("m_imgView"));
 
     CreateDockWindows();
     //LoadSettings();
@@ -71,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     showCaptions = true;
 
     m_menu = new QMenu(this);
+    m_menu->setObjectName(QStringLiteral("m_menu"));
     connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(OnMenu(QAction*)) );
 
     QSPInit();
@@ -537,8 +545,10 @@ void MainWindow::CreateDockWindows()
 {
     // "Objects" widget
     _objectsWidget = new QDockWidget(tr("Objects"), this);
+    _objectsWidget->setObjectName(QStringLiteral("_objectsWidget"));
     addDockWidget(Qt::RightDockWidgetArea, _objectsWidget, Qt::Vertical);
     _objectsListBox = new QspListBox(this);
+    _objectsListBox->setObjectName(QStringLiteral("_objectsListBox"));
     connect(_objectsListBox, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
     connect(_objectsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
     connect(_objectsListBox, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
@@ -547,8 +557,10 @@ void MainWindow::CreateDockWindows()
 
     // "Actions" widget
     _actionsWidget = new QDockWidget(tr("Actions"), this);
+    _actionsWidget->setObjectName(QStringLiteral("_actionsWidget"));
     addDockWidget(Qt::BottomDockWidgetArea, _actionsWidget, Qt::Vertical);
     _actionsListBox = new QspListBox(this);
+    _actionsListBox->setObjectName(QStringLiteral("_actionsListBox"));
     connect(_actionsListBox, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
     connect(_actionsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
     connect(_actionsListBox, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
@@ -557,15 +569,19 @@ void MainWindow::CreateDockWindows()
 
     // "Additional desc" widget
     _descWidget = new QDockWidget(tr("Additional desc"), this);
+    _descWidget->setObjectName(QStringLiteral("_descWidget"));
     addDockWidget(Qt::BottomDockWidgetArea, _descWidget, Qt::Horizontal);
     _descTextBox = new QspTextBox(this);
+    _descTextBox->setObjectName(QStringLiteral("_descTextBox"));
     connect(_descTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
     _descWidget->setWidget(_descTextBox);
 
     // "Input area" widget
     _inputWidget = new QDockWidget(tr("Input area"), this);
+    _inputWidget->setObjectName(QStringLiteral("_inputWidget"));
     addDockWidget(Qt::BottomDockWidgetArea, _inputWidget, Qt::Vertical);
     _inputTextBox = new QspInputBox(this);
+    _inputTextBox->setObjectName(QStringLiteral("_inputTextBox"));
     _inputWidget->setWidget(_inputTextBox);
     connect(_inputTextBox, SIGNAL(textChanged()), this, SLOT(OnInputTextChange()));
     connect(_inputTextBox, SIGNAL(InputTextEnter()), this, SLOT(OnInputTextEnter()));
