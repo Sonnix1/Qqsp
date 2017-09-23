@@ -100,34 +100,33 @@ void MainWindow::ApplyParams()
     int numVal;
     QSP_CHAR *strVal;
     QColor setBackColor, setFontColor, setLinkColor;
-    bool isRefresh = false;
-    // --------------
-    setBackColor = ((QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_backColor);
     int col;
-    col = setBackColor.red();
-    setBackColor.setRed(setBackColor.blue());
-    setBackColor.setBlue(col);
-    if (setBackColor != m_backColor)
+    // --------------
+    if(QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal) && numVal)
     {
-        if (ApplyBackColor(setBackColor)) isRefresh = true;
+        setBackColor = QColor::fromRgba(numVal);
+        col = setBackColor.red();
+        setBackColor.setRed(setBackColor.blue());
+        setBackColor.setBlue(col);
+        ApplyBackColor(setBackColor);
     }
     // --------------
-    setFontColor = ((QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_fontColor);
-    col = setFontColor.red();
-    setFontColor.setRed(setFontColor.blue());
-    setFontColor.setBlue(col);
-    if (setFontColor != m_fontColor)
+    if(QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal) && numVal)
     {
-        if (ApplyFontColor(setFontColor)) isRefresh = true;
+        setFontColor = QColor::fromRgba(numVal);
+        col = setFontColor.red();
+        setFontColor.setRed(setFontColor.blue());
+        setFontColor.setBlue(col);
+        ApplyFontColor(setFontColor);
     }
     // --------------
-    setLinkColor = ((QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal) && numVal) ? QColor::fromRgba(numVal) : m_linkColor);
-    col = setLinkColor.red();
-    setLinkColor.setRed(setLinkColor.blue());
-    setLinkColor.setBlue(col);
-    if (setLinkColor != m_linkColor)
+    if(QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal) && numVal)
     {
-        if (ApplyLinkColor(setLinkColor)) isRefresh = true;
+        setLinkColor = QColor::fromRgba(numVal);
+        col = setLinkColor.red();
+        setLinkColor.setRed(setLinkColor.blue());
+        setLinkColor.setBlue(col);
+        ApplyLinkColor(setLinkColor);
     }
     // --------------
     QFont new_font = m_font;
@@ -148,8 +147,6 @@ void MainWindow::ApplyParams()
     {
         ApplyFont(new_font);
     }
-    // --------------
-    //if (isRefresh) RefreshUI();
 }
 
 void MainWindow::DeleteMenu()
