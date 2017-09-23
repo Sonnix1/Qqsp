@@ -2,7 +2,7 @@
 #define QSPINPUTBOX_H
 
 #include <QWidget>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 #include <QString>
 #include <QStringList>
 
@@ -10,22 +10,23 @@ namespace Ui {
 class QspInputBox;
 }
 
-//TODO: implement
-class QspInputBox : public QTextEdit
+class QspInputBox : public QPlainTextEdit
 {
     Q_OBJECT
+
+signals:
+   void InputTextEnter();
 
 public:
     explicit QspInputBox(QWidget *parent = 0);
     ~QspInputBox();
-
     // Accessors
-    void SetText(const QString& text, bool isChangeValue = true);
-    QString GetText() const { return m_text; }
+    void SetText(const QString& text);
+    QString GetText();
 
 private:
+    void keyPressEvent(QKeyEvent *event);
     // Fields
-    QString m_text;
     QStringList m_strings;
     int m_selIndex;
 };

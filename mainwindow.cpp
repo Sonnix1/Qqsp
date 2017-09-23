@@ -570,6 +570,8 @@ void MainWindow::CreateDockWindows()
     addDockWidget(Qt::BottomDockWidgetArea, _inputWidget, Qt::Vertical);
     _inputTextBox = new QspInputBox(this);
     _inputWidget->setWidget(_inputTextBox);
+    connect(_inputTextBox, SIGNAL(textChanged()), this, SLOT(OnInputTextChange()));
+    connect(_inputTextBox, SIGNAL(InputTextEnter()), this, SLOT(OnInputTextEnter()));
 
     splitDockWidget(_actionsWidget, _inputWidget, Qt::Vertical);
 }
@@ -854,4 +856,16 @@ void MainWindow::OnActionChange(int currentRow)
 void MainWindow::OnMenu(QAction* action)
 {
     m_menuIndex = action->data().toInt();
+}
+
+void MainWindow::OnInputTextChange()
+{
+    QSPSetInputStrText(qspStringFromQString(_inputTextBox->GetText()));
+}
+
+void MainWindow::OnInputTextEnter()
+{
+    QSPSetInputStrText(qspStringFromQString(_inputTextBox->GetText()));
+    if (!QSPExecUserInput(QSP_TRUE))
+        ShowError();
 }

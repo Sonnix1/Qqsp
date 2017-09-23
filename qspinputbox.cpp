@@ -1,6 +1,6 @@
 #include "qspinputbox.h"
 
-QspInputBox::QspInputBox(QWidget *parent) : QTextEdit(parent)
+QspInputBox::QspInputBox(QWidget *parent) : QPlainTextEdit(parent)
 {
     m_selIndex = -1;
 }
@@ -10,14 +10,29 @@ QspInputBox::~QspInputBox()
 
 }
 
-void QspInputBox::SetText(const QString& text, bool isChangeValue)
+void QspInputBox::SetText(const QString& text)
 {
-    if (m_text != text)
+    bool oldState = blockSignals(true);
+    setPlainText(text);
+    blockSignals(oldState);
+}
+
+QString QspInputBox::GetText()
+{
+    return toPlainText();
+}
+
+void QspInputBox::keyPressEvent(QKeyEvent *event)
+{
+    if ((event->key()==Qt::Key_Return) && (event->modifiers()==Qt::ControlModifier))
     {
-        m_text = text;
-        //if (isChangeValue) ChangeValue(m_text); It also marks the control as not-modified which means that IsModified() would return false immediately after the call to ChangeValue().
-        //The insertion point is set to the start of the control (i.e. position 0) by this function.
-        //This functions does not generate the wxEVT_TEXT event but otherwise is identical to SetValue().
-        if (isChangeValue) setText(m_text);
+        appendPlainText("\n");
+        return;
     }
+    else if (event->key()==Qt::Key_Return)
+    {
+        emit InputTextEnter();
+        return;
+    }
+    QPlainTextEdit::keyPressEvent(event);
 }

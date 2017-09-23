@@ -92,8 +92,6 @@ private:
     void ReCreateGUI();
     void RefreshUI();
     void ApplyFont(const QFont& new_font);
-//    bool ApplyFontSize(int size);
-//    bool ApplyFontName(const wxString& name);
     bool ApplyFontColor(const QColor& color);
     bool ApplyBackColor(const QColor& color);
     bool ApplyLinkColor(const QColor& color);
@@ -162,6 +160,8 @@ private slots:
     void OnObjectChange(int currentRow);
     void OnActionChange(int currentRow);
     void OnMenu(QAction* action);
+    void OnInputTextChange();
+    void OnInputTextEnter();
 
     // Events
 //    void OnInit(); //TODO: add autorun event
@@ -176,9 +176,6 @@ private slots:
 //    void OnToggleCaptions(wxCommandEvent& event);
 //    void OnToggleHotkeys(wxCommandEvent& event);
 //    void OnVolume(wxCommandEvent& event);
-//    void OnAbout(wxCommandEvent& event);
-//    void OnInputTextChange(wxCommandEvent& event);
-//    void OnInputTextEnter(wxCommandEvent& event);
 //    void OnDropFiles(wxDropFilesEvent& event);
 };
 
