@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QFont>
 #include <QColor>
+#include <QString>
 
 namespace Ui {
 class OptionsDialog;
@@ -36,6 +37,7 @@ private:
     QColor m_backColor;
     QColor m_linkColor;
     QColor m_fontColor;
+    QString langid;
 };
 
 #endif // OPTIONSDIALOG_H

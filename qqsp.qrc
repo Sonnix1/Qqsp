@@ -11,4 +11,8 @@
         <file alias="menu/windowmode">icons/windowmode.xpm</file>
         <file alias="logo">icons/logo.png</file>
     </qresource>
+    <qresource prefix="/translations">
+        <file>Qqsp.en.qm</file>
+        <file>Qqsp.ru.qm</file>
+    </qresource>
 </RCC>

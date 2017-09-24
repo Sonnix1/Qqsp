@@ -11,6 +11,7 @@
 #include <QFontDialog>
 #include <QIcon>
 #include <QDesktopServices>
+#include <QLocale>
 
 #include "callbacks_gui.h"
 #include "comtools.h"
@@ -82,6 +83,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     perGameConfig = false;
     autostartLastGame = false;
+
+    langid = QObject::tr("__LANGID__");
+    if(langid == QStringLiteral("__LANGID__"))
+        langid = QLocale::system().name();
 
     CreateDockWindows();
     LoadSettings();
@@ -372,6 +377,8 @@ void MainWindow::LoadSettings(QString filePath)
     lastGame = settings->value("application/lastGame", lastGame).toString();
     autostartLastGame = settings->value("application/autostartLastGame", autostartLastGame).toBool();
 
+    langid = settings->value("application/language", langid).toString();
+
 //	cfg.Read(wxT("General/ShowHotkeys"), &m_isShowHotkeys, false);
 //	cfg.Read(wxT("General/Volume"), &m_volume, 100);
 //	m_transhelper->Load(cfg, wxT("General/Language"));
@@ -424,6 +431,8 @@ void MainWindow::SaveSettings(QString filePath)
 
     settings->setValue("application/lastGame", lastGame);
     settings->setValue("application/autostartLastGame", autostartLastGame);
+
+    settings->setValue("application/language", langid);
 
     settings->sync();
 
@@ -515,6 +524,7 @@ void MainWindow::CreateMenuBar()
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
     _showHideMenu->addAction(action);
 
+    //TODO: MenuBar
     // MenuBar
     //action = _showHideMenu->addAction(tr("MenuBar"));
     //action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));

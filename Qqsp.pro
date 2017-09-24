@@ -51,6 +51,9 @@ HEADERS += \
 FORMS += \
     optionsdialog.ui
 
+TRANSLATIONS = Qqsp.en.ts \
+    Qqsp.ru.ts
+
 DEFINES += _UNICODE
 DEFINES += NOT_RUBY
 #DEFINES += EXPORT

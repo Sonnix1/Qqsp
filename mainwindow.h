@@ -15,6 +15,7 @@
 #include <QFont>
 #include <QCloseEvent>
 #include <QKeyEvent>
+#include <QTranslator>
 
 #include "qsptextbox.h"
 #include "qsplistbox.h"
@@ -99,6 +100,8 @@ public:
     void SetUseLinkColor(bool isUseLinkColor) { m_isUseLinkColor = isUseLinkColor; }
     bool GetUseFontColor() { return m_isUseFontColor; }
     void SetUseFontColor(bool isUseFontColor) { m_isUseFontColor = isUseFontColor; }
+    QString GetLangID() { return langid; }
+    void SetLangID(const QString& new_langid) { langid = new_langid; }
 
 private:
     void CreateMenuBar();
@@ -169,6 +172,7 @@ private:
     bool showPlainText;
     bool showCaptions;
     bool autostartLastGame;
+    QString langid;
 
 private slots:
     void OnOpenGame();
@@ -196,14 +200,6 @@ private slots:
 
     // Events
 //    void OnQuickSave(wxCommandEvent& event);
-//    void OnSelectFont(wxCommandEvent& event);
-//    void OnUseFontSize(wxCommandEvent& event);
-//    void OnSelectFontColor(wxCommandEvent& event);
-//    void OnSelectBackColor(wxCommandEvent& event);
-//    void OnSelectLinkColor(wxCommandEvent& event);
-//    void OnSelectLang(wxCommandEvent& event);
-//    void OnToggleCaptions(wxCommandEvent& event);
-//    void OnToggleHotkeys(wxCommandEvent& event);
 //    void OnVolume(wxCommandEvent& event);
 //    void OnDropFiles(wxDropFilesEvent& event);
 };

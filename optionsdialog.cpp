@@ -3,6 +3,10 @@
 
 #include <QFontDialog>
 #include <QColorDialog>
+#include <QDirIterator>
+#include <QFileInfo>
+#include <QCoreApplication>
+#include <QTranslator>
 
 #include "mainwindow.h"
 
@@ -31,6 +35,29 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     ui->checkBox_fontColor->setChecked(mw->GetUseFontColor());
     ui->checkBox_perGameConfig->setChecked(mw->GetPerGameConfig());
     ui->checkBox_autostart->setChecked(mw->GetAutostart());
+
+    QDirIterator qmIt(QCoreApplication::applicationDirPath(), QStringList() << "*.qm", QDir::Files);
+    while(qmIt.hasNext())
+    {
+        qmIt.next();
+        QFileInfo finfo = qmIt.fileInfo();
+        QTranslator translator;
+        if(translator.load(finfo.completeBaseName(), finfo.absolutePath()))
+            ui->comboBox_language->addItem(translator.translate("__LANG__", "__LANGNAME__"), QVariant(translator.translate("__LANG__", "__LANGID__")));
+    }
+    QDirIterator qmItRC(":/translations/", QStringList() << "*.qm", QDir::Files);
+    while(qmItRC.hasNext())
+    {
+        qmItRC.next();
+        QFileInfo finfo = qmItRC.fileInfo();
+        QTranslator translator;
+        if(translator.load(finfo.completeBaseName(), finfo.absolutePath()))
+            ui->comboBox_language->addItem(translator.translate("__LANG__", "__LANGNAME__"), QVariant(translator.translate("__LANG__", "__LANGID__")));
+    }
+    langid = mw->GetLangID();
+    int index = ui->comboBox_language->findData(langid);
+    if ( index != -1 )
+       ui->comboBox_language->setCurrentIndex(index);
 }
 
 OptionsDialog::~OptionsDialog()
@@ -110,6 +137,8 @@ void OptionsDialog::on_pushButton_ok_clicked()
         mw->SetForegroundColor(m_fontColor);
     mw->SetPerGameConfig(ui->checkBox_perGameConfig->isChecked());
     mw->SetAutostart(ui->checkBox_autostart->isChecked());
+    if(ui->comboBox_language->count() > 0)
+        mw->SetLangID(ui->comboBox_language->itemData(ui->comboBox_language->currentIndex()).toString());
 
     close();
 }
