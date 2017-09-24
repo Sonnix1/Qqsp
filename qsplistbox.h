@@ -7,6 +7,7 @@
 #include <QStringList>
 #include <QFont>
 #include <QColor>
+#include <QResizeEvent>
 
 namespace Ui {
 class QspListBox;
@@ -49,6 +50,7 @@ private:
     // Internal methods
     void createList();
     QString formatItem(int itemIndex);
+    void resizeEvent(QResizeEvent *e);
 
     // Fields
     QString m_outFormat;

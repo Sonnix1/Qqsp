@@ -14,6 +14,7 @@
 QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
 {
     setSelectionMode(QAbstractItemView::NoSelection);
+    setSizeAdjustPolicy(QListWidget::AdjustToContents);
     m_isUseHtml = false;
     m_isShowNums = false;
     showPlainText = false;
@@ -186,9 +187,9 @@ void QspListBox::createList()
         QString item_tmp;
         item_tmp = formatItem(i);
 
-        QListWidgetItem* item;
-        item = new QListWidgetItem(this);
-        addItem(item);
+        QListWidgetItem* listItem;
+        listItem = new QListWidgetItem(this);
+        addItem(listItem);
         QspTextBox *item_widget;
         item_widget = new QspTextBox(this);
 
@@ -224,8 +225,8 @@ void QspListBox::createList()
         //sizehint.setHeight(item_widget->heightForWidth(this->width()));
         item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4);
         QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
-        item->setSizeHint(sizehint);
-        setItemWidget(item, item_widget);
+        listItem->setSizeHint(sizehint);
+        setItemWidget(listItem, item_widget);
     }
     if(oldSelection != -1)
     {
@@ -310,4 +311,23 @@ QString QspListBox::formatItem(int itemIndex)
                     .arg(formatedText);
         }
     }
+}
+
+void QspListBox::resizeEvent(QResizeEvent *e)
+{
+    for(int i = 0; i<count(); i++)
+    {
+        QListWidgetItem* listItem = item(i);
+        if(listItem != 0)
+        {
+            QspTextBox *item_widget = qobject_cast<QspTextBox*>(itemWidget(listItem));
+            if(item_widget != 0)
+            {
+                item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4);
+                QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
+                listItem->setSizeHint(sizehint);
+            }
+        }
+    }
+    QListWidget::resizeEvent(e);
 }
