@@ -78,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_isUseFont = false;
     m_fontSize = m_font.pointSize();
 
+    showCaptions = true;
+
     m_imgView = new QspImgCanvas(this);
     m_imgView->setObjectName(QStringLiteral("m_imgView"));
 
@@ -91,9 +93,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     CreateDockWindows();
     LoadSettings();
     CreateMenuBar();
-
-    showCaptions = true;
-    SetLastPath(QApplication::applicationDirPath());
 
     m_menu = new QMenu(this);
     m_menu->setObjectName(QStringLiteral("m_menu"));
