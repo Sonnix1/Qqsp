@@ -10,6 +10,7 @@
 #include <QPalette>
 #include <QFontDialog>
 #include <QIcon>
+#include <QDesktopServices>
 
 #include "callbacks_gui.h"
 #include "comtools.h"
@@ -927,7 +928,7 @@ void MainWindow::OnLinkClicked(const QUrl &url)
     }
     else
     {
-        //wxLaunchDefaultBrowser(href); //TODO: this
+        QDesktopServices::openUrl(url);
     }
 }
 

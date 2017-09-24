@@ -44,10 +44,6 @@ static const QSP_CHAR *qspStringFromQString(const QString &s)
     return (QSP_CHAR *)s.utf16();
 }
 
-/* Helpers */
-//#define QSP_STATIC_LEN(x) (sizeof(x) / sizeof(QSP_CHAR) - 1) //TODO: remove and replace
-//#define QSP_STATIC_STR(x) (qspStringFromLen(x, QSP_STATIC_LEN(x)))
-
 class QSPCallBacks
 {
 public:

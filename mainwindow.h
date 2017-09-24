@@ -168,8 +168,6 @@ private slots:
     void OnInputTextEnter();
 
     // Events
-//    void OnInit(); //TODO: add autorun event
-
 //    void OnQuickSave(wxCommandEvent& event);
 //    void OnSelectFont(wxCommandEvent& event);
 //    void OnUseFontSize(wxCommandEvent& event);

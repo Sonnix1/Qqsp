@@ -2,6 +2,7 @@
 
 #include <QRect>
 #include <QPalette>
+#include <QDesktopServices>
 
 #include "mainwindow.h"
 
@@ -57,10 +58,6 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
     p.setColor(QPalette::Base, backColor);
     //p.setColor(QPalette::Window, backColor);
     setPalette(p);
-    //#ifdef __WXMSW__
-    //	btnOk->SetBackgroundColour(backColor);
-    //	btnOk->SetForegroundColour(fontColor);
-    //#endif
     // ----------
     setWindowTitle(caption);
     sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
@@ -101,6 +98,6 @@ void QspMsgDlg::OnLinkClicked(const QUrl &url)
     }
     else
     {
-        //LaunchDefaultBrowser(url); //TODO: this
+        QDesktopServices::openUrl(url);
     }
 }
