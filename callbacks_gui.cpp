@@ -291,7 +291,7 @@ void QSPCallBacks::Msg(const QSP_CHAR *str)
     QspMsgDlg dialog(m_frame->GetDesc()->GetBackgroundColor(),
         m_frame->GetDesc()->GetForegroundColor(),
 		m_frame->GetDesc()->GetTextFont(),
-        "Info", //caption
+        MainWindow::tr("Info"), //caption
         QSPTools::qspStrToQt(str),
 		m_isHtml,
         m_gamePath,

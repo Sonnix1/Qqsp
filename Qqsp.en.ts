@@ -124,6 +124,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="callbacks_gui.cpp" line="294"/>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="callbacks_gui.cpp" line="382"/>
         <location filename="mainwindow.cpp" line="793"/>
         <source>Select saved game file</source>
