@@ -241,6 +241,7 @@ void QspTextBox::resizeEvent(QResizeEvent *e)
 
 QVariant QspTextBox::loadResource(int type, const QUrl &name)
 {
+#ifndef _WIN32
     QString new_name = QByteArray::fromPercentEncoding(name.toString().toUtf8());
     for(auto sPath : searchPaths())
     {
@@ -251,4 +252,7 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
                 return QTextBrowser::loadResource(type, QUrl(itDir.relativeFilePath(it.filePath())));
     }
     return QTextBrowser::loadResource(type, QUrl(new_name));
+#else
+    return QTextBrowser::loadResource(type, name);
+#endif
 }
