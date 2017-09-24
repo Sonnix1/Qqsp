@@ -9,153 +9,157 @@
         <translation>Панель инструментов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="265"/>
+        <location filename="mainwindow.cpp" line="264"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="450"/>
+        <location filename="mainwindow.cpp" line="449"/>
         <source>&amp;Quest</source>
         <translation>&amp;Квест</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="453"/>
+        <location filename="mainwindow.cpp" line="452"/>
         <source>Open game...</source>
         <translation>Открыть игру...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="458"/>
+        <location filename="mainwindow.cpp" line="457"/>
         <source>Restart game</source>
         <translation>Перезагрузить игру</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="466"/>
+        <location filename="mainwindow.cpp" line="465"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="472"/>
+        <location filename="mainwindow.cpp" line="471"/>
         <source>&amp;Game</source>
         <translation>&amp;Игра</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="475"/>
+        <location filename="mainwindow.cpp" line="474"/>
         <source>Open saved game...</source>
         <translation>Открыть сохраненную игру...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="479"/>
+        <location filename="mainwindow.cpp" line="478"/>
         <source>Save game...</source>
         <translation>Сохранить игру...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="485"/>
+        <location filename="mainwindow.cpp" line="484"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="488"/>
+        <location filename="mainwindow.cpp" line="487"/>
         <source>Show / Hide</source>
         <translation>Показать / Скрыть</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="513"/>
+        <location filename="mainwindow.cpp" line="512"/>
         <source>Captions</source>
         <translation>Заголовки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="543"/>
+        <location filename="mainwindow.cpp" line="542"/>
         <source>Sound volume...</source>
         <translation>Громкость...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="547"/>
+        <location filename="mainwindow.cpp" line="546"/>
         <source>Window / Fullscreen mode</source>
         <translation>Оконный / Полноэкранный режим</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="555"/>
+        <location filename="mainwindow.cpp" line="554"/>
         <source>Display HTML code as plain text</source>
         <translation>Отображать исходный код HTML</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="566"/>
+        <location filename="mainwindow.cpp" line="565"/>
         <source>Options...</source>
         <translation>Настройки...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="572"/>
+        <location filename="mainwindow.cpp" line="571"/>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="575"/>
+        <location filename="mainwindow.cpp" line="574"/>
         <source>About...</source>
         <translation>О программе...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="583"/>
+        <location filename="mainwindow.cpp" line="582"/>
         <source>Objects</source>
         <translation>Предметы</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="595"/>
+        <location filename="mainwindow.cpp" line="594"/>
         <source>Actions</source>
         <translation>Действия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="607"/>
+        <location filename="mainwindow.cpp" line="606"/>
         <source>Additional desc</source>
         <translation>Дополнительное описание</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="616"/>
+        <location filename="mainwindow.cpp" line="615"/>
         <source>Input area</source>
         <translation>Поле ввода</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="773"/>
+        <location filename="mainwindow.cpp" line="772"/>
         <source>Select game file</source>
         <translation>Выберите файл игры</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="773"/>
+        <location filename="mainwindow.cpp" line="772"/>
         <source>QSP games (*.qsp *.gam)</source>
         <translation>Файлы игры QSP (*.qsp *.gam)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="794"/>
+        <location filename="callbacks_gui.cpp" line="382"/>
+        <location filename="mainwindow.cpp" line="793"/>
         <source>Select saved game file</source>
         <translation>Выберите файл сохраненной игры</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="794"/>
-        <location filename="mainwindow.cpp" line="809"/>
+        <location filename="callbacks_gui.cpp" line="382"/>
+        <location filename="callbacks_gui.cpp" line="400"/>
+        <location filename="mainwindow.cpp" line="793"/>
+        <location filename="mainwindow.cpp" line="808"/>
         <source>Saved game files (*.sav)</source>
         <translation>Файлы сохранений (*.sav)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="809"/>
+        <location filename="callbacks_gui.cpp" line="400"/>
+        <location filename="mainwindow.cpp" line="808"/>
         <source>Select file to save</source>
         <translation>Выберите файл для сохранения</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="840"/>
+        <location filename="mainwindow.cpp" line="839"/>
         <source>, </source>
         <translation>, </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="841"/>
+        <location filename="mainwindow.cpp" line="840"/>
         <source>&lt;h2&gt;Qqsp&lt;/h2&gt;&lt;p&gt;Copyright &amp;copy; 2017, S.&lt;/p&gt;</source>
         <translation>&lt;h2&gt;Qqsp&lt;/h2&gt;&lt;p&gt;Авторские права &amp;copy; 2017, S.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="843"/>
+        <location filename="mainwindow.cpp" line="842"/>
         <source>&lt;p&gt;Application version: %1&lt;br&gt;QSP library version: %2&lt;br&gt;Application compilation date: %3&lt;br&gt;Library compilation date: %4&lt;/p&gt;</source>
         <translation>&lt;p&gt;Версия приложения: %1&lt;br&gt;Версия библиотеки QSP: %2&lt;br&gt;Дата компиляции приложения: %3&lt;br&gt;Дата компиляции библиотеки: %4&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="844"/>
+        <location filename="mainwindow.cpp" line="843"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
@@ -229,13 +233,13 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="main.cpp" line="17"/>
+        <location filename="main.cpp" line="16"/>
         <source>__LANGNAME__</source>
         <translation>Русский</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="18"/>
-        <location filename="mainwindow.cpp" line="87"/>
+        <location filename="main.cpp" line="17"/>
+        <location filename="mainwindow.cpp" line="89"/>
         <source>__LANGID__</source>
         <translation>ru_RU</translation>
     </message>
@@ -259,13 +263,14 @@
 <context>
     <name>__LANG__</name>
     <message>
-        <location filename="optionsdialog.cpp" line="48"/>
-        <location filename="optionsdialog.cpp" line="49"/>
+        <location filename="optionsdialog.cpp" line="46"/>
+        <location filename="optionsdialog.cpp" line="55"/>
         <source>__LANGNAME__</source>
         <translation>Русский</translation>
     </message>
     <message>
-        <location filename="optionsdialog.cpp" line="49"/>
+        <location filename="optionsdialog.cpp" line="46"/>
+        <location filename="optionsdialog.cpp" line="55"/>
         <source>__LANGID__</source>
         <translation>ru_RU</translation>
     </message>

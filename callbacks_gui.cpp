@@ -379,7 +379,7 @@ void QSPCallBacks::OpenGameStatus(const QSP_CHAR *file)
 	else
 	{
         m_frame->EnableControls(false);
-        QString path = QFileDialog::getOpenFileName(m_frame, "Select saved game file", m_frame->GetLastPath(), "Saved game files (*.sav)");
+        QString path = QFileDialog::getOpenFileName(m_frame, MainWindow::tr("Select saved game file"), m_frame->GetLastPath(), MainWindow::tr("Saved game files (*.sav)"));
         m_frame->EnableControls(true);
         if (!path.isEmpty())
 		{
@@ -397,7 +397,7 @@ void QSPCallBacks::SaveGameStatus(const QSP_CHAR *file)
 	else
 	{
         m_frame->EnableControls(false);
-        QString path = QFileDialog::getSaveFileName(m_frame, "Select file to save", m_frame->GetLastPath(), "Saved game files (*.sav)");
+        QString path = QFileDialog::getSaveFileName(m_frame, MainWindow::tr("Select file to save"), m_frame->GetLastPath(), MainWindow::tr("Saved game files (*.sav)"));
 		m_frame->EnableControls(true);
         if (!path.isEmpty())
 		{
