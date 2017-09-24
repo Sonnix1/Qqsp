@@ -5,6 +5,8 @@
 #include <QAbstractScrollArea>
 #include <QScrollBar>
 #include <QPainter>
+#include <QDir>
+#include <QDirIterator>
 
 #include "comtools.h"
 
@@ -49,6 +51,10 @@ void QspTextBox::RefreshUI(bool isScroll)
     QString text;
     if(m_isUseHtml)
     {
+        if(str.endsWith("\r"))
+            str.chop(1);
+        if(str.endsWith("\n"))
+            str.chop(1);
         text = str.replace("\r", "").replace("\n", "<br>");
     }
     else
@@ -231,4 +237,18 @@ void QspTextBox::resizeEvent(QResizeEvent *e)
         CalcImageSize();
     }
     QTextBrowser::resizeEvent(e);
+}
+
+QVariant QspTextBox::loadResource(int type, const QUrl &name)
+{
+    QString new_name = QByteArray::fromPercentEncoding(name.toString().toUtf8());
+    for(auto sPath : searchPaths())
+    {
+        QDir itDir(sPath);
+        QDirIterator it(sPath, QDir::Files, QDirIterator::Subdirectories);
+        while (it.hasNext())
+            if(new_name.compare(itDir.relativeFilePath(it.next()), Qt::CaseInsensitive) == 0)
+                return QTextBrowser::loadResource(type, QUrl(itDir.relativeFilePath(it.filePath())));
+    }
+    return QTextBrowser::loadResource(type, QUrl(new_name));
 }

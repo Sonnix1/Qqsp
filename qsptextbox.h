@@ -7,6 +7,8 @@
 #include <QFont>
 #include <QColor>
 #include <QPixmap>
+#include <QVariant>
+#include <QUrl>
 
 namespace Ui {
 class QspTextBox;
@@ -45,6 +47,7 @@ private:
     void CalcImageSize();
     void paintEvent(QPaintEvent *e);
     void resizeEvent(QResizeEvent *e);
+    QVariant loadResource(int type, const QUrl &name);
 
     // Fields
     bool m_isUseHtml;
