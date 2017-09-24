@@ -15,6 +15,8 @@
 #include "callbacks_gui.h"
 #include "comtools.h"
 
+#include "optionsdialog.h"
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(600, 450);
@@ -66,9 +68,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_linkColor = palette().color(QPalette::Link);
     m_fontColor = palette().color(QPalette::Text);
     m_backColor = palette().color(QPalette::Window);
+    m_isUseBackColor = false;
+    m_isUseLinkColor = false;
+    m_isUseFontColor = false;
 
     m_font = font();
     m_isUseFontSize = false;
+    m_isUseFont = false;
     m_fontSize = m_font.pointSize();
 
     m_imgView = new QspImgCanvas(this);
@@ -121,50 +127,56 @@ void MainWindow::ApplyParams()
     int col;
     setPalette(m_palette);
     // --------------
-    if(QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal))
-    {
-        setBackColor = QColor::fromRgba(numVal);
-        col = setBackColor.red();
-        setBackColor.setRed(setBackColor.blue());
-        setBackColor.setBlue(col);
-        ApplyBackColor(setBackColor);
-    }
+    if(!m_isUseBackColor)
+        if(QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal))
+        {
+            setBackColor = QColor::fromRgba(numVal);
+            col = setBackColor.red();
+            setBackColor.setRed(setBackColor.blue());
+            setBackColor.setBlue(col);
+            ApplyBackColor(setBackColor);
+        }
     // --------------
-    if(QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal))
-    {
-        setFontColor = QColor::fromRgba(numVal);
-        col = setFontColor.red();
-        setFontColor.setRed(setFontColor.blue());
-        setFontColor.setBlue(col);
-        ApplyFontColor(setFontColor);
-    }
+    if(!m_isUseFontColor)
+        if(QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal))
+        {
+            setFontColor = QColor::fromRgba(numVal);
+            col = setFontColor.red();
+            setFontColor.setRed(setFontColor.blue());
+            setFontColor.setBlue(col);
+            ApplyFontColor(setFontColor);
+        }
     // --------------
-    if(QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal))
-    {
-        setLinkColor = QColor::fromRgba(numVal);
-        col = setLinkColor.red();
-        setLinkColor.setRed(setLinkColor.blue());
-        setLinkColor.setBlue(col);
-        ApplyLinkColor(setLinkColor);
-    }
+    if(!m_isUseLinkColor)
+        if(QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal))
+        {
+            setLinkColor = QColor::fromRgba(numVal);
+            col = setLinkColor.red();
+            setLinkColor.setRed(setLinkColor.blue());
+            setLinkColor.setBlue(col);
+            ApplyLinkColor(setLinkColor);
+        }
     // --------------
     QFont new_font = m_font;
-    if(QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal))
-        if(strVal != 0)
-        {
-            new_font.setFamily(QSPTools::qspStrToQt(strVal));
-        }
-    if(!m_isUseFontSize)
+    if(!m_isUseFont)
     {
-        if(QSPGetVarValues(QSP_FMT("FSIZE"), 0, &numVal, &strVal))
-            if(numVal != 0)
+        if(QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal))
+            if(strVal != 0)
             {
-                new_font.setPointSize(numVal);
+                new_font.setFamily(QSPTools::qspStrToQt(strVal));
             }
-    }
-    else
-    {
-        new_font.setPointSize(m_fontSize);
+        if(!m_isUseFontSize)
+        {
+            if(QSPGetVarValues(QSP_FMT("FSIZE"), 0, &numVal, &strVal))
+                if(numVal != 0)
+                {
+                    new_font.setPointSize(numVal);
+                }
+        }
+        else
+        {
+            new_font.setPointSize(m_fontSize);
+        }
     }
     if(new_font != m_font)
     {
@@ -339,44 +351,32 @@ void MainWindow::LoadSettings(QString filePath)
 
     m_isUseFontSize = settings->value("application/isUseFontSize", m_isUseFontSize).toBool();
     m_fontSize = settings->value("application/fontSize", m_fontSize).toInt();
+    m_isUseFont = settings->value("application/isUseFont", m_isUseFont).toBool();
+    m_font = qvariant_cast<QFont>(settings->value("application/font", m_font));
+    if(m_isUseFont)
+        ApplyFont(m_font);
+
+    m_isUseBackColor = settings->value("application/isUseBackColor", m_isUseBackColor).toBool();
+    m_isUseLinkColor = settings->value("application/isUseLinkColor", m_isUseLinkColor).toBool();
+    m_isUseFontColor = settings->value("application/isUseFontColor", m_isUseFontColor).toBool();
+    m_backColor = qvariant_cast<QColor>(settings->value("application/backColor", m_backColor));
+    m_linkColor = qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor));
+    m_fontColor = qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor));
+    if(m_isUseBackColor)
+        ApplyBackColor(m_backColor);
+    if(m_isUseLinkColor)
+        ApplyLinkColor(m_linkColor);
+    if(m_isUseFontColor)
+        ApplyFontColor(m_fontColor);
 
     lastGame = settings->value("application/lastGame", lastGame).toString();
     autostartLastGame = settings->value("application/autostartLastGame", autostartLastGame).toBool();
 
-
-//    cfg.Read(wxT("Colors/BackColor"), &temp, 0xE0E0E0);
-//	m_backColor = wxColour(temp);
-//	cfg.Read(wxT("Colors/FontColor"), &temp, 0x000000);
-//	m_fontColor = wxColour(temp);
-//	cfg.Read(wxT("Colors/LinkColor"), &temp, 0xFF0000);
-//	m_linkColor = wxColour(temp);
-//	temp = wxNORMAL_FONT->GetPointSize();
-//	if (temp < 12) temp = 12;
-//	cfg.Read(wxT("Font/FontSize"), &m_fontSize, temp);
-//	cfg.Read(wxT("Font/FontName"), &m_fontName, wxNORMAL_FONT->GetFaceName());
-//	cfg.Read(wxT("Font/UseFontSize"), &m_isUseFontSize, false);
 //	cfg.Read(wxT("General/ShowHotkeys"), &m_isShowHotkeys, false);
 //	cfg.Read(wxT("General/Volume"), &m_volume, 100);
-//	cfg.Read(wxT("Pos/Left"), &x, 10);
-//	cfg.Read(wxT("Pos/Top"), &y, 10);
-//	cfg.Read(wxT("Pos/Width"), &w, 850);
-//	cfg.Read(wxT("Pos/Height"), &h, 650);
-//	cfg.Read(wxT("Pos/Maximize"), &isMaximize, false);
-//	wxString panels(wxT("layout2|") \
-//		wxT("name=imgview;state=1080035327;dir=1;layer=0;row=0;pos=0;prop=100000;bestw=832;besth=150;minw=50;minh=50;maxw=-1;maxh=-1;floatx=175;floaty=148;floatw=518;floath=372|") \
-//		wxT("name=desc;state=768;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=613;besth=341;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|") \
-//		wxT("name=objs;state=6293500;dir=2;layer=0;row=0;pos=0;prop=100000;bestw=213;besth=324;minw=50;minh=50;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|") \
-//		wxT("name=acts;state=6293500;dir=3;layer=0;row=0;pos=0;prop=117349;bestw=475;besth=185;minw=50;minh=50;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|") \
-//		wxT("name=vars;state=6293500;dir=3;layer=0;row=0;pos=1;prop=82651;bestw=351;besth=185;minw=50;minh=50;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|") \
-//		wxT("name=input;state=2099196;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=832;besth=22;minw=50;minh=20;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|") \
-//		wxT("dock_size(5,0,0)=22|dock_size(2,0,0)=215|dock_size(3,0,0)=204|dock_size(3,1,0)=41|"));
-//	cfg.Read(wxT("General/Panels"), &panels);
 //	m_transhelper->Load(cfg, wxT("General/Language"));
 //	// -------------------------------------------------
 //	SetOverallVolume(m_volume);
-//	ApplyBackColor(m_backColor);
-//	ApplyFontColor(m_fontColor);
-//	ApplyLinkColor(m_linkColor);
 //	ApplyFontSize(m_fontSize);
 //	if (!ApplyFontName(m_fontName))
 //	{
@@ -384,31 +384,6 @@ void MainWindow::LoadSettings(QString filePath)
 //		ApplyFontName(m_fontName);
 //	}
     RefreshUI();
-//	m_settingsMenu->Check(ID_USEFONTSIZE, m_isUseFontSize);
-//	m_manager->LoadPerspective(panels);
-//	m_manager->RestoreMaximizedPane();
-//	// Check for correct position
-//	wxSize winSize(ClientToWindowSize(wxSize(w, h)));
-//	w = winSize.GetWidth();
-//	h = winSize.GetHeight();
-//	wxRect dispRect(wxGetClientDisplayRect());
-//	if (w > dispRect.GetWidth()) w = dispRect.GetWidth();
-//	if (h > dispRect.GetHeight()) h = dispRect.GetHeight();
-//	if (x < dispRect.GetLeft()) x = dispRect.GetLeft();
-//	if (y < dispRect.GetTop()) y = dispRect.GetTop();
-//	if (x + w - 1 > dispRect.GetRight()) x = dispRect.GetRight() - w + 1;
-//	if (y + h - 1 > dispRect.GetBottom()) y = dispRect.GetBottom() - h + 1;
-//	// --------------------------
-//	SetSize(x, y, w, h);
-//	ShowPane(ID_VIEWPIC, false);
-//	ShowPane(ID_ACTIONS, true);
-//	ShowPane(ID_OBJECTS, true);
-//	ShowPane(ID_VARSDESC, true);
-//	ShowPane(ID_INPUT, true);
-//	ReCreateGUI();
-//	if (isMaximize) Maximize();
-//	Show();
-//	m_manager->Update();
     delete settings;
 }
 
@@ -437,25 +412,24 @@ void MainWindow::SaveSettings(QString filePath)
 
     settings->setValue("application/isUseFontSize", m_isUseFontSize);
     settings->setValue("application/fontSize", m_fontSize);
+    settings->setValue("application/isUseFont", m_isUseFont);
+    settings->setValue("application/font", m_font);
+
+    settings->setValue("application/isUseBackColor", m_isUseBackColor);
+    settings->setValue("application/isUseLinkColor", m_isUseLinkColor);
+    settings->setValue("application/isUseFontColor", m_isUseFontColor);
+    settings->setValue("application/backColor", m_backColor);
+    settings->setValue("application/linkColor", m_linkColor);
+    settings->setValue("application/fontColor", m_fontColor);
 
     settings->setValue("application/lastGame", lastGame);
     settings->setValue("application/autostartLastGame", autostartLastGame);
 
     settings->sync();
 
-
-//    cfg.Write(wxT("Colors/BackColor"), m_backColor.Blue() << 16 | m_backColor.Green() << 8 | m_backColor.Red());
-//	cfg.Write(wxT("Colors/FontColor"), m_fontColor.Blue() << 16 | m_fontColor.Green() << 8 | m_fontColor.Red());
-//	cfg.Write(wxT("Colors/LinkColor"), m_linkColor.Blue() << 16 | m_linkColor.Green() << 8 | m_linkColor.Red());
-//	cfg.Write(wxT("Font/FontSize"), m_fontSize);
-//	cfg.Write(wxT("Font/FontName"), m_fontName);
-//	cfg.Write(wxT("Font/UseFontSize"), m_isUseFontSize);
 //	cfg.Write(wxT("General/Volume"), m_volume);
 //	cfg.Write(wxT("General/ShowHotkeys"), m_isShowHotkeys);
-//	cfg.Write(wxT("General/Panels"), m_manager->SavePerspective());
 //	m_transhelper->Save(cfg, wxT("General/Language"));
-//	GetPosition(&x, &y);
-//	GetClientSize(&w, &h);
     delete settings;
 }
 
@@ -828,6 +802,15 @@ void MainWindow::OnSaveGame()
     }
 }
 
+void MainWindow::OnOptions()
+{
+    OptionsDialog optdlg(this);
+    optdlg.exec();
+    if(!m_configPath.isEmpty())
+        SaveSettings(m_configPath);
+    SaveSettings();
+}
+
 void MainWindow::OnAbout()
 {
     QPixmap icon = QPixmap(":/gfx/logo");
@@ -893,6 +876,11 @@ void MainWindow::OnToggleWinMode()
 void MainWindow::OnToggleShowPlainText(bool checked)
 {
     SetShowPlainText(checked);
+}
+
+void MainWindow::OnChangeSoundVolume()
+{
+
 }
 
 void MainWindow::OnNewGame()

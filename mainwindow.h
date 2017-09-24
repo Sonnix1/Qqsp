@@ -75,8 +75,30 @@ public:
     QColor GetLinkColor() { return m_linkColor; }
     QColor GetBackgroundColor() { return m_backColor; }
     QColor GetForegroundColor() { return m_fontColor; }
+    void SetLinkColor(const QColor& new_color) { if(m_isUseLinkColor) ApplyLinkColor(new_color); }
+    void SetBackgroundColor(const QColor& new_color) { if(m_isUseBackColor) ApplyBackColor(new_color); }
+    void SetForegroundColor(const QColor& new_color) { if(m_isUseFontColor) ApplyFontColor(new_color); }
 
     void SetShowPlainText(bool isPlain);
+
+    bool GetUseFontSize() { return m_isUseFontSize; }
+    void SetUseFontSize(bool isUseFontS) { m_isUseFontSize = isUseFontS; }
+    int GetFontSize() { return m_fontSize; }
+    void SetFontSize(int fontS) { m_fontSize = fontS; }
+    bool GetUseFont() { return m_isUseFont; }
+    void SetUseFont(bool isUseFont) { m_isUseFont = isUseFont; }
+    QFont GetFont() { return m_font; }
+    void SetFont(const QFont& new_font) { m_font = new_font; if(m_isUseFont) ApplyFont(new_font); }
+    bool GetAutostart() { return autostartLastGame; }
+    void SetAutostart(bool isAutostart) { autostartLastGame = isAutostart; }
+    bool GetPerGameConfig() { return perGameConfig; }
+    void SetPerGameConfig(bool isPerGameConfig) { perGameConfig = isPerGameConfig; }
+    bool GetUseBackColor() { return m_isUseBackColor; }
+    void SetUseBackColor(bool isUseBackColor) { m_isUseBackColor = isUseBackColor; }
+    bool GetUseLinkColor() { return m_isUseLinkColor; }
+    void SetUseLinkColor(bool isUseLinkColor) { m_isUseLinkColor = isUseLinkColor; }
+    bool GetUseFontColor() { return m_isUseFontColor; }
+    void SetUseFontColor(bool isUseFontColor) { m_isUseFontColor = isUseFontColor; }
 
 private:
     void CreateMenuBar();
@@ -130,10 +152,14 @@ private:
     QColor m_backColor;
     QColor m_linkColor;
     QColor m_fontColor;
+    bool m_isUseBackColor;
+    bool m_isUseLinkColor;
+    bool m_isUseFontColor;
     QPalette m_palette;
     int m_fontSize;
     QFont m_font;
     bool m_isUseFontSize;
+    bool m_isUseFont;
     bool m_isProcessEvents;
     bool m_isQuit;
     bool m_keyPressedWhileDisabled;
@@ -149,13 +175,13 @@ private slots:
     void OnRestartGame();
     void OnOpenSavedGame();
     void OnSaveGame(); //TODO: add quick save/load
-//    void OnOptions();
+    void OnOptions();
     void OnAbout();
     void OnToggleCaptions(bool checked);
 //    void OnToggleHotkeys();
     void OnToggleWinMode();
     void OnToggleShowPlainText(bool checked);
-//    void OnChangeSoundVolume();
+    void OnChangeSoundVolume();
     void OnNewGame();
     void OnTimer();
     void OnLinkClicked(const QUrl& url);

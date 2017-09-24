@@ -33,7 +33,8 @@ SOURCES += \
     qspmsgdlg.cpp \
     qspinputdlg.cpp \
     callbacks_gui.cpp \
-    comtools.cpp
+    comtools.cpp \
+    optionsdialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -44,7 +45,11 @@ HEADERS += \
     qspmsgdlg.h \
     qspinputdlg.h \
     callbacks_gui.h \
-    comtools.h
+    comtools.h \
+    optionsdialog.h
+
+FORMS += \
+    optionsdialog.ui
 
 DEFINES += _UNICODE
 DEFINES += NOT_RUBY
