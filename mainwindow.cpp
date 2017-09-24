@@ -515,6 +515,16 @@ void MainWindow::CreateMenuBar()
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
     _showHideMenu->addAction(action);
 
+    // MenuBar
+    //action = _showHideMenu->addAction(tr("MenuBar"));
+    //action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
+    //action->setCheckable(true);
+    //if(mainMenuBar->isVisible())
+    //    action->setChecked(true);
+    //else
+    //    action->setChecked(false);
+    //connect(action, SIGNAL(toggled(bool)), this, SLOT(OnToggleMenuBar(bool)));
+
     // Hotkeys for actions item
     //_showHideMenu->addAction(tr("Hotkeys for actions"), this, SLOT(OnToggleHotkeys()),
     //    QKeySequence(Qt::CTRL + Qt::Key_6));
@@ -859,6 +869,11 @@ void MainWindow::OnToggleCaptions(bool checked)
         delete descTitleBarWidget;
     if(inputTitleBarWidget)
         delete inputTitleBarWidget;
+}
+
+void MainWindow::OnToggleMenuBar(bool checked)
+{
+    mainMenuBar->setVisible(checked);
 }
 
 void MainWindow::OnToggleWinMode()

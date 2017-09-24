@@ -178,6 +178,7 @@ private slots:
     void OnOptions();
     void OnAbout();
     void OnToggleCaptions(bool checked);
+    void OnToggleMenuBar(bool checked);
 //    void OnToggleHotkeys();
     void OnToggleWinMode();
     void OnToggleShowPlainText(bool checked);
