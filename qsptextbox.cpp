@@ -13,6 +13,10 @@
 QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
 {
     //SetBorders(5);
+    setFocusPolicy(Qt::NoFocus);
+    setFrameStyle(QFrame::NoFrame);
+    setFrameShadow(QFrame::Plain);
+    setContentsMargins(0,0,0,0);
     m_isUseHtml = false;
     showPlainText = false;
     m_linkColor = palette().color(QPalette::Link);

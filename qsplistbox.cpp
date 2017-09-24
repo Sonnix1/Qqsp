@@ -14,7 +14,13 @@
 QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
 {
     setSelectionMode(QAbstractItemView::NoSelection);
+    setFocusPolicy(Qt::NoFocus);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSizeAdjustPolicy(QListWidget::AdjustToContents);
+    setContentsMargins(0,0,0,0);
+    setSpacing(-1);
+    setFrameStyle(QFrame::NoFrame);
+    setFrameShadow(QFrame::Plain);
     m_isUseHtml = false;
     m_isShowNums = false;
     showPlainText = false;
@@ -192,6 +198,7 @@ void QspListBox::createList()
         addItem(listItem);
         QspTextBox *item_widget;
         item_widget = new QspTextBox(this);
+        item_widget->setFrameStyle(QFrame::Box);
 
         item_widget->SetIsHtml(m_isUseHtml);
         item_widget->SetShowPlainText(showPlainText);
