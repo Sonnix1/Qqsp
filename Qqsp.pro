@@ -139,6 +139,15 @@ enable-debug {
   HEADERS += qsp/memwatch.h
 }
 
+#CONFIG += enable-webbox
+
+enable-webbox {
+  DEFINES += _WEBBOX
+  QT += webenginewidgets
+  SOURCES += qspwebbox.cpp
+  HEADERS += qspwebbox.h
+}
+
 isEmpty(TARGET_EXT) {
     win32 {
         TARGET_CUSTOM_EXT = .exe

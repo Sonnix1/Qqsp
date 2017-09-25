@@ -1,4 +1,4 @@
-#include "qsptextbox.h"
+#include "qspwebbox.h"
 
 #include <QFileInfo>
 #include <QPalette>
@@ -8,12 +8,11 @@
 
 #include "comtools.h"
 
-QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
+QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
 {
-    //SetBorders(5);
     setFocusPolicy(Qt::NoFocus);
-    setFrameStyle(QFrame::NoFrame);
-    setFrameShadow(QFrame::Plain);
+    //setFrameStyle(QFrame::NoFrame);
+    //setFrameShadow(QFrame::Plain);
     setContentsMargins(0,0,0,0);
     m_isUseHtml = false;
     showPlainText = false;
@@ -21,21 +20,15 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     m_fontColor = palette().color(QPalette::Text);
     m_backColor = palette().color(QPalette::Window);
     m_font = font();
-    setOpenLinks(false);
-//	m_font = *wxNORMAL_FONT;
-//	m_outFormat = wxString::Format(
-//		wxT("<HTML><META HTTP-EQUIV = \"Content-Type\" CONTENT = \"text/html; charset=%s\">")
-//		wxT("<BODY><FONT COLOR = #%%s>%%s</FONT></BODY></HTML>"),
-//		wxFontMapper::GetEncodingName(wxLocale::GetSystemEncoding()).wx_str()
-//	);
+    //setOpenLinks(false);
 }
 
-QspTextBox::~QspTextBox()
+QspWebBox::~QspWebBox()
 {
 
 }
 
-void QspTextBox::SetIsHtml(bool isHtml)
+void QspWebBox::SetIsHtml(bool isHtml)
 {
     if (m_isUseHtml != isHtml)
     {
@@ -44,34 +37,34 @@ void QspTextBox::SetIsHtml(bool isHtml)
     }
 }
 
-void QspTextBox::RefreshUI(bool isScroll)
+void QspWebBox::RefreshUI(bool isScroll)
 {
     QString color(QSPTools::GetHexColor(GetForegroundColor()));
     //QString str(QByteArray::fromPercentEncoding(m_text.replace("%", "%25").toUtf8()));
-    //QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str)));
     QString str = m_text;
-    QString text;
-    if(m_isUseHtml)
-    {
-        if(str.endsWith("\r"))
-            str.chop(1);
-        if(str.endsWith("\n"))
-            str.chop(1);
-        text = str.replace("\r", "").replace("\n", "<br>");
-    }
-    else
-    {
-        text = Qt::convertFromPlainText(str);
-    }
+    QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str)));
+//    QString text;
+//    if(m_isUseHtml)
+//    {
+//        if(str.endsWith("\r"))
+//            str.chop(1);
+//        if(str.endsWith("\n"))
+//            str.chop(1);
+//        text = str.replace("\r", "").replace("\n", "<br>");
+//    }
+//    else
+//    {
+//        text = Qt::convertFromPlainText(str);
+//    }
     //TODO: set colour and font
     if(showPlainText)
-        setPlainText(text);
+        ;//setPlainText(text);
     else
-        setHtml(text);
-    if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+        setHtml(text, QUrl(m_path));
+    //if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
-void QspTextBox::LoadBackImage(const QString& fileName)
+void QspWebBox::LoadBackImage(const QString& fileName)
 {
     QFileInfo file(m_path + fileName);
     QString path(file.absoluteFilePath());
@@ -93,7 +86,7 @@ void QspTextBox::LoadBackImage(const QString& fileName)
     }
 }
 
-void QspTextBox::SetText(const QString& text, bool isScroll)
+void QspWebBox::SetText(const QString& text, bool isScroll)
 {
     if (m_text != text)
     {
@@ -107,17 +100,17 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
     }
 }
 
-void QspTextBox::SetTextFont(const QFont& new_font)
+void QspWebBox::SetTextFont(const QFont& new_font)
 {
     if (m_font != new_font)
     {
         m_font = new_font;
         setFont(new_font); //TODO: check which one of this to use
-        setCurrentFont(new_font);
+        //setCurrentFont(new_font);
     }
 }
 
-bool QspTextBox::SetLinkColor(const QColor &color)
+bool QspWebBox::SetLinkColor(const QColor &color)
 {
     //QPalette p = palette();
     //p.setBrush( QPalette::Link, clr);
@@ -127,7 +120,7 @@ bool QspTextBox::SetLinkColor(const QColor &color)
     if(m_linkColor != color)
     {
         QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }").arg(color.name());
-        document()->setDefaultStyleSheet(sheet);
+        //document()->setDefaultStyleSheet(sheet);
         m_linkColor = color;
         RefreshUI();
         return true;
@@ -135,32 +128,32 @@ bool QspTextBox::SetLinkColor(const QColor &color)
     return false;
 }
 
-void QspTextBox::SetGamePath(const QString &path)
+void QspWebBox::SetGamePath(const QString &path)
 {
     m_path = path;
-    setSearchPaths(QStringList(path));
+    //setSearchPaths(QStringList(path));
 }
 
-void QspTextBox::SetBackgroundImage(const QPixmap& bmpBg)
+void QspWebBox::SetBackgroundImage(const QPixmap& bmpBg)
 {
     m_bmpBg = bmpBg;
     CalcImageSize();
 }
 
 //Returns the background color of the window.
-QColor QspTextBox::GetBackgroundColor()
+QColor QspWebBox::GetBackgroundColor()
 {
     return m_backColor;
 }
 
 //The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change their colour only partially or even not at all.
-QColor QspTextBox::GetForegroundColor()
+QColor QspWebBox::GetForegroundColor()
 {
     return m_fontColor;
 }
 
 //Returns true if the color was really changed, false if it was already set to this color and nothing was done.
-bool QspTextBox::SetBackgroundColor(const QColor &color)
+bool QspWebBox::SetBackgroundColor(const QColor &color)
 {
     if(m_backColor != color)
     {
@@ -168,14 +161,14 @@ bool QspTextBox::SetBackgroundColor(const QColor &color)
         p.setColor(QPalette::Base, color);
         setPalette(p);
         m_backColor = color;
-        setTextBackgroundColor(color);
+        //setTextBackgroundColor(color);
         RefreshUI();
         return true;
     }
     return false;
 }
 
-bool QspTextBox::SetForegroundColor(const QColor &color)
+bool QspWebBox::SetForegroundColor(const QColor &color)
 {
     //TODO: find alternative
     //NOTE: From Qt documentation
@@ -183,7 +176,7 @@ bool QspTextBox::SetForegroundColor(const QColor &color)
     if(m_fontColor != color)
     {
         m_fontColor = color;
-        setTextColor(color);
+        //setTextColor(color);
         QPalette p = palette();
         p.setColor(QPalette::Text, color);
         p.setColor(QPalette::WindowText, color);
@@ -194,13 +187,13 @@ bool QspTextBox::SetForegroundColor(const QColor &color)
     return false;
 }
 
-void QspTextBox::SetShowPlainText(bool isPlain)
+void QspWebBox::SetShowPlainText(bool isPlain)
 {
     showPlainText = isPlain;
     RefreshUI();
 }
 
-void QspTextBox::CalcImageSize()
+void QspWebBox::CalcImageSize()
 {
     if (!m_bmpBg.isNull())
     {
@@ -222,27 +215,26 @@ void QspTextBox::CalcImageSize()
     }
 }
 
-void QspTextBox::paintEvent(QPaintEvent *e)
-{
-    if (!m_bmpBg.isNull())
-    {
-        QPainter painter(viewport());
-        painter.drawImage(m_posX, m_posY, *(new QImage(m_bmpRealBg.toImage())));
-    }
-    QTextBrowser::paintEvent(e);
-}
+//void QspWebBox::paintEvent(QPaintEvent *e)
+//{
+//    if (!m_bmpBg.isNull())
+//    {
+//        QPainter painter(viewport());
+//        painter.drawImage(m_posX, m_posY, *(new QImage(m_bmpRealBg.toImage())));
+//    }
+//    QspWebBox::paintEvent(e);
+//}
 
-void QspTextBox::resizeEvent(QResizeEvent *e)
-{
-    if (!m_bmpBg.isNull())
-    {
-        CalcImageSize();
-    }
-    QTextBrowser::resizeEvent(e);
-}
-
-QVariant QspTextBox::loadResource(int type, const QUrl &name)
-{
-    QString new_name = QString(QByteArray::fromPercentEncoding(name.toString().toUtf8()));
-    return QTextBrowser::loadResource(type, QUrl(QSPTools::GetCaseInsensitiveFilePath(m_path, new_name)));
-}
+//void QspWebBox::resizeEvent(QResizeEvent *e)
+//{
+//    if (!m_bmpBg.isNull())
+//    {
+//        CalcImageSize();
+//    }
+//    QspWebBox::resizeEvent(e);
+//}
+//QVariant QspWebBox::loadResource(int type, const QUrl &name)
+//{
+//    QString new_name = QString(QByteArray::fromPercentEncoding(name.toString().toUtf8()));
+//    return QspWebBox::loadResource(type, QUrl(QSPTools::GetCaseInsensitiveFilePath(m_path, new_name)));
+//}

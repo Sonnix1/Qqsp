@@ -580,9 +580,13 @@ void MainWindow::CreateMenuBar()
 void MainWindow::CreateDockWindows()
 {
     // "Main desc" widget
+#ifndef _WEBBOX
     _mainDescTextBox = new QspTextBox(this);
-    _mainDescTextBox->setObjectName(QStringLiteral("_mainDescTextBox"));
     connect(_mainDescTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
+#else
+    _mainDescTextBox = new QspWebBox(this);
+#endif
+    _mainDescTextBox->setObjectName(QStringLiteral("_mainDescTextBox"));
     _mainDescWidget = new QDockWidget(tr("Main desc"), this);
     _mainDescWidget->setObjectName(QStringLiteral("_mainDescWidget"));
     addDockWidget(Qt::TopDockWidgetArea, _mainDescWidget, Qt::Vertical);
@@ -617,9 +621,13 @@ void MainWindow::CreateDockWindows()
     _descWidget = new QDockWidget(tr("Additional desc"), this);
     _descWidget->setObjectName(QStringLiteral("_descWidget"));
     addDockWidget(Qt::BottomDockWidgetArea, _descWidget, Qt::Horizontal);
+#ifndef _WEBBOX
     _descTextBox = new QspTextBox(this);
-    _descTextBox->setObjectName(QStringLiteral("_descTextBox"));
     connect(_descTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
+#else
+    _descTextBox = new QspWebBox(this);
+#endif
+    _descTextBox->setObjectName(QStringLiteral("_descTextBox"));
     _descWidget->setWidget(_descTextBox);
 
     // "Input area" widget
@@ -935,9 +943,17 @@ void MainWindow::OnLinkClicked(const QUrl &url)
     {
         QObject* obj = sender();
         if (obj == _mainDescTextBox)
-            _mainDescTextBox->setSource(url);
+#ifndef _WEBBOX
+            _mainDescTextBox->setSource(url); //TODO: check if works
+#else
+            _mainDescTextBox->setUrl(url); //TODO: check if works
+#endif
         else
+#ifndef _WEBBOX
             _descTextBox->setSource(url);
+#else
+            _descTextBox->setUrl(url);
+#endif
     }
     else if (href.startsWith("EXEC:", Qt::CaseInsensitive))
     {

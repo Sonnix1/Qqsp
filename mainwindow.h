@@ -21,6 +21,9 @@
 #include "qsplistbox.h"
 #include "qspinputbox.h"
 #include "qspimgcanvas.h"
+#ifdef _WEBBOX
+#include "qspwebbox.h"
+#endif
 
 #include <qsp_default.h>
 
@@ -53,8 +56,13 @@ public:
 
     // Accessors
     QTimer *GetTimer() const { return m_timer; }
+#ifndef _WEBBOX
     QspTextBox *GetDesc() const { return _mainDescTextBox; }
     QspTextBox *GetVars() const { return _descTextBox; }
+#else
+    QspWebBox *GetDesc() const { return _mainDescTextBox; }
+    QspWebBox *GetVars() const { return _descTextBox; }
+#endif
     QspInputBox *GetInput() const { return _inputTextBox; }
     QspListBox *GetActions() const { return _actionsListBox; }
     QspListBox *GetObjects() const { return _objectsListBox; }
@@ -131,10 +139,16 @@ private:
     QMenu*			_gameMenu; // was wxMenu *m_gameMenu;
     QMenu*			_settingsMenu; // was wxMenu *m_settingsMenu;
     QMenu*			_showHideMenu; //Show / Hide submenu
+#ifndef _WEBBOX
     QspTextBox*		_mainDescTextBox; //m_desc
+    QspTextBox*		_descTextBox; //m_vars ID_VARSDESC
+#else
+    QspWebBox*		_mainDescTextBox; //m_desc
+    QspWebBox*		_descTextBox; //m_vars ID_VARSDESC
+#endif
     QspListBox*		_objectsListBox; //m_objects
     QspListBox*		_actionsListBox; //m_actions
-    QspTextBox*		_descTextBox; //m_vars ID_VARSDESC
+
     QspInputBox*	_inputTextBox; //m_input
     QDockWidget*	_objectsWidget; //m_objects
     QDockWidget*	_actionsWidget; //m_actions
