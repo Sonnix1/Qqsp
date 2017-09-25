@@ -4,21 +4,10 @@
 #include <QString>
 #include <qsp_default.h>
 #include <QMap>
+#include <QMediaPlayer>
 #include "mainwindow.h"
 
-typedef struct
-{
-    //FMOD_CHANNEL *Channel;
-    //FMOD_SOUND *Sound;
-    int Volume;
-
-    void Free() const
-    {
-        //FMOD_Sound_Release(Sound);
-    }
-} QSPSound;
-
-typedef QMap<QString, QSPSound> QSPSounds;
+typedef QMap<QString, QMediaPlayer*> QSPSounds;
 
 //static QSPString qspStringFromPair(const QSP_CHAR *start, const QSP_CHAR *end)
 //{
@@ -81,7 +70,6 @@ private:
     static QString m_gamePath;
     static MainWindow *m_frame;
     static bool m_isHtml;
-    //static FMOD_SYSTEM *m_sys;
     static QSPSounds m_sounds;
     static float m_volumeCoeff;
 };

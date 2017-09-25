@@ -35,6 +35,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     ui->checkBox_fontColor->setChecked(mw->GetUseFontColor());
     ui->checkBox_perGameConfig->setChecked(mw->GetPerGameConfig());
     ui->checkBox_autostart->setChecked(mw->GetAutostart());
+    ui->horizontalSlider_volume->setValue(mw->GetOverallVolume() * 100);
 
     QDirIterator qmIt(QCoreApplication::applicationDirPath(), QStringList() << "*.qm", QDir::Files);
     while(qmIt.hasNext())
@@ -139,6 +140,8 @@ void OptionsDialog::on_pushButton_ok_clicked()
     mw->SetAutostart(ui->checkBox_autostart->isChecked());
     if(ui->comboBox_language->count() > 0)
         mw->SetLangID(ui->comboBox_language->itemData(ui->comboBox_language->currentIndex()).toString());
+    if(mw->GetOverallVolume() != ui->horizontalSlider_volume->value() / 100)
+        mw->SetOverallVolume(ui->horizontalSlider_volume->value() / 100);
 
     close();
 }

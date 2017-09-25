@@ -14,26 +14,15 @@
 QString QSPCallBacks::m_gamePath;
 MainWindow *QSPCallBacks::m_frame;
 bool QSPCallBacks::m_isHtml;
-//FMOD_SYSTEM *QSPCallBacks::m_sys;
 QSPSounds QSPCallBacks::m_sounds;
 float QSPCallBacks::m_volumeCoeff;
 
 void QSPCallBacks::Init(MainWindow *frame)
 {
 	m_frame = frame;
-	m_volumeCoeff = 1.0;
+    m_volumeCoeff = 1.0f;
 
-    //FMOD_System_Create(&m_sys);
     QString soundPath(QSPTools::GetAppPath() + QSP_SOUNDPLUGINS);
-    //FMOD_System_SetPluginPath(m_sys, wxConvFile.cWX2MB(soundPath.c_str()));
-//	#ifdef __WXMSW__
-//		FMOD_System_SetOutput(m_sys, FMOD_OUTPUTTYPE_DSOUND);
-//	#elif __WXOSX__
-//		FMOD_System_SetOutput(m_sys, FMOD_OUTPUTTYPE_COREAUDIO);
-//	#else
-//		FMOD_System_SetOutput(m_sys, FMOD_OUTPUTTYPE_ALSA);
-//	#endif
-//	FMOD_System_Init(m_sys, 32, FMOD_INIT_NORMAL, 0);
 
 	QSPSetCallBack(QSP_CALL_SETTIMER, (QSP_CALLBACK)&SetTimer);
 	QSPSetCallBack(QSP_CALL_REFRESHINT, (QSP_CALLBACK)&RefreshInt);
@@ -60,8 +49,6 @@ void QSPCallBacks::Init(MainWindow *frame)
 void QSPCallBacks::DeInit()
 {
     CloseFile(0);
-    //FMOD_System_Close(m_sys);
-    //FMOD_System_Release(m_sys);
 }
 
 void QSPCallBacks::SetTimer(int msecs)
@@ -94,8 +81,6 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	if (QSPIsVarsDescChanged())
 	{
         m_frame->GetVars()->SetText(QSPTools::qspStrToQt(varsDesc), isScroll);
-        //QSPString varsDesc = QSPGetVarsDesc();
-        //m_frame->GetVars()->SetText(QSPTools::qspStrToQt(varsDesc), isScroll);
 	}
 	// -------------------------------
 	int fullRefreshCount = QSPGetFullRefreshCount();
@@ -108,8 +93,6 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	if (QSPIsMainDescChanged())
 	{
         m_frame->GetDesc()->SetText(QSPTools::qspStrToQt(mainDesc), isScroll);
-        //QSPString mainDesc = QSPGetMainDesc();
-        //m_frame->GetDesc()->SetText(QSPTools::qspStrToQt(mainDesc), isScroll);
 	}
 	// -------------------------------
 	m_frame->GetActions()->SetIsHtml(m_isHtml);
@@ -140,8 +123,6 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
     }
 	m_frame->GetObjects()->SetSelection(QSPGetSelObjectIndex());
 	// -------------------------------
-    //if (QSPGetVarValues(QSP_STATIC_STR(QSP_FMT("BACKIMAGE")), 0, &numVal, &strVal) && strVal.Str && strVal.Str != strVal.End)
-    //    m_frame->GetDesc()->LoadBackImage(m_gamePath + QSPTools::qspStrToQt(strVal));
     if (QSPGetVarValues(QSP_FMT("BACKIMAGE"), 0, &numVal, &strVal) && strVal)
         m_frame->GetDesc()->LoadBackImage(m_gamePath + QSPTools::qspStrToQt(strVal));
 	else
@@ -167,63 +148,45 @@ void QSPCallBacks::SetInputStrText(const QSP_CHAR *text)
 
 QSP_BOOL QSPCallBacks::IsPlay(const QSP_CHAR *file)
 {
-//    FMOD_BOOL playing = FALSE;
-//	QSPSounds::iterator elem = m_sounds.find(wxFileName(file, wxPATH_DOS).GetFullPath().Upper());
-//	if (elem != m_sounds.end())
-//		FMOD_Channel_IsPlaying(((QSPSound *)(&elem->second))->Channel, &playing);
-//	return (playing == TRUE);
-    return QSP_FALSE;
+    QSP_BOOL playing = QSP_FALSE;
+    QSPSounds::iterator elem = m_sounds.find(QSPTools::qspStrToQt(file));
+    if (elem != m_sounds.end())
+        if(elem.value()->state() == QMediaPlayer::PlayingState)
+            playing = QSP_TRUE;
+    return playing;
 }
 
 void QSPCallBacks::CloseFile(const QSP_CHAR *file)
 {
     if (file)
 	{
-        QSPSounds::iterator elem = m_sounds.find(QFileInfo(QSPTools::qspStrToQt(file)).absoluteFilePath().toUpper());
+        QSPSounds::iterator elem = m_sounds.find(QFileInfo(QSPTools::qspStrToQt(file)).absoluteFilePath());
 		if (elem != m_sounds.end())
 		{
-            elem.value().Free();
-            //((QSPSound *)(&elem->second))->Free();
+            delete elem.value();
 			m_sounds.erase(elem);
 		}
 	}
 	else
 	{
-		for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
-            i.value().Free();
-            //((QSPSound *)(&i->second))->Free();
+        for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
+            delete i.value();
 		m_sounds.clear();
 	}
 }
 
 void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
 {
-//	FMOD_SOUND *newSound;
-//	FMOD_CHANNEL *newChannel;
-//	QSPSound snd;
-//	if (SetVolume(file, volume)) return;
-//	CloseFile(file);
-//	wxString strFile(wxFileName(wxString(file.Str, file.End), wxPATH_DOS).GetFullPath());
-//	#if defined(__WXMSW__) || defined(__WXOSX__)
-//	if (!FMOD_System_CreateSound(m_sys, wxConvFile.cWX2MB(strFile.c_str()), FMOD_SOFTWARE | FMOD_CREATESTREAM, 0, &newSound))
-//	#else
-//	FMOD_CREATESOUNDEXINFO exInfo;
-//	memset(&exInfo, 0, sizeof(FMOD_CREATESOUNDEXINFO));
-//	exInfo.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
-//	wxString dlsPath(QSPTools::GetAppPath() + QSP_MIDIDLS);
-//	wxCharBuffer dlsCharPath(wxConvFile.cWX2MB(dlsPath.c_str()));
-//	exInfo.dlsname = dlsCharPath;
-//	if (!FMOD_System_CreateSound(m_sys, wxConvFile.cWX2MB(strFile.c_str()), FMOD_SOFTWARE | FMOD_CREATESTREAM, &exInfo, &newSound))
-//	#endif
-//	{
-//		UpdateSounds();
-//		FMOD_System_PlaySound(m_sys, FMOD_CHANNEL_FREE, newSound, FALSE, &newChannel);
-//		snd.Channel = newChannel;
-//		snd.Sound = newSound;
-//		snd.Volume = volume;
-//		m_sounds.insert(QSPSounds::value_type(strFile.Upper(), snd));
-//		SetVolume(file, volume);
-//	}
+    if (SetVolume(file, volume)) return;
+    CloseFile(file);
+
+    QString strFile(QFileInfo(QSPTools::qspStrToQt(file)).absoluteFilePath());
+    QMediaPlayer *snd = new QMediaPlayer();
+    snd->setMedia(QUrl::fromLocalFile(strFile));
+    snd->setVolume(volume*m_volumeCoeff);
+    snd->play();
+    m_sounds.insert(strFile, snd);
+    UpdateSounds();
 }
 
 void QSPCallBacks::ShowPane(int type, QSP_BOOL isShow)
@@ -345,7 +308,7 @@ void QSPCallBacks::Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen)
 //	#else
 //		strncpy(buffer, dialog.GetText().c_str(), maxLen);
 //	#endif
-    QString inputText = QInputDialog::getMultiLineText(m_frame, "Input data", QSPTools::qspStrToQt(text));
+    QString inputText = QInputDialog::getMultiLineText(m_frame, MainWindow::tr("Input data"), QSPTools::qspStrToQt(text));
     c16sncpy(buffer, (QSP_CHAR *)(inputText.utf16()), maxLen);
 }
 
@@ -421,47 +384,42 @@ void QSPCallBacks::UpdateGamePath()
 
 bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)
 {
-//	if (!IsPlay(file)) return false;
-//	QSPSounds::iterator elem = m_sounds.find(wxFileName(wxString(file.Str, file.End), wxPATH_DOS).GetFullPath().Upper());
-//	QSPSound *snd = (QSPSound *)&elem->second;
-//	snd->Volume = volume;
-//	FMOD_Channel_SetVolume(snd->Channel, (float)(m_volumeCoeff * volume) / 100);
+    if (!IsPlay(file)) return false;
+    QSPSounds::iterator elem = m_sounds.find(QString(QFileInfo(QSPTools::qspStrToQt(file)).absoluteFilePath()));
+    QMediaPlayer *snd = elem.value();
+    snd->setVolume(volume*m_volumeCoeff);
 	return true;
 }
 
 void QSPCallBacks::SetOverallVolume(float coeff)
 {
-//	QSPSound *snd;
-//	FMOD_BOOL playing = FALSE;
-//	if (coeff < 0.0)
-//		coeff = 0.0;
-//	else if (coeff > 1.0)
-//		coeff = 1.0;
-//	m_volumeCoeff = coeff;
-//	for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
-//	{
-//		snd = (QSPSound *)&i->second;
-//		FMOD_Channel_IsPlaying(snd->Channel, &playing);
-//		if (playing)
-//			FMOD_Channel_SetVolume(snd->Channel, (float)(m_volumeCoeff * snd->Volume) / 100);
-//	}
+    QMediaPlayer *snd;
+    if (coeff < 0.0)
+        coeff = 0.0;
+    else if (coeff > 1.0)
+        coeff = 1.0;
+    m_volumeCoeff = coeff;
+    for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
+    {
+        snd = i.value();
+        if (snd->state() == QMediaPlayer::PlayingState)
+            snd->setVolume(snd->volume()*m_volumeCoeff);
+    }
 }
 
 void QSPCallBacks::UpdateSounds()
 {
-//	QSPSound *snd;
-//	FMOD_BOOL playing = FALSE;
-//	QSPSounds::iterator i = m_sounds.begin();
-//	while (i != m_sounds.end())
-//	{
-//		snd = (QSPSound *)&i->second;
-//		FMOD_Channel_IsPlaying(snd->Channel, &playing);
-//		if (playing)
-//			++i;
-//		else
-//		{
-//			snd->Free();
-//			m_sounds.erase(i++);
-//		}
-//	}
+    QMediaPlayer *snd;
+    QSPSounds::iterator i = m_sounds.begin();
+    while (i != m_sounds.end())
+    {
+        snd = i.value();
+        if(snd->state() == QMediaPlayer::PlayingState)
+            ++i;
+        else
+        {
+            delete snd;
+            i = m_sounds.erase(i);
+        }
+    }
 }

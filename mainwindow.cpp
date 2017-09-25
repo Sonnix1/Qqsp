@@ -12,6 +12,7 @@
 #include <QIcon>
 #include <QDesktopServices>
 #include <QLocale>
+#include <QInputDialog>
 
 #include "callbacks_gui.h"
 #include "comtools.h"
@@ -76,6 +77,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_fontSize = m_font.pointSize();
 
     showCaptions = true;
+
+    m_volume = 1.0f;
 
     m_imgView = new QspImgCanvas(this);
     m_imgView->setObjectName(QStringLiteral("m_imgView"));
@@ -327,6 +330,12 @@ bool MainWindow::ApplyLinkColor(const QColor &color)
     return false;
 }
 
+void MainWindow::SetOverallVolume(float new_volume)
+{
+    QSPCallBacks::SetOverallVolume(new_volume);
+    m_volume = new_volume;
+}
+
 void MainWindow::LoadSettings(QString filePath)
 {
     QSettings *settings;
@@ -373,19 +382,11 @@ void MainWindow::LoadSettings(QString filePath)
     lastGame = settings->value("application/lastGame", lastGame).toString();
     autostartLastGame = settings->value("application/autostartLastGame", autostartLastGame).toBool();
 
+    m_volume = settings->value("application/volume", m_volume).toFloat();
+    SetOverallVolume(m_volume);
+
     langid = settings->value("application/language", langid).toString();
 
-//	cfg.Read(wxT("General/ShowHotkeys"), &m_isShowHotkeys, false);
-//	cfg.Read(wxT("General/Volume"), &m_volume, 100);
-//	m_transhelper->Load(cfg, wxT("General/Language"));
-//	// -------------------------------------------------
-//	SetOverallVolume(m_volume);
-//	ApplyFontSize(m_fontSize);
-//	if (!ApplyFontName(m_fontName))
-//	{
-//		m_fontName = wxNORMAL_FONT->GetFaceName();
-//		ApplyFontName(m_fontName);
-//	}
     RefreshUI();
     delete settings;
 }
@@ -428,13 +429,12 @@ void MainWindow::SaveSettings(QString filePath)
     settings->setValue("application/lastGame", lastGame);
     settings->setValue("application/autostartLastGame", autostartLastGame);
 
+    settings->setValue("application/volume", m_volume);
+
     settings->setValue("application/language", langid);
 
     settings->sync();
 
-//	cfg.Write(wxT("General/Volume"), m_volume);
-//	cfg.Write(wxT("General/ShowHotkeys"), m_isShowHotkeys);
-//	m_transhelper->Save(cfg, wxT("General/Language"));
     delete settings;
 }
 
@@ -539,10 +539,6 @@ void MainWindow::CreateMenuBar()
     // Hotkeys for actions item
     //_showHideMenu->addAction(tr("Hotkeys for actions"), this, SLOT(OnToggleHotkeys()),
     //    QKeySequence(Qt::CTRL + Qt::Key_6));
-
-    // Sound volume item
-    _settingsMenu->addAction(tr("Sound volume..."),
-        this, SLOT(OnChangeSoundVolume()), QKeySequence(Qt::ALT + Qt::Key_V));
 
     // Window / Fullscreen mode item
     action = _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"),
@@ -913,11 +909,6 @@ void MainWindow::OnToggleWinMode()
 void MainWindow::OnToggleShowPlainText(bool checked)
 {
     SetShowPlainText(checked);
-}
-
-void MainWindow::OnChangeSoundVolume()
-{
-
 }
 
 void MainWindow::OnNewGame()

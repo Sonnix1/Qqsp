@@ -102,6 +102,8 @@ public:
     void SetUseFontColor(bool isUseFontColor) { m_isUseFontColor = isUseFontColor; }
     QString GetLangID() { return langid; }
     void SetLangID(const QString& new_langid) { langid = new_langid; }
+    float GetOverallVolume() { return m_volume; }
+    void SetOverallVolume(float new_volume);
 
 private:
     void CreateMenuBar();
@@ -121,7 +123,6 @@ private:
     bool ApplyFontColor(const QColor& color);
     bool ApplyBackColor(const QColor& color);
     bool ApplyLinkColor(const QColor& color);
-//    void SetOverallVolume(int percents);
 
     QMenuBar*       mainMenuBar;
     QToolBar*       mainToolBar;
@@ -168,7 +169,7 @@ private:
     bool m_isQuit;
     bool m_keyPressedWhileDisabled;
     bool m_isShowHotkeys;
-    int m_volume;
+    float m_volume;
     int m_menuIndex;
     bool showPlainText;
     bool showCaptions;
@@ -187,7 +188,6 @@ private slots:
 //    void OnToggleHotkeys();
     void OnToggleWinMode();
     void OnToggleShowPlainText(bool checked);
-    void OnChangeSoundVolume();
     void OnNewGame();
     void OnTimer();
     void OnLinkClicked(const QUrl& url);
@@ -201,7 +201,6 @@ private slots:
 
     // Events
 //    void OnQuickSave(wxCommandEvent& event);
-//    void OnVolume(wxCommandEvent& event);
 //    void OnDropFiles(wxDropFilesEvent& event);
 };
 
