@@ -61,10 +61,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_isGameOpened = false;
     showPlainText = false;
 
-    _mainDescTextBox = new QspTextBox(this);
-    _mainDescTextBox->setObjectName(QStringLiteral("_mainDescTextBox"));
-    connect(_mainDescTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
-    setCentralWidget(_mainDescTextBox);
+    //setCentralWidget(_mainDescWidget);
 
     m_linkColor = palette().color(QPalette::Link);
     m_fontColor = palette().color(QPalette::Text);
@@ -506,11 +503,16 @@ void MainWindow::CreateMenuBar()
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_4));
     _showHideMenu->addAction(action);
 
+    // Main desc item
+    action = _mainDescWidget->toggleViewAction();
+    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
+    _showHideMenu->addAction(action);
+
     _showHideMenu->addSeparator();
 
     // Captions item
     action = _showHideMenu->addAction(tr("Captions"));
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
+    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
     action->setCheckable(true);
     if(_objectsWidget->titleBarWidget() == 0)
         action->setChecked(true);
@@ -520,7 +522,7 @@ void MainWindow::CreateMenuBar()
 
     // ToolBar
     action = mainToolBar->toggleViewAction();
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
     _showHideMenu->addAction(action);
 
     //TODO: MenuBar
@@ -578,6 +580,15 @@ void MainWindow::CreateMenuBar()
 
 void MainWindow::CreateDockWindows()
 {
+    // "Main desc" widget
+    _mainDescTextBox = new QspTextBox(this);
+    _mainDescTextBox->setObjectName(QStringLiteral("_mainDescTextBox"));
+    connect(_mainDescTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
+    _mainDescWidget = new QDockWidget(tr("Main desc"), this);
+    _mainDescWidget->setObjectName(QStringLiteral("_mainDescWidget"));
+    addDockWidget(Qt::TopDockWidgetArea, _mainDescWidget, Qt::Vertical);
+    _mainDescWidget->setWidget(_mainDescTextBox);
+
     // "Objects" widget
     _objectsWidget = new QDockWidget(tr("Objects"), this);
     _objectsWidget->setObjectName(QStringLiteral("_objectsWidget"));
@@ -622,6 +633,7 @@ void MainWindow::CreateDockWindows()
     connect(_inputTextBox, SIGNAL(InputTextEnter()), this, SLOT(OnInputTextEnter()));
 
     splitDockWidget(_actionsWidget, _inputWidget, Qt::Vertical);
+    splitDockWidget(_mainDescWidget, _objectsWidget, Qt::Horizontal);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

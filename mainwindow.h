@@ -139,6 +139,7 @@ private:
     QDockWidget*	_actionsWidget; //m_actions
     QDockWidget*	_descWidget; //m_vars ID_VARSDESC
     QDockWidget*	_inputWidget; //m_input
+    QDockWidget*    _mainDescWidget;
     QString lastPath; //For QFileDialog
     QString lastGame;
 
