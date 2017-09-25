@@ -263,7 +263,7 @@ QString QspListBox::formatItem(int itemIndex)
     QString imgPath;
     if(!m_images.at(itemIndex).isEmpty())
     {
-        QFileInfo imgFile(m_images.at(itemIndex));
+        QFileInfo imgFile(m_path + m_images.at(itemIndex));
         if (imgFile.exists() && imgFile.isFile())
         {
             imgPath = imgFile.absoluteFilePath();

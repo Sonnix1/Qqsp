@@ -5,8 +5,6 @@
 #include <QAbstractScrollArea>
 #include <QScrollBar>
 #include <QPainter>
-#include <QDir>
-#include <QDirIterator>
 
 #include "comtools.h"
 
@@ -75,7 +73,7 @@ void QspTextBox::RefreshUI(bool isScroll)
 
 void QspTextBox::LoadBackImage(const QString& fileName)
 {
-    QFileInfo file(fileName);
+    QFileInfo file(m_path + fileName);
     QString path(file.absoluteFilePath());
     if (m_imagePath != path)
     {
@@ -244,18 +242,6 @@ void QspTextBox::resizeEvent(QResizeEvent *e)
 }
 QVariant QspTextBox::loadResource(int type, const QUrl &name)
 {
-    QString new_name = QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())).replace("\\", "/");
-    if(new_name.startsWith("/"))
-        new_name = new_name.remove(0, 1);
-#ifndef _WIN32
-    for(auto sPath : searchPaths())
-    {
-        QDir itDir(sPath);
-        QDirIterator it(sPath, QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext())
-            if(new_name.compare(itDir.relativeFilePath(it.next()), Qt::CaseInsensitive) == 0)
-                return QTextBrowser::loadResource(type, QUrl(itDir.relativeFilePath(it.filePath())));
-    }
-#endif
-    return QTextBrowser::loadResource(type, QUrl(new_name));
+    QString new_name = QString(QByteArray::fromPercentEncoding(name.toString().toUtf8()));
+    return QTextBrowser::loadResource(type, QUrl(QSPTools::GetCaseInsensitiveFilePath(m_path, new_name)));
 }

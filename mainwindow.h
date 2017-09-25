@@ -148,8 +148,8 @@ private:
     bool m_isGameOpened;
     QString m_savedGamePath;
     QString m_configPath;
-    QString m_configDefPath;
     bool perGameConfig;
+    QString m_path;
     QTimer *m_timer;
     QspImgCanvas *m_imgView;
     int m_menuItemId;

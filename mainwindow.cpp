@@ -202,7 +202,7 @@ void MainWindow::AddMenuItem(const QString &name, const QString &imgPath)
     {
         bool pixmap_ok = false;
         QPixmap itemPixmap;
-        QFileInfo file(imgPath);
+        QFileInfo file(m_path + imgPath);
         QString itemPath(file.absoluteFilePath());
         if (file.exists() && file.isFile())
         {
@@ -214,7 +214,6 @@ void MainWindow::AddMenuItem(const QString &name, const QString &imgPath)
         {
             action = m_menu->addAction(QIcon(itemPixmap), name);
             //m_menu->addAction(QIcon(itemPixmap), name, this, SLOT(OnMenu(bool)));
-
         }
         else
         {
@@ -235,10 +234,14 @@ int MainWindow::ShowMenu()
 
 void MainWindow::UpdateGamePath(const QString &path)
 {
-    _mainDescTextBox->SetGamePath(path);
-    _descTextBox->SetGamePath(path);
-    _actionsListBox->SetGamePath(path);
-    _objectsListBox->SetGamePath(path);
+    QString new_path = path;
+    if(!new_path.endsWith("/"))
+        new_path+="/";
+    m_path = new_path;
+    _mainDescTextBox->SetGamePath(new_path);
+    _descTextBox->SetGamePath(new_path);
+    _actionsListBox->SetGamePath(new_path);
+    _objectsListBox->SetGamePath(new_path);
 }
 
 void MainWindow::ShowError()

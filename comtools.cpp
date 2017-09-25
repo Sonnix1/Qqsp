@@ -1,6 +1,8 @@
 #include "comtools.h"
 
 #include <QCoreApplication>
+#include <QDir>
+#include <QDirIterator>
 
 QString QSPTools::GetHexColor(const QColor color)
 {
@@ -148,6 +150,34 @@ QString QSPTools::ProceedAsPlain(const QString& str)
 QString QSPTools::GetAppPath()
 {
     return QCoreApplication::applicationDirPath();
+}
+
+QString QSPTools::GetCaseInsensitiveFilePath(QString  searchDir, QString originalPath)
+{
+    QString new_name = originalPath.replace("\\", "/");
+    if(new_name.startsWith("/"))
+        new_name = new_name.remove(0, 1);
+#ifndef _WIN32
+        QDir itDir(searchDir);
+        QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
+        while (it.hasNext())
+            if(new_name.compare(itDir.relativeFilePath(it.next()), Qt::CaseInsensitive) == 0)
+                return itDir.relativeFilePath(it.filePath());
+#endif
+    return new_name;
+}
+
+QString QSPTools::GetCaseInsensitiveAbsoluteFilePath(QString  searchDir, QString originalPath)
+{
+    QString new_name = originalPath.replace("\\", "/");
+#ifndef _WIN32
+        QDir itDir(searchDir);
+        QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
+        while (it.hasNext())
+            if(new_name.compare(itDir.relativeFilePath(it.next()), Qt::CaseInsensitive) == 0)
+                return itDir.absoluteFilePath(it.filePath());
+#endif
+    return new_name;
 }
 
 QString QSPTools::qspStrToQt(const QSP_CHAR *str)

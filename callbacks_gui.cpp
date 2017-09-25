@@ -104,7 +104,7 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
         for (i = 0; i < actionsCount; ++i)
         {
             QSPGetActionData(i, &imgPath, &strVal);
-            m_frame->GetActions()->AddItem(QSPTools::qspStrToQt(imgPath), QSPTools::qspStrToQt(strVal));
+            m_frame->GetActions()->AddItem(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(imgPath)), QSPTools::qspStrToQt(strVal));
         }
         m_frame->GetActions()->EndItems();
     }
@@ -117,14 +117,14 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
         for (i = 0; i < objectsCount; ++i)
         {
             QSPGetObjectData(i, &imgPath, &strVal);
-            m_frame->GetObjects()->AddItem(QSPTools::qspStrToQt(imgPath), QSPTools::qspStrToQt(strVal));
+            m_frame->GetObjects()->AddItem(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(imgPath)), QSPTools::qspStrToQt(strVal));
         }
         m_frame->GetObjects()->EndItems();
     }
 	m_frame->GetObjects()->SetSelection(QSPGetSelObjectIndex());
 	// -------------------------------
     if (QSPGetVarValues(QSP_FMT("BACKIMAGE"), 0, &numVal, &strVal) && strVal)
-        m_frame->GetDesc()->LoadBackImage(m_gamePath + QSPTools::qspStrToQt(strVal));
+        m_frame->GetDesc()->LoadBackImage(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(strVal)));
 	else
         m_frame->GetDesc()->LoadBackImage(QString(""));
     // -------------------------------
@@ -149,7 +149,7 @@ void QSPCallBacks::SetInputStrText(const QSP_CHAR *text)
 QSP_BOOL QSPCallBacks::IsPlay(const QSP_CHAR *file)
 {
     QSP_BOOL playing = QSP_FALSE;
-    QSPSounds::iterator elem = m_sounds.find(QSPTools::qspStrToQt(file));
+    QSPSounds::iterator elem = m_sounds.find(QFileInfo(QSPTools::qspStrToQt(file)).absoluteFilePath());
     if (elem != m_sounds.end())
         if(elem.value()->state() == QMediaPlayer::PlayingState)
             playing = QSP_TRUE;
@@ -179,8 +179,7 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
 {
     if (SetVolume(file, volume)) return;
     CloseFile(file);
-
-    QString strFile(QFileInfo(QSPTools::qspStrToQt(file)).absoluteFilePath());
+    QString strFile(QFileInfo(QSPTools::GetCaseInsensitiveAbsoluteFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
     QMediaPlayer *snd = new QMediaPlayer();
     snd->setMedia(QUrl::fromLocalFile(strFile));
     snd->setVolume(volume*m_volumeCoeff);
@@ -274,7 +273,7 @@ void QSPCallBacks::DeleteMenu()
 void QSPCallBacks::AddMenuItem(const QSP_CHAR *name, const QSP_CHAR *imgPath)
 {
     if (m_frame->IsQuit()) return;
-    m_frame->AddMenuItem(QSPTools::qspStrToQt(name), QSPTools::qspStrToQt(imgPath));
+    m_frame->AddMenuItem(QSPTools::qspStrToQt(name), QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(imgPath)));
 }
 
 int QSPCallBacks::ShowMenu()
@@ -315,7 +314,7 @@ void QSPCallBacks::Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen)
 void QSPCallBacks::ShowImage(const QSP_CHAR *file)
 {
 	if (m_frame->IsQuit()) return;
-    m_frame->GetImgView()->OpenFile(QSPTools::qspStrToQt(file)); //NOTE: will not display image if file is not found
+    m_frame->GetImgView()->OpenFile(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))); //NOTE: will not display image if file is not found
     //m_frame->GetImgView()->setVisible(true);
 }
 
@@ -374,7 +373,7 @@ void QSPCallBacks::UpdateGamePath()
 {
     QFileInfo fileName(QSPTools::qspStrToQt(QSPGetQstFullPath()));
     m_gamePath = fileName.canonicalPath();
-    if(!m_gamePath.endsWith('/')) m_gamePath+="/";
+    if(!m_gamePath.endsWith("/")) m_gamePath+="/";
     //m_frame->UpdateGamePath(m_gamePath);
     m_frame->GetDesc()->SetGamePath(m_gamePath);
     m_frame->GetObjects()->SetGamePath(m_gamePath);
@@ -385,7 +384,7 @@ void QSPCallBacks::UpdateGamePath()
 bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)
 {
     if (!IsPlay(file)) return false;
-    QSPSounds::iterator elem = m_sounds.find(QString(QFileInfo(QSPTools::qspStrToQt(file)).absoluteFilePath()));
+    QSPSounds::iterator elem = m_sounds.find(QString(QFileInfo(QSPTools::GetCaseInsensitiveAbsoluteFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath()));
     QMediaPlayer *snd = elem.value();
     snd->setVolume(volume*m_volumeCoeff);
 	return true;
