@@ -242,11 +242,12 @@ void QspTextBox::resizeEvent(QResizeEvent *e)
     }
     QTextBrowser::resizeEvent(e);
 }
-
 QVariant QspTextBox::loadResource(int type, const QUrl &name)
 {
+    QString new_name = QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())).replace("\\", "/");
+    if(new_name.startsWith("/"))
+        new_name = new_name.remove(0, 1);
 #ifndef _WIN32
-    QString new_name = QByteArray::fromPercentEncoding(name.toString().toUtf8());
     for(auto sPath : searchPaths())
     {
         QDir itDir(sPath);
@@ -255,8 +256,6 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
             if(new_name.compare(itDir.relativeFilePath(it.next()), Qt::CaseInsensitive) == 0)
                 return QTextBrowser::loadResource(type, QUrl(itDir.relativeFilePath(it.filePath())));
     }
-    return QTextBrowser::loadResource(type, QUrl(new_name));
-#else
-    return QTextBrowser::loadResource(type, name);
 #endif
+    return QTextBrowser::loadResource(type, QUrl(new_name));
 }
