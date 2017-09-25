@@ -30,6 +30,7 @@ QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
     m_selectionColor = palette().color(QPalette::Highlight);
     m_font = font();
     oldSelection = -1;
+    m_mouseTracking = false;
 }
 
 QspListBox::~QspListBox()
@@ -179,6 +180,12 @@ void QspListBox::SetShowPlainText(bool isPlain)
     RefreshUI();
 }
 
+void QspListBox::SetMouseTracking(bool trackMouse)
+{
+    m_mouseTracking = trackMouse;
+    viewport()->setMouseTracking(trackMouse);
+}
+
 void QspListBox::createList()
 {
     //clear(); //NOTE: clear() only deletes items but does not delete the widgets belonging to it. The widgets will be deleted if the QListWidget is deleted.
@@ -200,6 +207,8 @@ void QspListBox::createList()
         item_widget = new QspTextBox(this);
         //item_widget->setFrameStyle(QFrame::Box);
         item_widget->setLineWidth(0);
+        item_widget->viewport()->setMouseTracking(false);
+        item_widget->setAttribute(Qt::WA_TransparentForMouseEvents);
 
         item_widget->SetIsHtml(m_isUseHtml);
         item_widget->SetShowPlainText(showPlainText);
@@ -338,4 +347,17 @@ void QspListBox::resizeEvent(QResizeEvent *e)
         }
     }
     QListWidget::resizeEvent(e);
+}
+
+void QspListBox::mouseMoveEvent(QMouseEvent *event)
+{
+    if(m_mouseTracking)
+    {
+        QListWidgetItem *curItem = itemAt(event->pos());
+        if (curItem != 0)
+        {
+            SetSelection(row(curItem));
+        }
+    }
+    QListWidget::mouseMoveEvent(event);
 }

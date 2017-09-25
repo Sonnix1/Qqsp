@@ -8,6 +8,7 @@
 #include <QFont>
 #include <QColor>
 #include <QResizeEvent>
+#include <QMouseEvent>
 
 namespace Ui {
 class QspListBox;
@@ -45,12 +46,14 @@ public:
     void SetSelection(int selection);
     int GetSelection() { return oldSelection; }
     void SetShowPlainText(bool isPlain);
+    void SetMouseTracking(bool trackMouse);
 
 private:
     // Internal methods
     void createList();
     QString formatItem(int itemIndex);
     void resizeEvent(QResizeEvent *e);
+    void mouseMoveEvent(QMouseEvent *event);
 
     // Fields
     QString m_outFormat;
@@ -69,6 +72,7 @@ private:
     QColor m_textColor;
     QColor m_backgroundColor;
     QColor m_selectionColor;
+    bool m_mouseTracking;
     bool showPlainText;
     int oldSelection;
 };
