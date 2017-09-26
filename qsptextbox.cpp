@@ -73,7 +73,6 @@ void QspTextBox::RefreshUI(bool isScroll)
     else
         setHtml(text);
     if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
-    resizeAnimations();
 }
 
 void QspTextBox::LoadBackImage(const QString& fileName)
@@ -114,6 +113,7 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
         }
         m_text = text;
         RefreshUI(isScroll);
+        resizeAnimations();
     }
 }
 
@@ -279,34 +279,33 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
 
 void QspTextBox::resizeAnimations()
 {
-    QTextBlock bl = document()->begin();
-    while(bl.isValid())
+    if(animations_gif.count() > 0)
     {
-        QTextBlock::iterator it;
-        for(it = bl.begin(); !(it.atEnd()); ++it)
+        QTextBlock bl = document()->begin();
+        QTextCursor cursor(document());
+        while(bl.isValid())
         {
-            QTextFragment currentFragment = it.fragment();
-            if(currentFragment.isValid())
+            QTextBlock::iterator it;
+            for(it = bl.begin(); !(it.atEnd()); ++it)
             {
-                if(currentFragment.charFormat().isImageFormat())
+                if(it.fragment().isValid())
                 {
-                    QTextImageFormat imgFmt = currentFragment.charFormat().toImageFormat();
-                    QTextCursor cursor(document());
-                    cursor.setPosition(currentFragment.position());
-                    QString image_name=imgFmt.name();
-                    QRect curRect = cursorRect(cursor);
-
-                    if (animations_gif.contains(image_name))
+                    if(it.fragment().charFormat().isImageFormat())
                     {
-                        animations_gif[image_name].x = curRect.x();
-                        animations_gif[image_name].y = curRect.y();
+                        cursor.setPosition(it.fragment().position());
+                        if (animations_gif.contains(it.fragment().charFormat().toImageFormat().name()))
+                        {
+                            QRect curRect = cursorRect(cursor);
+                            animations_gif[it.fragment().charFormat().toImageFormat().name()].x = curRect.x();
+                            animations_gif[it.fragment().charFormat().toImageFormat().name()].y = curRect.y();
+                        }
+                        //QVariant image_data=document()->resource(QTextDocument::ImageResource, QUrl(image_name));
+                        //QImage picture=image_data.value<QImage>();
                     }
-                    //QVariant image_data=document()->resource(QTextDocument::ImageResource, QUrl(image_name));
-                    //QImage picture=image_data.value<QImage>();
                 }
             }
+            bl = bl.next();
         }
-        bl = bl.next();
     }
 }
 
