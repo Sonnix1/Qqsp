@@ -25,10 +25,10 @@ QspImgCanvas::~QspImgCanvas()
 bool QspImgCanvas::OpenFile(const QString &fileName)
 {
     bool ret;
-    QFileInfo file(m_path + fileName);
+    QFileInfo file(fileName);
     QString path(file.absoluteFilePath());
     setWindowTitle(path);
-    if (m_path != path || path.isEmpty())
+    if (!path.isEmpty())
     {
         if (file.exists() && file.isFile())
         {
@@ -54,7 +54,6 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
                 {
                     //Refresh();
                 }
-                m_path = path;
                 setVisible(true);
             }
             return ret;

@@ -171,11 +171,13 @@ QString QSPTools::GetCaseInsensitiveAbsoluteFilePath(QString  searchDir, QString
 {
     QString new_name = originalPath.replace("\\", "/");
 #ifndef _WIN32
-        QDir itDir(searchDir);
-        QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext())
-            if(new_name.compare(itDir.relativeFilePath(it.next()), Qt::CaseInsensitive) == 0)
-                return itDir.absoluteFilePath(it.filePath());
+    if(originalPath.startsWith(searchDir))
+        new_name = new_name.remove(0, searchDir.length());
+    QDir itDir(searchDir);
+    QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
+    while (it.hasNext())
+        if(new_name.compare(itDir.relativeFilePath(it.next()), Qt::CaseInsensitive) == 0)
+            return itDir.absoluteFilePath(it.filePath());
 #endif
     return new_name;
 }
