@@ -5,6 +5,8 @@
 #include <QAbstractScrollArea>
 #include <QScrollBar>
 #include <QPainter>
+#include <QImage>
+#include <QTextBlock>
 
 #include "comtools.h"
 
@@ -22,6 +24,8 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     m_backColor = palette().color(QPalette::Window);
     m_font = font();
     setOpenLinks(false);
+    connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );
+    connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );
 //	m_font = *wxNORMAL_FONT;
 //	m_outFormat = wxString::Format(
 //		wxT("<HTML><META HTTP-EQUIV = \"Content-Type\" CONTENT = \"text/html; charset=%s\">")
@@ -69,6 +73,7 @@ void QspTextBox::RefreshUI(bool isScroll)
     else
         setHtml(text);
     if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+    resizeAnimations();
 }
 
 void QspTextBox::LoadBackImage(const QString& fileName)
@@ -97,6 +102,11 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
 {
     if (m_text != text)
     {
+        for(auto animationsItem : animations_gif)
+        {
+            delete animationsItem.movie;
+        }
+        animations_gif.clear();
         if (isScroll)
         {
             if (m_text.isEmpty() || !text.startsWith(m_text))
@@ -224,10 +234,16 @@ void QspTextBox::CalcImageSize()
 
 void QspTextBox::paintEvent(QPaintEvent *e)
 {
+    QPainter painter(viewport());
     if (!m_bmpBg.isNull())
     {
-        QPainter painter(viewport());
         painter.drawImage(m_posX, m_posY, *(new QImage(m_bmpRealBg.toImage())));
+    }
+    for(auto movie : animations_gif)
+    {
+        if(movie.movie != 0)
+            if(movie.movie->isValid())
+                painter.drawImage(movie.x, movie.y, movie.movie->currentImage());
     }
     QTextBrowser::paintEvent(e);
 }
@@ -238,11 +254,64 @@ void QspTextBox::resizeEvent(QResizeEvent *e)
     {
         CalcImageSize();
     }
+    resizeAnimations();
     QTextBrowser::resizeEvent(e);
 }
 
 QVariant QspTextBox::loadResource(int type, const QUrl &name)
 {
-    QString new_name = QString(QByteArray::fromPercentEncoding(name.toString().toUtf8()));
-    return QTextBrowser::loadResource(type, QUrl(QSPTools::GetCaseInsensitiveFilePath(m_path, new_name)));
+    QString new_name = QSPTools::GetCaseInsensitiveFilePath(m_path, QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())));
+    if(new_name.endsWith(".gif", Qt::CaseInsensitive) || new_name.endsWith(".mng", Qt::CaseInsensitive))
+    {
+        QMovie *movie = new QMovie(m_path + new_name);
+        if(movie->isValid())
+        {
+            connect(movie, SIGNAL(frameChanged(int)), this, SLOT(repaintAnimation()) );
+            movie->start();
+        }
+        animations_gif.insert(new_name, {0,0, movie});
+        QImage image(movie->frameRect().size(), QImage::Format_ARGB32);
+        image.fill(qRgba(0,0,0,0));
+        return QVariant(image);
+    }
+    return QTextBrowser::loadResource(type, QUrl(new_name));
 }
+
+void QspTextBox::resizeAnimations()
+{
+    QTextBlock bl = document()->begin();
+    while(bl.isValid())
+    {
+        QTextBlock::iterator it;
+        for(it = bl.begin(); !(it.atEnd()); ++it)
+        {
+            QTextFragment currentFragment = it.fragment();
+            if(currentFragment.isValid())
+            {
+                if(currentFragment.charFormat().isImageFormat())
+                {
+                    QTextImageFormat imgFmt = currentFragment.charFormat().toImageFormat();
+                    QTextCursor cursor(document());
+                    cursor.setPosition(currentFragment.position());
+                    QString image_name=imgFmt.name();
+                    QRect curRect = cursorRect(cursor);
+
+                    if (animations_gif.contains(image_name))
+                    {
+                        animations_gif[image_name].x = curRect.x();
+                        animations_gif[image_name].y = curRect.y();
+                    }
+                    //QVariant image_data=document()->resource(QTextDocument::ImageResource, QUrl(image_name));
+                    //QImage picture=image_data.value<QImage>();
+                }
+            }
+        }
+        bl = bl.next();
+    }
+}
+
+void QspTextBox::repaintAnimation()
+{
+    viewport()->repaint();
+}
+

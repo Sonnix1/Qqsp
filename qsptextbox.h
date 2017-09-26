@@ -9,6 +9,15 @@
 #include <QPixmap>
 #include <QVariant>
 #include <QUrl>
+#include <QMovie>
+#include <QMap>
+
+struct animation_gif
+{
+    int x;
+    int y;
+    QMovie *movie;
+};
 
 namespace Ui {
 class QspTextBox;
@@ -64,6 +73,11 @@ private:
     QColor m_backColor;
     QColor m_fontColor;
     bool showPlainText;
+    QMap<QString, animation_gif> animations_gif;
+
+private slots:
+    void repaintAnimation();
+    void resizeAnimations();
 };
 
 #endif // QSPTEXTBOX_H
