@@ -57,6 +57,7 @@ private:
     void paintEvent(QPaintEvent *e);
     void resizeEvent(QResizeEvent *e);
     QVariant loadResource(int type, const QUrl &name);
+    void wheelEvent(QWheelEvent *e);
 
     // Fields
     bool m_isUseHtml;

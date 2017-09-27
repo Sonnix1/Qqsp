@@ -61,7 +61,8 @@ void QspTextBox::RefreshUI(bool isScroll)
             str.chop(1);
         if(str.endsWith("\n"))
             str.chop(1);
-        text = str.replace("\r", "").replace("\n", "<br>");
+        str = str.replace("\r", "").replace("\n", "<br>");
+        text = str.replace("</center><br>", "</center>");
     }
     else
     {
@@ -275,6 +276,13 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         return QVariant(image);
     }
     return QTextBrowser::loadResource(type, QUrl(new_name));
+}
+
+void QspTextBox::wheelEvent(QWheelEvent *e)
+{
+    if( e->modifiers() == Qt::ControlModifier )
+        return;
+    QTextBrowser::wheelEvent(e);
 }
 
 void QspTextBox::resizeAnimations()
