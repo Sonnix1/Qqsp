@@ -19,6 +19,11 @@
 
 #include "optionsdialog.h"
 
+#ifdef _ANDROIDQT
+#include <QStandardPaths>
+#include "androidfiledialog.h"
+#endif
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(600, 450);
@@ -789,12 +794,30 @@ void MainWindow::ActionsListBoxDoAction(int action)
 
 void MainWindow::OnOpenGame()
 {
+#ifndef _ANDROIDQT
     QString path = QFileDialog::getOpenFileName(this, tr("Select game file"), GetLastPath(), tr("QSP games (*.qsp *.gam)"));
     if (!path.isEmpty())
     {
         SetLastPath(QFileInfo(path).canonicalPath());
         OpenGameFile(path);
     }
+#else
+    QString path = QFileDialog::getOpenFileName(this, tr("Select game file"), QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation).at(0), tr("QSP games (*.qsp *.gam)"));
+    if (!path.isEmpty())
+    {
+        SetLastPath(QFileInfo(path).canonicalPath());
+        OpenGameFile(path);
+    }
+    return;
+    AndroidFileDialog fileDialog;
+    connect(&fileDialog, SIGNAL(existingFileNameReady(QString)), this, SLOT(OpenGameFile(QString)));
+    bool success = fileDialog.provideExistingFileName();
+    if (!success) {
+        qDebug() << "Problem with JNI or sth like that...";
+        disconnect(fileDialog, SIGNAL(existingFileNameReady(QString)), this, SLOT(OpenGameFile(QString)));
+        //or just delete fileDialog instead of disconnect
+    }
+#endif
 }
 
 void MainWindow::OnRestartGame()

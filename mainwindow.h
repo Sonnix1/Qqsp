@@ -120,7 +120,6 @@ private:
     void SaveSettings(QString filePath = QString());
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event);
-    void OpenGameFile(const QString& path);
     void ActionsListBoxDoAction(int action);
 
     // Internal methods
@@ -192,6 +191,7 @@ private:
 
 private slots:
     void OnOpenGame();
+    void OpenGameFile(const QString& path);
     void OnRestartGame();
     void OnOpenSavedGame();
     void OnSaveGame(); //TODO: add quick save/load

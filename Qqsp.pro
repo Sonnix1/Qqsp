@@ -148,6 +148,15 @@ enable-webbox {
   HEADERS += qspwebbox.h
 }
 
+#CONFIG += enable-android
+
+enable-android {
+  DEFINES += _ANDROIDQT
+  QT += androidextras
+  SOURCES += androidfiledialog.cpp
+  HEADERS += androidfiledialog.h
+}
+
 isEmpty(TARGET_EXT) {
     win32 {
         TARGET_CUSTOM_EXT = .exe
