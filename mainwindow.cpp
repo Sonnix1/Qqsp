@@ -599,7 +599,7 @@ void MainWindow::CreateDockWindows()
     _objectsListBox = new QspListBox(this);
     _objectsListBox->setObjectName(QStringLiteral("_objectsListBox"));
     connect(_objectsListBox, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
-    connect(_objectsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
+    //connect(_objectsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
     connect(_objectsListBox, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
     //connect(_objectsListBox, SIGNAL(currentRowChanged(int)), this, SLOT(OnObjectChange(int)));
     _objectsWidget->setWidget(_objectsListBox);
@@ -611,7 +611,7 @@ void MainWindow::CreateDockWindows()
     _actionsListBox = new QspListBox(this);
     _actionsListBox->setObjectName(QStringLiteral("_actionsListBox"));
     connect(_actionsListBox, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
-    connect(_actionsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
+    //connect(_actionsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
     connect(_actionsListBox, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
     connect(_actionsListBox, SIGNAL(SelectionChange(int)), this, SLOT(OnActionChange(int)));
     _actionsListBox->SetMouseTracking(true);
