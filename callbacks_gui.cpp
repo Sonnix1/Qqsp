@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QLineEdit>
 
 #include "comtools.h"
 #include "qspmsgdlg.h"
@@ -310,7 +311,8 @@ void QSPCallBacks::Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen)
 //	#else
 //		strncpy(buffer, dialog.GetText().c_str(), maxLen);
 //	#endif
-    QString inputText = QInputDialog::getMultiLineText(m_frame, MainWindow::tr("Input data"), QSPTools::qspStrToQt(text));
+    //QString inputText = QInputDialog::getMultiLineText(m_frame, MainWindow::tr("Input data"), QSPTools::qspStrToQt(text));
+    QString inputText = QInputDialog::getText(m_frame, MainWindow::tr("Input data"), QSPTools::qspStrToQt(text), QLineEdit::Normal);
     c16sncpy(buffer, (QSP_CHAR *)(inputText.utf16()), maxLen);
 }
 
