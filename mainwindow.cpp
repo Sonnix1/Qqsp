@@ -71,12 +71,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_linkColor = palette().color(QPalette::Link);
     m_fontColor = palette().color(QPalette::Text);
-    m_backColor = palette().color(QPalette::Window);
+    m_backColor = QColor(224, 224, 224);
     m_isUseBackColor = false;
     m_isUseLinkColor = false;
     m_isUseFontColor = false;
+    m_defaultBackColor = m_backColor;
+    m_defaultLinkColor = m_linkColor;
+    m_defaultFontColor = m_fontColor;
 
     m_font = font();
+    m_defaultFont = m_font;
     m_isUseFontSize = false;
     m_isUseFont = false;
     m_fontSize = m_font.pointSize();
@@ -96,6 +100,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         langid = QLocale::system().name();
 
     CreateDockWindows();
+
+    ApplyBackColor(m_backColor);
+    ApplyFontColor(m_fontColor);
+    ApplyLinkColor(m_linkColor);
+    ApplyFont(m_font);
+
     LoadSettings();
     CreateMenuBar();
 
@@ -370,22 +380,18 @@ void MainWindow::LoadSettings(QString filePath)
     m_isUseFontSize = settings->value("application/isUseFontSize", m_isUseFontSize).toBool();
     m_fontSize = settings->value("application/fontSize", m_fontSize).toInt();
     m_isUseFont = settings->value("application/isUseFont", m_isUseFont).toBool();
-    m_font = qvariant_cast<QFont>(settings->value("application/font", m_font));
     if(m_isUseFont)
-        ApplyFont(m_font);
+        ApplyFont(qvariant_cast<QFont>(settings->value("application/font", m_font)));
 
     m_isUseBackColor = settings->value("application/isUseBackColor", m_isUseBackColor).toBool();
     m_isUseLinkColor = settings->value("application/isUseLinkColor", m_isUseLinkColor).toBool();
     m_isUseFontColor = settings->value("application/isUseFontColor", m_isUseFontColor).toBool();
-    m_backColor = qvariant_cast<QColor>(settings->value("application/backColor", m_backColor));
-    m_linkColor = qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor));
-    m_fontColor = qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor));
     if(m_isUseBackColor)
-        ApplyBackColor(m_backColor);
+        ApplyBackColor(qvariant_cast<QColor>(settings->value("application/backColor", m_backColor)));
     if(m_isUseLinkColor)
-        ApplyLinkColor(m_linkColor);
+        ApplyLinkColor(qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor)));
     if(m_isUseFontColor)
-        ApplyFontColor(m_fontColor);
+        ApplyFontColor(qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor)));
 
     lastGame = settings->value("application/lastGame", lastGame).toString();
     autostartLastGame = settings->value("application/autostartLastGame", autostartLastGame).toBool();
@@ -768,6 +774,14 @@ void MainWindow::OpenGameFile(const QString &path)
                 if(configFile.exists() && configFile.isFile())
                     LoadSettings(configString);
             }
+            if(!m_isUseBackColor)
+                ApplyBackColor(m_defaultBackColor);
+            if(!m_isUseLinkColor)
+                ApplyLinkColor(m_defaultLinkColor);
+            if(!m_isUseFontColor)
+                ApplyFontColor(m_defaultFontColor);
+            if(!m_isUseFont)
+                ApplyFont(m_defaultFont);
             UpdateGamePath(filePath);
             OnNewGame();
             if (m_isQuit) return;

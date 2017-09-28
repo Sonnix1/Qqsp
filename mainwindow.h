@@ -170,12 +170,16 @@ private:
     QColor m_backColor;
     QColor m_linkColor;
     QColor m_fontColor;
+    QColor m_defaultBackColor;
+    QColor m_defaultLinkColor;
+    QColor m_defaultFontColor;
     bool m_isUseBackColor;
     bool m_isUseLinkColor;
     bool m_isUseFontColor;
     QPalette m_palette;
     int m_fontSize;
     QFont m_font;
+    QFont m_defaultFont;
     bool m_isUseFontSize;
     bool m_isUseFont;
     bool m_isProcessEvents;

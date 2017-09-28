@@ -19,9 +19,9 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     setContentsMargins(0,0,0,0);
     m_isUseHtml = false;
     showPlainText = false;
-    m_linkColor = palette().color(QPalette::Link);
-    m_fontColor = palette().color(QPalette::Text);
-    m_backColor = palette().color(QPalette::Window);
+    //m_linkColor = palette().color(QPalette::Link);
+    //m_fontColor = palette().color(QPalette::Text);
+    //m_backColor = QColor(224, 224, 224);
     m_font = font();
     setOpenLinks(false);
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );

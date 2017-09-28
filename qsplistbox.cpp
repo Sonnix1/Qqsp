@@ -24,9 +24,9 @@ QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
     m_isUseHtml = false;
     m_isShowNums = false;
     showPlainText = false;
-    m_linkColor = palette().color(QPalette::Link);
-    m_textColor = palette().color(QPalette::Text);
-    m_backgroundColor = palette().color(QPalette::Window);
+    //m_linkColor = palette().color(QPalette::Link);
+    //m_textColor = palette().color(QPalette::Text);
+    //m_backgroundColor = QColor(224, 224, 224);
     m_selectionColor = palette().color(QPalette::Highlight);
     m_font = font();
     oldSelection = -1;
@@ -131,6 +131,9 @@ bool QspListBox::SetBackgroundColor(const QColor &color)
 {
     if(m_backgroundColor != color)
     {
+        QPalette p = palette();
+        p.setColor(QPalette::Base, color);
+        setPalette(p);
         m_backgroundColor = color;
         createList();
         return true;
@@ -202,6 +205,7 @@ void QspListBox::createList()
 
         QListWidgetItem* listItem;
         listItem = new QListWidgetItem(this);
+        listItem->setBackground(m_backgroundColor);
         addItem(listItem);
         QspTextBox *item_widget;
         item_widget = new QspTextBox(this);
