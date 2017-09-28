@@ -13,6 +13,7 @@
 #include <QDesktopServices>
 #include <QLocale>
 #include <QInputDialog>
+#include <QMimeData>
 
 #include "callbacks_gui.h"
 #include "comtools.h"
@@ -34,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setDockNestingEnabled(true);
     setFocusPolicy(Qt::StrongFocus);
     setObjectName(QStringLiteral("MainWindow"));
+    setAcceptDrops(true);
 
     m_palette = palette();
 
@@ -56,11 +58,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     mainToolBar->setVisible(false);
     mainToolBar->setWindowTitle(tr("ToolBar"));
 
-    //DragAcceptFiles(true);
     m_timer = new QTimer(this);
     m_timer->setObjectName(QStringLiteral("m_timer"));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()));
-    //SetOverallVolume(100);
     m_savedGamePath.clear();
     m_isQuit = false;
     m_keyPressedWhileDisabled = false;
@@ -812,6 +812,37 @@ void MainWindow::ActionsListBoxDoAction(int action)
         if (!QSPExecuteSelActionCode(QSP_TRUE))
             ShowError();
     }
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    if (event->mimeData()->hasUrls())
+    {
+        if(event->mimeData()->urls().count() > 0)
+        {
+            if(event->mimeData()->urls().at(0).toLocalFile().endsWith(".qsp"))
+            {
+                OpenGameFile(event->mimeData()->urls().at(0).toLocalFile());
+                event->acceptProposedAction();
+            }
+            if(event->mimeData()->urls().at(0).toLocalFile().endsWith(".sav"))
+            {
+                if(m_isGameOpened)
+                {
+                    if (!QSPOpenSavedGame(qspStringFromQString(event->mimeData()->urls().at(0).toLocalFile()), QSP_TRUE))
+                        ShowError();
+                    else
+                        ApplyParams();
+                }
+                event->acceptProposedAction();
+            }
+        }
+    }
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->accept();
 }
 
 void MainWindow::OnOpenGame()

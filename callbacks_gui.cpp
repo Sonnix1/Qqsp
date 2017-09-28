@@ -26,8 +26,6 @@ void QSPCallBacks::Init(MainWindow *frame)
 	m_frame = frame;
     m_volumeCoeff = 1.0f;
 
-    QString soundPath(QSPTools::GetAppPath() + QSP_SOUNDPLUGINS);
-
 	QSPSetCallBack(QSP_CALL_SETTIMER, (QSP_CALLBACK)&SetTimer);
 	QSPSetCallBack(QSP_CALL_REFRESHINT, (QSP_CALLBACK)&RefreshInt);
 	QSPSetCallBack(QSP_CALL_SETINPUTSTRTEXT, (QSP_CALLBACK)&SetInputStrText);

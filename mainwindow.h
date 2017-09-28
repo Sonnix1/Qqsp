@@ -15,6 +15,8 @@
 #include <QFont>
 #include <QCloseEvent>
 #include <QKeyEvent>
+#include <QDropEvent>
+#include <QDragEnterEvent>
 #include <QTranslator>
 
 #include "qsptextbox.h"
@@ -31,8 +33,6 @@
 #define QSP_APPNAME "qspgui"
 #define QSP_CONFIG "qqsp.ini"
 #define QSP_QUICKSAVE "quicksave.sav"
-#define QSP_SOUNDPLUGINS "sound"
-#define QSP_MIDIDLS "sound/midi.dls"
 
 namespace Ui {
 class MainWindow;
@@ -122,6 +122,8 @@ private:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void ActionsListBoxDoAction(int action);
+    void dropEvent(QDropEvent* event);
+    void dragEnterEvent(QDragEnterEvent* event);
 
     // Internal methods
     void UpdateTitle();
