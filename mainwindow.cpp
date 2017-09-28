@@ -489,6 +489,14 @@ void MainWindow::CreateMenuBar()
     action =  _gameMenu->addAction(QIcon(":/gfx/menu/statussave"), tr("Save game..."),
         this, SLOT(OnSaveGame()), QKeySequence(Qt::CTRL + Qt::Key_S));
     mainToolBar->addAction(action);
+    // Open quicksave item
+    action =  _gameMenu->addAction(tr("Quick Load"),
+        this, SLOT(OnOpenQuickSavedGame()), QKeySequence(Qt::Key_F9));
+    mainToolBar->addAction(action);
+    // Quicksave item
+    action =  _gameMenu->addAction(tr("Quick Save"),
+        this, SLOT(OnQuickSaveGame()), QKeySequence(Qt::Key_F5));
+    mainToolBar->addAction(action);
     //------------------------------------------------------------------
     mainToolBar->addSeparator();
     // Settings menu
@@ -876,6 +884,32 @@ void MainWindow::OnSaveGame()
         else
             ShowError();
     }
+}
+
+void MainWindow::OnOpenQuickSavedGame()
+{
+    if(!m_isGameOpened)
+        return;
+    QString path = m_path + QSP_QUICKSAVE;
+    QFileInfo fileInfo(path);
+    if(fileInfo.exists() && fileInfo.isFile())
+    {
+        if (!QSPOpenSavedGame(qspStringFromQString(path), QSP_TRUE))
+            ShowError();
+        else
+            ApplyParams();
+    }
+}
+
+void MainWindow::OnQuickSaveGame()
+{
+    if(!m_isGameOpened)
+        return;
+    QString path = m_path + QSP_QUICKSAVE;
+    if (QSPSaveGame(qspStringFromQString(path), QSP_TRUE))
+        m_savedGamePath = path;
+    else
+        ShowError();
 }
 
 void MainWindow::OnOptions()

@@ -30,6 +30,7 @@
 #define QSP_LOGO "Quest Soft Player 5"
 #define QSP_APPNAME "qspgui"
 #define QSP_CONFIG "qqsp.ini"
+#define QSP_QUICKSAVE "quicksave.sav"
 #define QSP_SOUNDPLUGINS "sound"
 #define QSP_MIDIDLS "sound/midi.dls"
 
@@ -198,7 +199,9 @@ private slots:
     void OpenGameFile(const QString& path);
     void OnRestartGame();
     void OnOpenSavedGame();
-    void OnSaveGame(); //TODO: add quick save/load
+    void OnSaveGame();
+    void OnOpenQuickSavedGame();
+    void OnQuickSaveGame();
     void OnOptions();
     void OnAbout();
     void OnToggleCaptions(bool checked);
