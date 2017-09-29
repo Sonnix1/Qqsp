@@ -12,11 +12,24 @@
 #include <QMovie>
 #include <QMap>
 
+#include "videoframeprocessor.h"
+
 struct animation_gif
 {
     int x;
     int y;
+    int w;
+    int h;
     QMovie *movie;
+};
+
+struct animation_video
+{
+    int x;
+    int y;
+    int w;
+    int h;
+    VideoFrameProcessor *frameProcessor;
 };
 
 namespace Ui {
@@ -75,6 +88,7 @@ private:
     QColor m_fontColor;
     bool showPlainText;
     QMap<QString, animation_gif> animations_gif;
+    QMap<QString, animation_video> animations_video;
 
 private slots:
     void repaintAnimation();

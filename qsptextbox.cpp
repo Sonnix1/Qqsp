@@ -61,7 +61,7 @@ void QspTextBox::RefreshUI(bool isScroll)
             str.chop(1);
         if(str.endsWith("\n"))
             str.chop(1);
-        str = str.replace("\r", "").replace("\n", "<br>");
+        str = str.replace("\r", "").replace("\n", "<br>").replace("<video ", "<img ");
         text = str.replace("</center><br>", "</center>");
     }
     else
@@ -107,6 +107,11 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
             delete animationsItem.movie;
         }
         animations_gif.clear();
+        for(auto animationsItem : animations_video)
+        {
+            delete animationsItem.frameProcessor;
+        }
+        animations_video.clear();
         if (isScroll)
         {
             if (m_text.isEmpty() || !text.startsWith(m_text))
@@ -244,7 +249,13 @@ void QspTextBox::paintEvent(QPaintEvent *e)
     {
         if(movie.movie != 0)
             if(movie.movie->isValid())
-                painter.drawImage(movie.x, movie.y, movie.movie->currentImage());
+                painter.drawImage(movie.x, movie.y, movie.movie->currentImage().scaled(movie.w, movie.h));
+    }
+    for(auto frameProcessor : animations_video)
+    {
+        if(frameProcessor.frameProcessor != 0)
+            if(frameProcessor.frameProcessor->IsValid())
+                painter.drawImage(frameProcessor.x, frameProcessor.y, frameProcessor.frameProcessor->curFrame.scaled(frameProcessor.w, frameProcessor.h));
     }
     QTextBrowser::paintEvent(e);
 }
@@ -269,13 +280,38 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         {
             connect(movie, SIGNAL(frameChanged(int)), this, SLOT(repaintAnimation()) );
             movie->start();
+            animations_gif.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,movie->frameRect().size().width(), movie->frameRect().size().height(), movie});
+            QImage image(movie->frameRect().size(), QImage::Format_ARGB32);
+            image.fill(qRgba(0,0,0,0));
+            return QVariant(image);
         }
-        animations_gif.insert(new_name, {0,0, movie});
-        QImage image(movie->frameRect().size(), QImage::Format_ARGB32);
-        image.fill(qRgba(0,0,0,0));
-        return QVariant(image);
+        else
+        {
+            delete movie;
+            return QTextBrowser::loadResource(type, QUrl(new_name));
+        }
     }
-    return QTextBrowser::loadResource(type, QUrl(new_name));
+    if(new_name.endsWith(".mp4", Qt::CaseInsensitive) || new_name.endsWith(".avi", Qt::CaseInsensitive) || new_name.endsWith(".wmv", Qt::CaseInsensitive) || new_name.endsWith(".mkv", Qt::CaseInsensitive) || new_name.endsWith(".webm", Qt::CaseInsensitive) || new_name.endsWith(".m4v", Qt::CaseInsensitive))
+    {
+        VideoFrameProcessor *vfp = new VideoFrameProcessor(m_path, new_name, this);
+        if(vfp->IsValid())
+        {
+            animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,vfp->mediaResolution.width(),vfp->mediaResolution.height(), vfp});
+            connect(vfp, SIGNAL(newFrame()), this, SLOT(repaintAnimation()));
+            QImage image(vfp->mediaResolution, QImage::Format_ARGB32);
+            image.fill(qRgba(0,0,0,0));
+            return QVariant(image);
+        }
+        else
+        {
+            delete vfp;
+            return QTextBrowser::loadResource(type, QUrl(new_name));
+        }
+    }
+    if(type == QTextDocument::ImageResource)
+        return QVariant(QImage(m_path + new_name));
+    else
+        return QTextBrowser::loadResource(type, QUrl(new_name));
 }
 
 void QspTextBox::wheelEvent(QWheelEvent *e)
@@ -287,7 +323,7 @@ void QspTextBox::wheelEvent(QWheelEvent *e)
 
 void QspTextBox::resizeAnimations()
 {
-    if(animations_gif.count() > 0)
+    if(animations_gif.count() > 0 || animations_video.count() > 0)
     {
         QTextBlock bl = document()->begin();
         QTextCursor cursor(document());
@@ -306,6 +342,21 @@ void QspTextBox::resizeAnimations()
                             QRect curRect = cursorRect(cursor);
                             animations_gif[it.fragment().charFormat().toImageFormat().name()].x = curRect.x();
                             animations_gif[it.fragment().charFormat().toImageFormat().name()].y = curRect.y();
+                            if(it.fragment().charFormat().toImageFormat().width() > 0)
+                                animations_gif[it.fragment().charFormat().toImageFormat().name()].w = it.fragment().charFormat().toImageFormat().width();
+                            if(it.fragment().charFormat().toImageFormat().height() > 0)
+                                animations_gif[it.fragment().charFormat().toImageFormat().name()].h = it.fragment().charFormat().toImageFormat().height();
+                        }
+                        else
+                        if (animations_video.contains(it.fragment().charFormat().toImageFormat().name()))
+                        {
+                            QRect curRect = cursorRect(cursor);
+                            animations_video[it.fragment().charFormat().toImageFormat().name()].x = curRect.x();
+                            animations_video[it.fragment().charFormat().toImageFormat().name()].y = curRect.y();
+                            if(it.fragment().charFormat().toImageFormat().width() > 0)
+                                animations_video[it.fragment().charFormat().toImageFormat().name()].w = it.fragment().charFormat().toImageFormat().width();
+                            if(it.fragment().charFormat().toImageFormat().height() > 0)
+                                animations_video[it.fragment().charFormat().toImageFormat().name()].h = it.fragment().charFormat().toImageFormat().height();
                         }
                         //QVariant image_data=document()->resource(QTextDocument::ImageResource, QUrl(image_name));
                         //QImage picture=image_data.value<QImage>();

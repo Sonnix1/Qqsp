@@ -34,7 +34,8 @@ SOURCES += \
     qspinputdlg.cpp \
     callbacks_gui.cpp \
     comtools.cpp \
-    optionsdialog.cpp
+    optionsdialog.cpp \
+    videoframeprocessor.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -46,7 +47,8 @@ HEADERS += \
     qspinputdlg.h \
     callbacks_gui.h \
     comtools.h \
-    optionsdialog.h
+    optionsdialog.h \
+    videoframeprocessor.h
 
 FORMS += \
     optionsdialog.ui
