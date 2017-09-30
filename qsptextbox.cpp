@@ -8,6 +8,7 @@
 #include <QImage>
 #include <QTextBlock>
 #include <QMediaPlaylist>
+#include <QThread>
 
 #include "comtools.h"
 
@@ -307,13 +308,19 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         mediaPlayer->setPlaylist(playlist);
         mediaPlayer->setVideoOutput(vfp);
         while(mediaPlayer->mediaStatus() == QMediaPlayer::NoMedia || mediaPlayer->mediaStatus() == QMediaPlayer::LoadingMedia)
+        {
             QCoreApplication::processEvents();
+            QThread::msleep(4);
+        }
 
         if(mediaPlayer->mediaStatus() == QMediaPlayer::LoadedMedia )
         {
             mediaPlayer->play();
             while(!vfp->hasFrame)
+            {
                 QCoreApplication::processEvents();
+                QThread::msleep(4);
+            }
             animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,vfp->mediaResolution.width(),vfp->mediaResolution.height(), vfp, mediaPlayer});
             connect(vfp, SIGNAL(newFrame()), this, SLOT(repaintAnimation()));
             QImage image(vfp->mediaResolution, QImage::Format_ARGB32);
