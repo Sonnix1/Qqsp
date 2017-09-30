@@ -82,7 +82,9 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	m_frame->GetVars()->SetIsHtml(m_isHtml);
 	if (QSPIsVarsDescChanged())
 	{
+        m_frame->EnableControls(false, true);
         m_frame->GetVars()->SetText(QSPTools::qspStrToQt(varsDesc), isScroll);
+        m_frame->EnableControls(true, true);
 	}
 	// -------------------------------
 	int fullRefreshCount = QSPGetFullRefreshCount();
@@ -94,7 +96,9 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	m_frame->GetDesc()->SetIsHtml(m_isHtml);
 	if (QSPIsMainDescChanged())
 	{
+        m_frame->EnableControls(false, true);
         m_frame->GetDesc()->SetText(QSPTools::qspStrToQt(mainDesc), isScroll);
+        m_frame->EnableControls(true, true);
 	}
 	// -------------------------------
 	m_frame->GetActions()->SetIsHtml(m_isHtml);

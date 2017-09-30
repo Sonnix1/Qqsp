@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QImage>
 #include <QTextBlock>
+#include <QMediaPlaylist>
 
 #include "comtools.h"
 
@@ -104,12 +105,16 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
     {
         for(auto animationsItem : animations_gif)
         {
-            delete animationsItem.movie;
+            if(animationsItem.movie != 0)
+                delete animationsItem.movie;
         }
         animations_gif.clear();
         for(auto animationsItem : animations_video)
         {
-            delete animationsItem.frameProcessor;
+            if(animationsItem.mediaPlayer != 0)
+                delete animationsItem.mediaPlayer;
+            if(animationsItem.frameProcessor != 0)
+                delete animationsItem.frameProcessor;
         }
         animations_video.clear();
         if (isScroll)
@@ -254,7 +259,7 @@ void QspTextBox::paintEvent(QPaintEvent *e)
     for(auto frameProcessor : animations_video)
     {
         if(frameProcessor.frameProcessor != 0)
-            if(frameProcessor.frameProcessor->IsValid())
+            //if(frameProcessor.frameProcessor->IsValid())
                 painter.drawImage(frameProcessor.x, frameProcessor.y, frameProcessor.frameProcessor->curFrame.scaled(frameProcessor.w, frameProcessor.h));
     }
     QTextBrowser::paintEvent(e);
@@ -287,24 +292,43 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         }
         else
         {
-            delete movie;
+            if(movie != 0)
+                delete movie;
             return QTextBrowser::loadResource(type, QUrl(new_name));
         }
     }
     if(new_name.endsWith(".mp4", Qt::CaseInsensitive) || new_name.endsWith(".avi", Qt::CaseInsensitive) || new_name.endsWith(".wmv", Qt::CaseInsensitive) || new_name.endsWith(".mkv", Qt::CaseInsensitive) || new_name.endsWith(".webm", Qt::CaseInsensitive) || new_name.endsWith(".m4v", Qt::CaseInsensitive))
     {
-        VideoFrameProcessor *vfp = new VideoFrameProcessor(m_path, new_name, this);
-        if(vfp->IsValid())
+        VideoFrameProcessor *vfp = new VideoFrameProcessor();
+        QMediaPlayer *mediaPlayer = new QMediaPlayer();
+        QMediaPlaylist *playlist = new QMediaPlaylist();
+        playlist->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
+        playlist->addMedia(QUrl::fromLocalFile(m_path + new_name));
+        mediaPlayer->setPlaylist(playlist);
+        mediaPlayer->setVideoOutput(vfp);
+        while(mediaPlayer->mediaStatus() == QMediaPlayer::NoMedia || mediaPlayer->mediaStatus() == QMediaPlayer::LoadingMedia)
+            QCoreApplication::processEvents();
+
+        if(mediaPlayer->mediaStatus() == QMediaPlayer::LoadedMedia )
         {
-            animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,vfp->mediaResolution.width(),vfp->mediaResolution.height(), vfp});
+            mediaPlayer->play();
+            while(!vfp->hasFrame)
+                QCoreApplication::processEvents();
+            animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,vfp->mediaResolution.width(),vfp->mediaResolution.height(), vfp, mediaPlayer});
             connect(vfp, SIGNAL(newFrame()), this, SLOT(repaintAnimation()));
             QImage image(vfp->mediaResolution, QImage::Format_ARGB32);
             image.fill(qRgba(0,0,0,0));
+
             return QVariant(image);
         }
         else
         {
-            delete vfp;
+            if(mediaPlayer != 0)
+                delete mediaPlayer;
+            if(vfp != 0)
+                delete vfp;
+            QImage image(1,1, QImage::Format_ARGB32);
+            image.fill(qRgba(0,0,0,0));
             return QTextBrowser::loadResource(type, QUrl(new_name));
         }
     }

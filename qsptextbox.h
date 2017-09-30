@@ -11,6 +11,8 @@
 #include <QUrl>
 #include <QMovie>
 #include <QMap>
+#include <QMediaPlayer>
+#include <QCoreApplication>
 
 #include "videoframeprocessor.h"
 
@@ -30,6 +32,7 @@ struct animation_video
     int w;
     int h;
     VideoFrameProcessor *frameProcessor;
+    QMediaPlayer *mediaPlayer;
 };
 
 namespace Ui {

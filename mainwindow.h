@@ -221,10 +221,6 @@ private slots:
     void OnMenu(QAction* action);
     void OnInputTextChange();
     void OnInputTextEnter();
-
-    // Events
-//    void OnQuickSave(wxCommandEvent& event);
-//    void OnDropFiles(wxDropFilesEvent& event);
 };
 
 #endif // MAINWINDOW_H

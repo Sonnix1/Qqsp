@@ -805,12 +805,15 @@ void MainWindow::OpenGameFile(const QString &path)
 
 void MainWindow::ActionsListBoxDoAction(int action)
 {
-    if(action != -1)
+    if(m_isProcessEvents)
     {
-        if (!QSPSetSelActionIndex(action, QSP_TRUE))
-            ShowError();
-        if (!QSPExecuteSelActionCode(QSP_TRUE))
-            ShowError();
+        if(action != -1)
+        {
+            if (!QSPSetSelActionIndex(action, QSP_TRUE))
+                ShowError();
+            if (!QSPExecuteSelActionCode(QSP_TRUE))
+                ShowError();
+        }
     }
 }
 
@@ -1038,6 +1041,8 @@ void MainWindow::OnTimer()
 
 void MainWindow::OnLinkClicked(const QUrl &url)
 {
+    if(!m_isProcessEvents)
+        return;
     QString href;
     href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
 
@@ -1071,6 +1076,8 @@ void MainWindow::OnLinkClicked(const QUrl &url)
 
 void MainWindow::OnObjectListBoxItemClicked(QListWidgetItem *itemClicked)
 {
+    if(!m_isProcessEvents)
+        return;
     int object = _objectsListBox->row(itemClicked);
     if (!QSPSetSelObjectIndex(object, QSP_TRUE))
         ShowError();
@@ -1078,12 +1085,16 @@ void MainWindow::OnObjectListBoxItemClicked(QListWidgetItem *itemClicked)
 
 void MainWindow::OnActionsListBoxItemClicked(QListWidgetItem *itemClicked)
 {
+    if(!m_isProcessEvents)
+        return;
     int action = _actionsListBox->row(itemClicked);
     ActionsListBoxDoAction(action);
 }
 
 void MainWindow::OnObjectChange(int currentRow)
 {
+    if(!m_isProcessEvents)
+        return;
     //QThread::msleep(20);
     if (!QSPSetSelObjectIndex(currentRow, QSP_TRUE))
         ShowError();
@@ -1091,6 +1102,8 @@ void MainWindow::OnObjectChange(int currentRow)
 
 void MainWindow::OnActionChange(int currentRow)
 {
+    if(!m_isProcessEvents)
+        return;
     if (!QSPSetSelActionIndex(currentRow, QSP_TRUE))
         ShowError();
 }
@@ -1107,6 +1120,8 @@ void MainWindow::OnInputTextChange()
 
 void MainWindow::OnInputTextEnter()
 {
+    if(!m_isProcessEvents)
+        return;
     QSPSetInputStrText(qspStringFromQString(_inputTextBox->GetText()));
     if (!QSPExecUserInput(QSP_TRUE))
         ShowError();

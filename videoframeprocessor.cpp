@@ -1,39 +1,18 @@
 #include "videoframeprocessor.h"
 
 #include <QVideoSurfaceFormat>
-#include <QTimer>
-#include <QEventLoop>
-#include <QMediaPlaylist>
 
-VideoFrameProcessor::VideoFrameProcessor(const QString &filepath, const QString &filename, QObject *parent) : QAbstractVideoSurface(parent)
+VideoFrameProcessor::VideoFrameProcessor(QObject *parent) : QAbstractVideoSurface(parent)
 {
-    m_path = filepath;
-    mediaPlayer = new QMediaPlayer(this);
-    connect(mediaPlayer, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)), this, SLOT(OnMediaStatusChanged(QMediaPlayer::MediaStatus)));
-
-    QMediaPlaylist *playlist = new QMediaPlaylist(this);
-    playlist->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
-    playlist->addMedia(QUrl::fromLocalFile(m_path + filename));
-    mediaPlayer->setPlaylist(playlist);
-
-    //mediaPlayer->setMedia(QUrl::fromLocalFile(m_path + filename));
-    mediaPlayer->setVideoOutput(this);
-
-    QTimer timer;
+    hasFrame = false;
     timer.setSingleShot(true);
-    QEventLoop loop;
-    connect(this,  SIGNAL(medialLoaded()), &loop, SLOT(quit()));
-    connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    timer.start(500);
-    loop.exec();
-
-    mediaPlayer->play();
+    connect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
+    timer.start(100);
 }
 
 VideoFrameProcessor::~VideoFrameProcessor()
 {
-    delete mediaPlayer->playlist();
-    delete mediaPlayer;
+
 }
 
 bool VideoFrameProcessor::present(const QVideoFrame &frame)
@@ -43,13 +22,20 @@ bool VideoFrameProcessor::present(const QVideoFrame &frame)
         QVideoFrame videoFrame(frame);
         if(videoFrame.map(QAbstractVideoBuffer::ReadOnly))
         {
-
+            mediaResolution = videoFrame.size();
             curFrame = QImage(
                         videoFrame.bits(),
                         videoFrame.width(),
                         videoFrame.height(),
                         videoFrame.bytesPerLine(),
                         QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat()));
+            if(!hasFrame)
+            {
+                disconnect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
+                timer.stop();
+                mediaResolution = videoFrame.size();
+                hasFrame = true;
+            }
             emit newFrame();
         }
         videoFrame.unmap();
@@ -79,24 +65,9 @@ bool VideoFrameProcessor::isFormatSupported(const QVideoSurfaceFormat &format) c
             && format.handleType() == QAbstractVideoBuffer::NoHandle;
 }
 
-bool VideoFrameProcessor::IsValid()
+void VideoFrameProcessor::OnFrameTimeout()
 {
-    if(mediaPlayer->error() == QMediaPlayer::NoError)
-        return true;
-    else
-        return false;
-}
-
-void VideoFrameProcessor::OnMediaStatusChanged(QMediaPlayer::MediaStatus status)
-{
-    if(status == QMediaPlayer::LoadedMedia)
-    {
-        disconnect(mediaPlayer, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)), this, SLOT(OnMediaStatusChanged(QMediaPlayer::MediaStatus)));
-        mediaResolution = mediaPlayer->metaData("Resolution").toSize();
-        emit medialLoaded();
-    }
-    if(status == QMediaPlayer::InvalidMedia)
-    {
-        //TODO:
-    }
+    mediaResolution.setWidth(640);
+    mediaResolution.setHeight(480);
+    hasFrame = true;
 }
