@@ -1,4 +1,5 @@
-QT       += core gui widgets multimedia multimedia-private
+QT       += core gui widgets multimedia
+#QT += multimedia-private
 
 TARGET = Qqsp
 TEMPLATE = app

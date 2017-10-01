@@ -260,7 +260,7 @@ void QspTextBox::paintEvent(QPaintEvent *e)
     for(auto frameProcessor : animations_video)
     {
         if(frameProcessor.frameProcessor != 0)
-            //if(frameProcessor.frameProcessor->IsValid())
+            if(frameProcessor.frameProcessor->hasFrame)
                 painter.drawImage(frameProcessor.x, frameProcessor.y, frameProcessor.frameProcessor->curFrame.scaled(frameProcessor.w, frameProcessor.h));
     }
     QTextBrowser::paintEvent(e);
@@ -298,7 +298,7 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
             return QTextBrowser::loadResource(type, QUrl(new_name));
         }
     }
-    if(new_name.endsWith(".mp4", Qt::CaseInsensitive) || new_name.endsWith(".avi", Qt::CaseInsensitive) || new_name.endsWith(".wmv", Qt::CaseInsensitive) || new_name.endsWith(".mkv", Qt::CaseInsensitive) || new_name.endsWith(".webm", Qt::CaseInsensitive) || new_name.endsWith(".m4v", Qt::CaseInsensitive))
+    if(new_name.endsWith(".mp4", Qt::CaseInsensitive) || new_name.endsWith(".avi", Qt::CaseInsensitive) || new_name.endsWith(".wmv", Qt::CaseInsensitive) || new_name.endsWith(".mkv", Qt::CaseInsensitive) || new_name.endsWith(".webm", Qt::CaseInsensitive) || new_name.endsWith(".m4v", Qt::CaseInsensitive) || new_name.endsWith(".ogv", Qt::CaseInsensitive))
     {
         VideoFrameProcessor *vfp = new VideoFrameProcessor();
         QMediaPlayer *mediaPlayer = new QMediaPlayer();
