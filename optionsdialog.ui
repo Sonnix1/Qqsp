@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>375</width>
-    <height>310</height>
+    <height>340</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -151,7 +151,7 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="0">
+     <item row="9" column="0">
       <widget class="QCheckBox" name="checkBox_autostart">
        <property name="text">
         <string>Autostart last game</string>
@@ -256,7 +256,7 @@
        </item>
       </layout>
      </item>
-     <item row="7" column="0">
+     <item row="8" column="0">
       <widget class="QCheckBox" name="checkBox_perGameConfig">
        <property name="text">
         <string>Separate config per game</string>
@@ -277,6 +277,13 @@
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QCheckBox" name="checkBox_disableVideo">
+       <property name="text">
+        <string>Disable video</string>
        </property>
       </widget>
      </item>

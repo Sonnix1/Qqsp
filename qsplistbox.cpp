@@ -216,6 +216,7 @@ void QspListBox::createList()
 
         item_widget->SetIsHtml(m_isUseHtml);
         item_widget->SetShowPlainText(showPlainText);
+        item_widget->SetDisableVideo(true);
 
         item_widget->SetLinkColor(m_linkColor);
         item_widget->SetBackgroundColor(m_backgroundColor);

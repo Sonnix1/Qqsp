@@ -9,179 +9,179 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="282"/>
+        <location filename="mainwindow.cpp" line="284"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="460"/>
+        <location filename="mainwindow.cpp" line="474"/>
         <source>&amp;Quest</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="463"/>
+        <location filename="mainwindow.cpp" line="477"/>
         <source>Open game...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="468"/>
+        <location filename="mainwindow.cpp" line="482"/>
         <source>Restart game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="476"/>
+        <location filename="mainwindow.cpp" line="490"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="482"/>
+        <location filename="mainwindow.cpp" line="496"/>
         <source>&amp;Game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="485"/>
+        <location filename="mainwindow.cpp" line="499"/>
         <source>Open saved game...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="489"/>
+        <location filename="mainwindow.cpp" line="503"/>
         <source>Save game...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="493"/>
+        <location filename="mainwindow.cpp" line="507"/>
         <source>Quick Load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="497"/>
+        <location filename="mainwindow.cpp" line="511"/>
         <source>Quick Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="503"/>
+        <location filename="mainwindow.cpp" line="517"/>
         <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="506"/>
+        <location filename="mainwindow.cpp" line="520"/>
         <source>Show / Hide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="536"/>
+        <location filename="mainwindow.cpp" line="550"/>
         <source>Captions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="566"/>
+        <location filename="mainwindow.cpp" line="580"/>
         <source>Window / Fullscreen mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="574"/>
+        <location filename="mainwindow.cpp" line="588"/>
         <source>Display HTML code as plain text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="585"/>
+        <location filename="mainwindow.cpp" line="599"/>
         <source>Options...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="591"/>
+        <location filename="mainwindow.cpp" line="605"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="594"/>
+        <location filename="mainwindow.cpp" line="608"/>
         <source>About...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="609"/>
+        <location filename="mainwindow.cpp" line="623"/>
         <source>Main desc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="615"/>
+        <location filename="mainwindow.cpp" line="629"/>
         <source>Objects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="627"/>
+        <location filename="mainwindow.cpp" line="641"/>
         <source>Actions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="640"/>
+        <location filename="mainwindow.cpp" line="654"/>
         <source>Additional desc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="653"/>
+        <location filename="mainwindow.cpp" line="667"/>
         <source>Input area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="851"/>
-        <location filename="mainwindow.cpp" line="858"/>
+        <location filename="mainwindow.cpp" line="868"/>
+        <location filename="mainwindow.cpp" line="875"/>
         <source>Select game file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="851"/>
-        <location filename="mainwindow.cpp" line="858"/>
+        <location filename="mainwindow.cpp" line="868"/>
+        <location filename="mainwindow.cpp" line="875"/>
         <source>QSP games (*.qsp *.gam)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="callbacks_gui.cpp" line="258"/>
+        <location filename="callbacks_gui.cpp" line="262"/>
         <source>Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="callbacks_gui.cpp" line="313"/>
+        <location filename="callbacks_gui.cpp" line="317"/>
         <source>Input data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="callbacks_gui.cpp" line="347"/>
-        <location filename="mainwindow.cpp" line="889"/>
+        <location filename="callbacks_gui.cpp" line="351"/>
+        <location filename="mainwindow.cpp" line="908"/>
         <source>Select saved game file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="callbacks_gui.cpp" line="347"/>
-        <location filename="callbacks_gui.cpp" line="365"/>
-        <location filename="mainwindow.cpp" line="889"/>
-        <location filename="mainwindow.cpp" line="904"/>
+        <location filename="callbacks_gui.cpp" line="351"/>
+        <location filename="callbacks_gui.cpp" line="369"/>
+        <location filename="mainwindow.cpp" line="908"/>
+        <location filename="mainwindow.cpp" line="923"/>
         <source>Saved game files (*.sav)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="callbacks_gui.cpp" line="365"/>
-        <location filename="mainwindow.cpp" line="904"/>
+        <location filename="callbacks_gui.cpp" line="369"/>
+        <location filename="mainwindow.cpp" line="923"/>
         <source>Select file to save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="961"/>
+        <location filename="mainwindow.cpp" line="980"/>
         <source>, </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="962"/>
+        <location filename="mainwindow.cpp" line="981"/>
         <source>&lt;h2&gt;Qqsp&lt;/h2&gt;&lt;p&gt;Copyright &amp;copy; 2017, S.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="964"/>
+        <location filename="mainwindow.cpp" line="983"/>
         <source>&lt;p&gt;Application version: %1&lt;br&gt;QSP library version: %2&lt;br&gt;Application compilation date: %3&lt;br&gt;Library compilation date: %4&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="965"/>
+        <location filename="mainwindow.cpp" line="984"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
@@ -247,12 +247,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="optionsdialog.ui" line="316"/>
-        <source>Cancel</source>
+        <location filename="optionsdialog.ui" line="286"/>
+        <source>Disable video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="optionsdialog.ui" line="323"/>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="optionsdialog.ui" line="330"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
@@ -266,7 +271,7 @@
     </message>
     <message>
         <location filename="main.cpp" line="17"/>
-        <location filename="mainwindow.cpp" line="98"/>
+        <location filename="mainwindow.cpp" line="100"/>
         <source>__LANGID__</source>
         <translation>en_US</translation>
     </message>
@@ -290,14 +295,14 @@
 <context>
     <name>__LANG__</name>
     <message>
-        <location filename="optionsdialog.cpp" line="47"/>
-        <location filename="optionsdialog.cpp" line="56"/>
+        <location filename="optionsdialog.cpp" line="48"/>
+        <location filename="optionsdialog.cpp" line="57"/>
         <source>__LANGNAME__</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="optionsdialog.cpp" line="47"/>
-        <location filename="optionsdialog.cpp" line="56"/>
+        <location filename="optionsdialog.cpp" line="48"/>
+        <location filename="optionsdialog.cpp" line="57"/>
         <source>__LANGID__</source>
         <translation>en_US</translation>
     </message>

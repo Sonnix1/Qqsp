@@ -66,6 +66,7 @@ public:
     bool SetBackgroundColor(const QColor& color);
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
+    void SetDisableVideo(bool isDisableVideo) { disableVideo = isDisableVideo; }
 
 private:
     // Internal methods
@@ -90,6 +91,7 @@ private:
     QColor m_backColor;
     QColor m_fontColor;
     bool showPlainText;
+    bool disableVideo;
     QMap<QString, animation_gif> animations_gif;
     QMap<QString, animation_video> animations_video;
 

@@ -92,6 +92,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_imgView = new QspImgCanvas(this);
     m_imgView->setObjectName(QStringLiteral("m_imgView"));
 
+    disableVideo = false;
+
     perGameConfig = false;
     autostartLastGame = false;
 
@@ -354,6 +356,13 @@ void MainWindow::SetOverallVolume(float new_volume)
     m_volume = new_volume;
 }
 
+void MainWindow::SetDisableVideo(bool isDisableVideo)
+{
+    disableVideo = isDisableVideo;
+    _mainDescTextBox->SetDisableVideo(disableVideo);
+    _descTextBox->SetDisableVideo(disableVideo);
+}
+
 void MainWindow::LoadSettings(QString filePath)
 {
     QSettings *settings;
@@ -392,6 +401,9 @@ void MainWindow::LoadSettings(QString filePath)
         ApplyLinkColor(qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor)));
     if(m_isUseFontColor)
         ApplyFontColor(qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor)));
+
+    disableVideo = settings->value("application/disableVideo", disableVideo).toBool();
+    SetDisableVideo(disableVideo);
 
     lastGame = settings->value("application/lastGame", lastGame).toString();
     autostartLastGame = settings->value("application/autostartLastGame", autostartLastGame).toBool();
@@ -439,6 +451,8 @@ void MainWindow::SaveSettings(QString filePath)
     settings->setValue("application/backColor", m_backColor);
     settings->setValue("application/linkColor", m_linkColor);
     settings->setValue("application/fontColor", m_fontColor);
+
+    settings->setValue("application/disableVideo", disableVideo);
 
     settings->setValue("application/lastGame", lastGame);
     settings->setValue("application/autostartLastGame", autostartLastGame);

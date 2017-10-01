@@ -33,6 +33,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     ui->checkBox_backColor->setChecked(mw->GetUseBackColor());
     ui->checkBox_linkColor->setChecked(mw->GetUseLinkColor());
     ui->checkBox_fontColor->setChecked(mw->GetUseFontColor());
+    ui->checkBox_disableVideo->setChecked(mw->GetDisableVideo());
     ui->checkBox_perGameConfig->setChecked(mw->GetPerGameConfig());
     ui->checkBox_autostart->setChecked(mw->GetAutostart());
     ui->horizontalSlider_volume->setValue(mw->GetOverallVolume() * 100);
@@ -136,6 +137,7 @@ void OptionsDialog::on_pushButton_ok_clicked()
         mw->SetLinkColor(m_linkColor);
     if(ui->checkBox_fontColor->isChecked())
         mw->SetForegroundColor(m_fontColor);
+    mw->SetDisableVideo(ui->checkBox_disableVideo->isChecked());
     mw->SetPerGameConfig(ui->checkBox_perGameConfig->isChecked());
     mw->SetAutostart(ui->checkBox_autostart->isChecked());
     if(ui->comboBox_language->count() > 0)

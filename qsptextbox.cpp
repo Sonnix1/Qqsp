@@ -21,6 +21,7 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     setContentsMargins(0,0,0,0);
     m_isUseHtml = false;
     showPlainText = false;
+    disableVideo = false;
     //m_linkColor = palette().color(QPalette::Link);
     //m_fontColor = palette().color(QPalette::Text);
     //m_backColor = QColor(224, 224, 224);
@@ -300,44 +301,54 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
     }
     if(new_name.endsWith(".mp4", Qt::CaseInsensitive) || new_name.endsWith(".avi", Qt::CaseInsensitive) || new_name.endsWith(".wmv", Qt::CaseInsensitive) || new_name.endsWith(".mkv", Qt::CaseInsensitive) || new_name.endsWith(".webm", Qt::CaseInsensitive) || new_name.endsWith(".m4v", Qt::CaseInsensitive) || new_name.endsWith(".ogv", Qt::CaseInsensitive))
     {
-        VideoFrameProcessor *vfp = new VideoFrameProcessor();
-        QMediaPlayer *mediaPlayer = new QMediaPlayer();
-        QMediaPlaylist *playlist = new QMediaPlaylist();
-        playlist->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
-        playlist->addMedia(QUrl::fromLocalFile(m_path + new_name));
-        mediaPlayer->setPlaylist(playlist);
-        mediaPlayer->setVideoOutput(vfp);
-        while(mediaPlayer->mediaStatus() == QMediaPlayer::NoMedia || mediaPlayer->mediaStatus() == QMediaPlayer::LoadingMedia)
+        if(!disableVideo)
         {
-            QCoreApplication::processEvents();
-            QThread::msleep(4);
-        }
-
-        if(mediaPlayer->mediaStatus() == QMediaPlayer::LoadedMedia )
-        {
-            mediaPlayer->play();
-            while(!vfp->hasFrame)
+            VideoFrameProcessor *vfp = new VideoFrameProcessor();
+            QMediaPlayer *mediaPlayer = new QMediaPlayer();
+            QMediaPlaylist *playlist = new QMediaPlaylist();
+            playlist->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
+            playlist->addMedia(QUrl::fromLocalFile(m_path + new_name));
+            mediaPlayer->setPlaylist(playlist);
+            mediaPlayer->setVideoOutput(vfp);
+            QTimer timer;
+            timer.setSingleShot(true);
+            timer.start(5000);
+            while((mediaPlayer->mediaStatus() == QMediaPlayer::NoMedia || mediaPlayer->mediaStatus() == QMediaPlayer::LoadingMedia) && mediaPlayer->error() == QMediaPlayer::NoError && timer.isActive())
             {
                 QCoreApplication::processEvents();
                 QThread::msleep(4);
             }
-            animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,vfp->mediaResolution.width(),vfp->mediaResolution.height(), vfp, mediaPlayer});
-            connect(vfp, SIGNAL(newFrame()), this, SLOT(repaintAnimation()));
-            QImage image(vfp->mediaResolution, QImage::Format_ARGB32);
-            image.fill(qRgba(0,0,0,0));
 
-            return QVariant(image);
+            if(mediaPlayer->mediaStatus() == QMediaPlayer::LoadedMedia && mediaPlayer->error() == QMediaPlayer::NoError)
+                mediaPlayer->play();
+
+            while(!vfp->hasFrame && mediaPlayer->error() == QMediaPlayer::NoError && vfp->error() == QAbstractVideoSurface::NoError)
+            {
+                QCoreApplication::processEvents();
+                QThread::msleep(4);
+            }
+
+            if(mediaPlayer->error() == QMediaPlayer::NoError && vfp->error() == QAbstractVideoSurface::NoError)
+            {
+
+                animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,vfp->mediaResolution.width(),vfp->mediaResolution.height(), vfp, mediaPlayer});
+                connect(vfp, SIGNAL(newFrame()), this, SLOT(repaintAnimation()));
+                QImage image(vfp->mediaResolution, QImage::Format_ARGB32);
+                image.fill(qRgba(0,0,0,0));
+
+                return QVariant(image);
+            }
+            else
+            {
+                if(mediaPlayer != 0)
+                    delete mediaPlayer;
+                if(vfp != 0)
+                    delete vfp;
+            }
         }
-        else
-        {
-            if(mediaPlayer != 0)
-                delete mediaPlayer;
-            if(vfp != 0)
-                delete vfp;
-            QImage image(1,1, QImage::Format_ARGB32);
-            image.fill(qRgba(0,0,0,0));
-            return QTextBrowser::loadResource(type, QUrl(new_name));
-        }
+        QImage image(1,1, QImage::Format_ARGB32);
+        image.fill(qRgba(0,0,0,0));
+        return QVariant(image);
     }
     if(type == QTextDocument::ImageResource)
         return QVariant(QImage(m_path + new_name));

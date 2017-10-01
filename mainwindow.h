@@ -113,6 +113,8 @@ public:
     void SetLangID(const QString& new_langid) { langid = new_langid; }
     float GetOverallVolume() { return m_volume; }
     void SetOverallVolume(float new_volume);
+    bool GetDisableVideo() { return disableVideo; }
+    void SetDisableVideo(bool isDisableVideo);
 
 private:
     void CreateMenuBar();
@@ -195,6 +197,7 @@ private:
     bool showCaptions;
     bool autostartLastGame;
     QString langid;
+    bool disableVideo;
 
 private slots:
     void OnOpenGame();
