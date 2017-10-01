@@ -136,11 +136,13 @@
 #define xmemcpy     memcpy
 #define xmemmove    memmove
 
+#ifndef _WIN32
+#include <alloca.h>
+#endif
 #if defined(_WIN32) && !defined(__GNUC__)
 #define xalloca     _alloca
 #define xvsnprintf  _vsnprintf
 #else
-#include <alloca.h>
 #define xalloca     alloca
 #define xvsnprintf  vsnprintf
 #endif
