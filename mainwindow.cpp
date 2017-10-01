@@ -879,10 +879,12 @@ void MainWindow::OnOpenGame()
 void MainWindow::OnRestartGame()
 {
     if(m_isGameOpened)
+    {
         if (!QSPRestartGame(QSP_TRUE))
             ShowError();
         else
             ApplyParams();
+    }
 }
 
 void MainWindow::OnOpenSavedGame()
@@ -1057,9 +1059,9 @@ void MainWindow::OnLinkClicked(const QUrl &url)
         QObject* obj = sender();
         if (obj == _mainDescTextBox)
 #ifndef _WEBBOX
-            _mainDescTextBox->setSource(url); //TODO: check if works
+            _mainDescTextBox->setSource(url);
 #else
-            _mainDescTextBox->setUrl(url); //TODO: check if works
+            _mainDescTextBox->setUrl(url);
 #endif
         else
 #ifndef _WEBBOX
