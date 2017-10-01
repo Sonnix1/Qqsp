@@ -973,12 +973,15 @@ void MainWindow::OnAbout()
 void MainWindow::OnToggleCaptions(bool checked)
 {
     showCaptions = checked;
+    QWidget* mainTitleBarWidget = _mainDescWidget->titleBarWidget();
     QWidget* objectsTitleBarWidget = _objectsWidget->titleBarWidget();
     QWidget* actionsTitleBarWidget = _actionsWidget->titleBarWidget();
     QWidget* descTitleBarWidget = _descWidget->titleBarWidget();
     QWidget* inputTitleBarWidget = _inputWidget->titleBarWidget();
     if(checked == false)
     {
+        _mainDescWidget->setTitleBarWidget(new QWidget(_mainDescWidget));
+        _mainDescWidget->titleBarWidget()->hide();
         _objectsWidget->setTitleBarWidget(new QWidget(_objectsWidget));
         _objectsWidget->titleBarWidget()->hide();
         _actionsWidget->setTitleBarWidget(new QWidget(_actionsWidget));
@@ -990,11 +993,14 @@ void MainWindow::OnToggleCaptions(bool checked)
     }
     else
     {
+        _mainDescWidget->setTitleBarWidget(0);
         _objectsWidget->setTitleBarWidget(0);
         _actionsWidget->setTitleBarWidget(0);
         _descWidget->setTitleBarWidget(0);
         _inputWidget->setTitleBarWidget(0);
     }
+    if(mainTitleBarWidget)
+        delete mainTitleBarWidget;
     if(objectsTitleBarWidget)
         delete objectsTitleBarWidget;
     if(actionsTitleBarWidget)
