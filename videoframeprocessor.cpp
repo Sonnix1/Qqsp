@@ -9,7 +9,7 @@ VideoFrameProcessor::VideoFrameProcessor(QObject *parent) : QAbstractVideoSurfac
     hasFrame = false;
     timer.setSingleShot(true);
     connect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
-    timer.start(5000);
+    timer.start(10000);
 }
 
 VideoFrameProcessor::~VideoFrameProcessor()
@@ -96,9 +96,10 @@ bool VideoFrameProcessor::isFormatSupported(const QVideoSurfaceFormat &format) c
 
 void VideoFrameProcessor::OnFrameTimeout()
 {
-    mediaResolution.setWidth(640);
-    mediaResolution.setHeight(480);
-    curFrame = QImage(mediaResolution, QImage::Format_ARGB32);
-    curFrame.fill(qRgba(0,0,0,0));
-    hasFrame = true;
+    if(!hasFrame)
+    {
+        mediaResolution.setWidth(640);
+        mediaResolution.setHeight(480);
+        hasFrame = true;
+    }
 }

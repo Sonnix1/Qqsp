@@ -92,6 +92,7 @@ private:
     QColor m_fontColor;
     bool showPlainText;
     bool disableVideo;
+    bool doRepaint;
     QMap<QString, animation_gif> animations_gif;
     QMap<QString, animation_video> animations_video;
 
