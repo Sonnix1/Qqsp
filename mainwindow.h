@@ -138,7 +138,7 @@ private:
 
     QMenuBar*       mainMenuBar;
     QToolBar*       mainToolBar;
-    QStatusBar*     mainStatusBar;
+    //QStatusBar*     mainStatusBar;
     QMenu*			_fileMenu; // was wxMenu *m_fileMenu;
     QMenu*			_gameMenu; // was wxMenu *m_gameMenu;
     QMenu*			_settingsMenu; // was wxMenu *m_settingsMenu;

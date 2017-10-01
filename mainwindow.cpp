@@ -45,16 +45,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     mainToolBar = new QToolBar(this);
     mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
     addToolBar(mainToolBar);
-    mainStatusBar = new QStatusBar(this);
-    mainStatusBar->setObjectName(QStringLiteral("mainStatusBar"));
-    setStatusBar(mainStatusBar);
+    //mainStatusBar = new QStatusBar(this);
+    //mainStatusBar->setObjectName(QStringLiteral("mainStatusBar"));
+    //setStatusBar(mainStatusBar);
 
     // Set QMainWindow in the center of desktop
     //QRect rect = geometry();
     //rect.moveCenter(QApplication::desktop()->availableGeometry().center());
     //setGeometry(rect);
 
-    mainStatusBar->setVisible(false);
+    //mainStatusBar->setVisible(false);
     mainToolBar->setVisible(false);
     mainToolBar->setWindowTitle(tr("ToolBar"));
 
