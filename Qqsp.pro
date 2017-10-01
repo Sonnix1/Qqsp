@@ -137,7 +137,7 @@ RESOURCES += \
 #CONFIG += enable-debug
 
 enable-debug {
-  DEFINES += _DEBUG
+  DEFINES += _DEBUGMW
   SOURCES += qsp/memwatch.c
   HEADERS += qsp/memwatch.h
 }

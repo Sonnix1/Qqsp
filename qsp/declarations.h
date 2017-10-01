@@ -29,7 +29,7 @@
 
 /* MEMWATCH */
 
-#ifdef _DEBUG
+#ifdef _DEBUGMW
 	#define MEMWATCH
 	#define MEMWATCH_STDIO
 

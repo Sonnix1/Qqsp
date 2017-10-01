@@ -480,7 +480,7 @@ void QSPSetCallBack(int type, QSP_CALLBACK func)
 /* Инициализация */
 void QSPInit()
 {
-	#ifdef _DEBUG
+        #ifdef _DEBUGMW
 		mwInit();
 	#endif
 	qspIsDebug = QSP_FALSE;
