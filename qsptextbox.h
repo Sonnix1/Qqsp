@@ -6,33 +6,24 @@
 #include <QString>
 #include <QFont>
 #include <QColor>
-#include <QPixmap>
+#include <QImage>
 #include <QVariant>
 #include <QUrl>
 #include <QMovie>
+#include <QLabel>
 #include <QMap>
-#include <QMediaPlayer>
-#include <QCoreApplication>
 
-#include "videoframeprocessor.h"
+#include "videolabel.h"
 
 struct animation_gif
 {
-    int x;
-    int y;
-    int w;
-    int h;
     QMovie *movie;
+    QLabel *movieLabel;
 };
 
 struct animation_video
 {
-    int x;
-    int y;
-    int w;
-    int h;
-    VideoFrameProcessor *frameProcessor;
-    QMediaPlayer *mediaPlayer;
+    VideoLabel *videoLabel;
 };
 
 namespace Ui {
@@ -60,7 +51,7 @@ public:
     bool SetLinkColor(const QColor &color);
     QColor GetLinkColor() { return m_linkColor; }
     void SetGamePath(const QString& path);
-    void SetBackgroundImage(const QPixmap& bmpBg);
+    void SetBackgroundImage(const QImage& bmpBg);
     QColor GetBackgroundColor();
     QColor GetForegroundColor(); //text color
     bool SetBackgroundColor(const QColor& color);
@@ -83,8 +74,8 @@ private:
     QString m_imagePath;
     QFont m_font;
     QString m_text;
-    QPixmap m_bmpBg;
-    QPixmap m_bmpRealBg;
+    QImage m_bmpBg;
+    QImage m_bmpRealBg;
     int m_posX;
     int m_posY;
     QColor m_linkColor;
@@ -92,7 +83,6 @@ private:
     QColor m_fontColor;
     bool showPlainText;
     bool disableVideo;
-    bool doRepaint;
     QMap<QString, animation_gif> animations_gif;
     QMap<QString, animation_video> animations_video;
 

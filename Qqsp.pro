@@ -36,7 +36,8 @@ SOURCES += \
     callbacks_gui.cpp \
     comtools.cpp \
     optionsdialog.cpp \
-    videoframeprocessor.cpp
+    videoframeprocessor.cpp \
+    videolabel.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -49,7 +50,8 @@ HEADERS += \
     callbacks_gui.h \
     comtools.h \
     optionsdialog.h \
-    videoframeprocessor.h
+    videoframeprocessor.h \
+    videolabel.h
 
 FORMS += \
     optionsdialog.ui

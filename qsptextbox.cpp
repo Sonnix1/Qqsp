@@ -5,10 +5,7 @@
 #include <QAbstractScrollArea>
 #include <QScrollBar>
 #include <QPainter>
-#include <QImage>
 #include <QTextBlock>
-#include <QMediaPlaylist>
-#include <QThread>
 
 #include "comtools.h"
 
@@ -22,7 +19,6 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     m_isUseHtml = false;
     showPlainText = false;
     disableVideo = false;
-    doRepaint = false;
     //m_linkColor = palette().color(QPalette::Link);
     //m_fontColor = palette().color(QPalette::Text);
     //m_backColor = QColor(224, 224, 224);
@@ -89,7 +85,7 @@ void QspTextBox::LoadBackImage(const QString& fileName)
         m_imagePath = path;
         if (file.exists() && file.isFile())
         {
-            QPixmap image;
+            QImage image;
             if (image.load(path))
             {
                 SetBackgroundImage(image);
@@ -97,7 +93,7 @@ void QspTextBox::LoadBackImage(const QString& fileName)
                 return;
             }
         }
-        SetBackgroundImage(QPixmap());
+        SetBackgroundImage(QImage());
         //Refresh();
     }
 }
@@ -108,16 +104,16 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
     {
         for(auto animationsItem : animations_gif)
         {
+            if(animationsItem.movieLabel != 0)
+                delete animationsItem.movieLabel;
             if(animationsItem.movie != 0)
                 delete animationsItem.movie;
         }
         animations_gif.clear();
         for(auto animationsItem : animations_video)
         {
-            if(animationsItem.mediaPlayer != 0)
-                delete animationsItem.mediaPlayer;
-            if(animationsItem.frameProcessor != 0)
-                delete animationsItem.frameProcessor;
+            if(animationsItem.videoLabel != 0)
+                delete animationsItem.videoLabel;
         }
         animations_video.clear();
         if (isScroll)
@@ -165,7 +161,7 @@ void QspTextBox::SetGamePath(const QString &path)
     setSearchPaths(QStringList(path));
 }
 
-void QspTextBox::SetBackgroundImage(const QPixmap& bmpBg)
+void QspTextBox::SetBackgroundImage(const QImage& bmpBg)
 {
     m_bmpBg = bmpBg;
     CalcImageSize();
@@ -251,24 +247,8 @@ void QspTextBox::paintEvent(QPaintEvent *e)
     QPainter painter(viewport());
     if (!m_bmpBg.isNull())
     {
-        painter.drawImage(m_posX, m_posY, *(new QImage(m_bmpRealBg.toImage())));
+        painter.drawImage(m_posX, m_posY, m_bmpRealBg);
     }
-    for(auto movie : animations_gif)
-    {
-        if(movie.movie != 0)
-            if(movie.movie->isValid())
-                painter.drawImage(movie.x, movie.y, movie.movie->currentImage().scaled(movie.w, movie.h));
-    }
-    for(auto frameProcessor : animations_video)
-    {
-        if(frameProcessor.frameProcessor != 0)
-        {
-            if(frameProcessor.frameProcessor->hasFrame)
-                if(!frameProcessor.frameProcessor->curFrame.isNull())
-                    painter.drawImage(frameProcessor.x, frameProcessor.y, frameProcessor.frameProcessor->curFrame.scaled(frameProcessor.w, frameProcessor.h));
-        }
-    }
-    doRepaint = false;
     QTextBrowser::paintEvent(e);
 }
 
@@ -288,17 +268,26 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
     if(new_name.endsWith(".gif", Qt::CaseInsensitive) || new_name.endsWith(".mng", Qt::CaseInsensitive))
     {
         QMovie *movie = new QMovie(m_path + new_name);
+        QLabel *videoL = new QLabel(this);
         if(movie->isValid())
         {
-            connect(movie, SIGNAL(frameChanged(int)), this, SLOT(repaintAnimation()) );
+            videoL->setScaledContents(true);
+            videoL->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+            videoL->setAttribute(Qt::WA_TransparentForMouseEvents);
+            videoL->setMovie(movie);
             movie->start();
-            animations_gif.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,movie->frameRect().size().width(), movie->frameRect().size().height(), movie});
+            videoL->raise();
+            videoL->show();
+            videoL->setGeometry(0,0, movie->frameRect().size().width(), movie->frameRect().size().height());
+            animations_gif.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {movie, videoL});
             QImage image(movie->frameRect().size(), QImage::Format_ARGB32);
             image.fill(qRgba(0,0,0,0));
             return QVariant(image);
         }
         else
         {
+            if(videoL != 0)
+                delete videoL;
             if(movie != 0)
                 delete movie;
             return QTextBrowser::loadResource(type, QUrl(new_name));
@@ -308,36 +297,22 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
     {
         if(!disableVideo)
         {
-            VideoFrameProcessor *vfp = new VideoFrameProcessor();
-            QMediaPlayer *mediaPlayer = new QMediaPlayer();
-            QMediaPlaylist *playlist = new QMediaPlaylist();
-            playlist->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
-            playlist->addMedia(QUrl::fromLocalFile(m_path + new_name));
-            mediaPlayer->setPlaylist(playlist);
-            mediaPlayer->setVideoOutput(vfp);
-            mediaPlayer->play();
-
-            while(!vfp->hasFrame && mediaPlayer->error() != QMediaPlayer::InvalidMedia && vfp->error() == QAbstractVideoSurface::NoError)
+            VideoLabel *videoL = new VideoLabel(m_path, new_name, this);
+            if(!videoL->videoError())
             {
-                QCoreApplication::processEvents();
-                QThread::msleep(4);
-            }
-
-            if(mediaPlayer->error() != QMediaPlayer::InvalidMedia && vfp->error() == QAbstractVideoSurface::NoError)
-            {
-                animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {0,0,vfp->mediaResolution.width(),vfp->mediaResolution.height(), vfp, mediaPlayer});
-                connect(vfp, SIGNAL(newFrame()), this, SLOT(repaintAnimation()));
-                QImage image(vfp->mediaResolution, QImage::Format_ARGB32);
+                animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), { videoL });
+                videoL->setGeometry(0,0, videoL->getResolution().width(), videoL->getResolution().height());
+                videoL->raise();
+                videoL->show();
+                QImage image(videoL->getResolution(), QImage::Format_ARGB32);
                 image.fill(qRgba(0,0,0,0));
 
                 return QVariant(image);
             }
             else
             {
-                if(mediaPlayer != 0)
-                    delete mediaPlayer;
-                if(vfp != 0)
-                    delete vfp;
+                if(videoL != 0)
+                    delete videoL;
             }
         }
         QImage image(1,1, QImage::Format_ARGB32);
@@ -376,23 +351,19 @@ void QspTextBox::resizeAnimations()
                         if (animations_gif.contains(it.fragment().charFormat().toImageFormat().name()))
                         {
                             QRect curRect = cursorRect(cursor);
-                            animations_gif[it.fragment().charFormat().toImageFormat().name()].x = curRect.x();
-                            animations_gif[it.fragment().charFormat().toImageFormat().name()].y = curRect.y();
-                            if(it.fragment().charFormat().toImageFormat().width() > 0)
-                                animations_gif[it.fragment().charFormat().toImageFormat().name()].w = it.fragment().charFormat().toImageFormat().width();
-                            if(it.fragment().charFormat().toImageFormat().height() > 0)
-                                animations_gif[it.fragment().charFormat().toImageFormat().name()].h = it.fragment().charFormat().toImageFormat().height();
+                            if(it.fragment().charFormat().toImageFormat().width() > 0 && it.fragment().charFormat().toImageFormat().height() > 0)
+                                animations_gif[it.fragment().charFormat().toImageFormat().name()].movieLabel->setGeometry(curRect.x(),curRect.y(),it.fragment().charFormat().toImageFormat().width(),it.fragment().charFormat().toImageFormat().height());
+                            else
+                                animations_gif[it.fragment().charFormat().toImageFormat().name()].movieLabel->move(curRect.x(),curRect.y());
                         }
                         else
                         if (animations_video.contains(it.fragment().charFormat().toImageFormat().name()))
                         {
                             QRect curRect = cursorRect(cursor);
-                            animations_video[it.fragment().charFormat().toImageFormat().name()].x = curRect.x();
-                            animations_video[it.fragment().charFormat().toImageFormat().name()].y = curRect.y();
-                            if(it.fragment().charFormat().toImageFormat().width() > 0)
-                                animations_video[it.fragment().charFormat().toImageFormat().name()].w = it.fragment().charFormat().toImageFormat().width();
-                            if(it.fragment().charFormat().toImageFormat().height() > 0)
-                                animations_video[it.fragment().charFormat().toImageFormat().name()].h = it.fragment().charFormat().toImageFormat().height();
+                            if(it.fragment().charFormat().toImageFormat().width() > 0 && it.fragment().charFormat().toImageFormat().height() > 0)
+                                animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->setGeometry(curRect.x(),curRect.y(),it.fragment().charFormat().toImageFormat().width(),it.fragment().charFormat().toImageFormat().height());
+                            else
+                                animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->move(curRect.x(),curRect.y());
                         }
                         //QVariant image_data=document()->resource(QTextDocument::ImageResource, QUrl(image_name));
                         //QImage picture=image_data.value<QImage>();
@@ -406,9 +377,6 @@ void QspTextBox::resizeAnimations()
 
 void QspTextBox::repaintAnimation()
 {
-    if(doRepaint)
-        return;
-    doRepaint = true;
     viewport()->update();
 }
 

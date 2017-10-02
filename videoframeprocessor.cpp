@@ -25,12 +25,12 @@ bool VideoFrameProcessor::present(const QVideoFrame &frame)
         if(videoFrame.map(QAbstractVideoBuffer::ReadOnly))
         {
             //curFrame = qt_imageFromVideoFrame(videoFrame);
-            curFrame = QImage(
-                        videoFrame.bits(),
-                        videoFrame.width(),
-                        videoFrame.height(),
-                        videoFrame.bytesPerLine(),
-                        QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat()));
+//            curFrame = QImage(
+//                        videoFrame.bits(),
+//                        videoFrame.width(),
+//                        videoFrame.height(),
+//                        videoFrame.bytesPerLine(),
+//                        QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat()));
             if(!hasFrame)
             {
                 disconnect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
@@ -38,7 +38,12 @@ bool VideoFrameProcessor::present(const QVideoFrame &frame)
                 mediaResolution = videoFrame.size();
                 hasFrame = true;
             }
-            emit newFrame();
+            emit newFrame(QImage(
+                              videoFrame.bits(),
+                              videoFrame.width(),
+                              videoFrame.height(),
+                              videoFrame.bytesPerLine(),
+                              QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat())));
         }
         videoFrame.unmap();
     }

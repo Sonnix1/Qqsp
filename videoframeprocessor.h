@@ -17,7 +17,7 @@ class VideoFrameProcessor : public QAbstractVideoSurface
 
 signals:
     void medialLoaded();
-    void newFrame();
+    void newFrame(QImage);
 
 public:
     explicit VideoFrameProcessor(QObject *parent = 0);
@@ -25,7 +25,7 @@ public:
     bool present(const QVideoFrame& frame);
     QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const;
     bool isFormatSupported(const QVideoSurfaceFormat &format) const;
-    QImage curFrame;
+    //QImage curFrame;
     QSize mediaResolution;
     bool hasFrame;
     QTimer timer;
