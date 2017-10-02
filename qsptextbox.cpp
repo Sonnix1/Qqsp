@@ -61,8 +61,8 @@ void QspTextBox::RefreshUI(bool isScroll)
             str.chop(1);
         if(str.endsWith("\n"))
             str.chop(1);
-        str = str.replace("\r", "").replace("\n", "<br>").replace("<video ", "<img ");
-        text = str.replace("</center><br>", "</center>");
+        str = str.replace("\r", "").replace("\n", "<br>").replace("<video ", "<img ", Qt::CaseInsensitive);
+        text = str.replace("</center><br>", "</center>", Qt::CaseInsensitive).replace("</table><br>", "</table>", Qt::CaseInsensitive);
     }
     else
     {
