@@ -770,6 +770,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Escape)
         if(isFullScreen())
             showNormal();
+    _descTextBox->keyPressEvent(event);
+    _mainDescTextBox->keyPressEvent(event);
     QMainWindow::keyPressEvent(event);
 }
 

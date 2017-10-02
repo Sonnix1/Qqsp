@@ -12,6 +12,7 @@
 #include <QMovie>
 #include <QLabel>
 #include <QMap>
+#include <QKeyEvent>
 
 #include "videolabel.h"
 
@@ -58,6 +59,7 @@ public:
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
     void SetDisableVideo(bool isDisableVideo) { disableVideo = isDisableVideo; }
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     // Internal methods

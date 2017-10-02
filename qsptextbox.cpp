@@ -332,6 +332,11 @@ void QspTextBox::wheelEvent(QWheelEvent *e)
     QTextBrowser::wheelEvent(e);
 }
 
+void QspTextBox::keyPressEvent(QKeyEvent *event)
+{
+    QTextBrowser::keyPressEvent(event);
+}
+
 void QspTextBox::resizeAnimations()
 {
     if(animations_gif.count() > 0 || animations_video.count() > 0)
