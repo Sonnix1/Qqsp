@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setApplicationName("Qqsp");
     a.setOrganizationName("Qqsp");
-    a.setApplicationVersion("0.7");
+    a.setApplicationVersion("0.8");
 
     QObject::tr("__LANGNAME__");
     QObject::tr("__LANGID__");
