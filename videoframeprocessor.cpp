@@ -7,9 +7,9 @@
 VideoFrameProcessor::VideoFrameProcessor(QObject *parent) : QAbstractVideoSurface(parent)
 {
     hasFrame = false;
-    timer.setSingleShot(true);
-    connect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
-    timer.start(10000);
+//    timer.setSingleShot(true);
+//    connect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
+//    timer.start(10000);
 }
 
 VideoFrameProcessor::~VideoFrameProcessor()
@@ -33,8 +33,8 @@ bool VideoFrameProcessor::present(const QVideoFrame &frame)
 //                        QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat()));
             if(!hasFrame)
             {
-                disconnect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
-                timer.stop();
+                //disconnect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
+                //timer.stop();
                 mediaResolution = videoFrame.size();
                 hasFrame = true;
             }

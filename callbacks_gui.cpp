@@ -139,7 +139,7 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	{
 		m_frame->EnableControls(false, true);
         //m_frame->Update();
-        QCoreApplication::processEvents();
+        //QCoreApplication::processEvents();
 		if (m_frame->IsQuit()) return;
 		m_frame->EnableControls(true, true);
 	}
@@ -225,7 +225,7 @@ void QSPCallBacks::Sleep(int msecs)
 	{
         QThread::msleep(50);
         //m_frame->Update();
-        QCoreApplication::processEvents();
+        //QCoreApplication::processEvents();
 		if (m_frame->IsQuit() ||
             m_frame->IsKeyPressedWhileDisabled()) //TODO: implement
 		{
@@ -237,7 +237,7 @@ void QSPCallBacks::Sleep(int msecs)
 	{
         QThread::msleep(msecs % 50);
         //m_frame->Update();
-        QCoreApplication::processEvents();
+        //QCoreApplication::processEvents();
 	}
 	m_frame->EnableControls(true, true);
     m_frame->GetGameMenu()->setEnabled(isSave);

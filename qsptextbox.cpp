@@ -298,22 +298,14 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         if(!disableVideo)
         {
             VideoLabel *videoL = new VideoLabel(m_path, new_name, this);
-            if(!videoL->videoError())
-            {
-                animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), { videoL });
-                videoL->setGeometry(0,0, videoL->getResolution().width(), videoL->getResolution().height());
-                videoL->raise();
-                videoL->show();
-                QImage image(videoL->getResolution(), QImage::Format_ARGB32);
-                image.fill(qRgba(0,0,0,0));
-
-                return QVariant(image);
-            }
-            else
-            {
-                if(videoL != 0)
-                    delete videoL;
-            }
+            connect(videoL, SIGNAL(medialLoaded()), this, SLOT(resizeAnimations()));
+            animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), { videoL });
+            videoL->setGeometry(0,0, 0, 0);
+            videoL->raise();
+            videoL->show();
+            QImage image(1,1, QImage::Format_ARGB32);
+            image.fill(qRgba(0,0,0,0));
+            return QVariant(image);
         }
         QImage image(1,1, QImage::Format_ARGB32);
         image.fill(qRgba(0,0,0,0));
@@ -339,44 +331,74 @@ void QspTextBox::keyPressEvent(QKeyEvent *event)
 
 void QspTextBox::resizeAnimations()
 {
-    if(animations_gif.count() > 0 || animations_video.count() > 0)
+    if(mutex.tryLock())
     {
-        QTextBlock bl = document()->begin();
-        QTextCursor cursor(document());
-        while(bl.isValid())
+        if(animations_gif.count() > 0 || animations_video.count() > 0)
         {
-            QTextBlock::iterator it;
-            for(it = bl.begin(); !(it.atEnd()); ++it)
+            QTextBlock bl = document()->begin();
+            QTextCursor cursor(document());
+            while(bl.isValid())
             {
-                if(it.fragment().isValid())
+                QTextBlock::iterator it;
+                for(it = bl.begin(); !(it.atEnd()); ++it)
                 {
-                    if(it.fragment().charFormat().isImageFormat())
+                    if(it.fragment().isValid())
                     {
-                        cursor.setPosition(it.fragment().position());
-                        if (animations_gif.contains(it.fragment().charFormat().toImageFormat().name()))
+                        if(it.fragment().charFormat().isImageFormat())
                         {
-                            QRect curRect = cursorRect(cursor);
-                            if(it.fragment().charFormat().toImageFormat().width() > 0 && it.fragment().charFormat().toImageFormat().height() > 0)
-                                animations_gif[it.fragment().charFormat().toImageFormat().name()].movieLabel->setGeometry(curRect.x(),curRect.y(),it.fragment().charFormat().toImageFormat().width(),it.fragment().charFormat().toImageFormat().height());
+                            cursor.setPosition(it.fragment().position());
+                            if (animations_gif.contains(it.fragment().charFormat().toImageFormat().name()))
+                            {
+                                QRect curRect = cursorRect(cursor);
+                                if(it.fragment().charFormat().toImageFormat().width() > 0 && it.fragment().charFormat().toImageFormat().height() > 0)
+                                    animations_gif[it.fragment().charFormat().toImageFormat().name()].movieLabel->setGeometry(curRect.x(),curRect.y(),it.fragment().charFormat().toImageFormat().width(),it.fragment().charFormat().toImageFormat().height());
+                                else
+                                    animations_gif[it.fragment().charFormat().toImageFormat().name()].movieLabel->move(curRect.x(),curRect.y());
+                            }
                             else
-                                animations_gif[it.fragment().charFormat().toImageFormat().name()].movieLabel->move(curRect.x(),curRect.y());
+                            if (animations_video.contains(it.fragment().charFormat().toImageFormat().name()))
+                            {
+                                if(animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel != 0)
+                                {
+                                    if(animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->hasFrame())
+                                    {
+                                        QRect curRect = cursorRect(cursor);
+                                        if(it.fragment().charFormat().toImageFormat().width() > 0 && it.fragment().charFormat().toImageFormat().height() > 0)
+                                            animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->setGeometry(curRect.x(),curRect.y(),it.fragment().charFormat().toImageFormat().width(),it.fragment().charFormat().toImageFormat().height());
+                                        else
+                                        {
+                                            animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->move(curRect.x(),curRect.y());
+                                            if(!animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->resolution_set)
+                                            {
+                                                QTextImageFormat newImageFormat = it.fragment().charFormat().toImageFormat();
+                                                newImageFormat.setWidth(animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->getResolution().width());
+                                                newImageFormat.setHeight(animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->getResolution().height());
+                                                if (newImageFormat.isValid())
+                                                {
+                                                    QTextCursor cur(document());
+                                                    cur.setPosition(it.fragment().position());
+                                                    cur.setPosition(it.fragment().position() + it.fragment().length(), QTextCursor::KeepAnchor);
+                                                    cur.setCharFormat(newImageFormat);
+                                                    cur.setPosition(it.fragment().position());
+                                                    curRect = cursorRect(cur);
+                                                }
+                                                animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->setGeometry(curRect.x(),curRect.y(), animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->getResolution().width(), animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->getResolution().height());
+                                                animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->resolution_set = true;
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                            //QVariant image_data=document()->resource(QTextDocument::ImageResource, QUrl(image_name));
+                            //QImage picture=image_data.value<QImage>();
                         }
-                        else
-                        if (animations_video.contains(it.fragment().charFormat().toImageFormat().name()))
-                        {
-                            QRect curRect = cursorRect(cursor);
-                            if(it.fragment().charFormat().toImageFormat().width() > 0 && it.fragment().charFormat().toImageFormat().height() > 0)
-                                animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->setGeometry(curRect.x(),curRect.y(),it.fragment().charFormat().toImageFormat().width(),it.fragment().charFormat().toImageFormat().height());
-                            else
-                                animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->move(curRect.x(),curRect.y());
-                        }
-                        //QVariant image_data=document()->resource(QTextDocument::ImageResource, QUrl(image_name));
-                        //QImage picture=image_data.value<QImage>();
                     }
                 }
+                bl = bl.next();
             }
-            bl = bl.next();
         }
+        mutex.unlock();
     }
 }
 

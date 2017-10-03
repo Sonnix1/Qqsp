@@ -13,6 +13,7 @@
 #include <QLabel>
 #include <QMap>
 #include <QKeyEvent>
+#include <QMutex>
 
 #include "videolabel.h"
 
@@ -87,6 +88,7 @@ private:
     bool disableVideo;
     QMap<QString, animation_gif> animations_gif;
     QMap<QString, animation_video> animations_video;
+    QMutex mutex;
 
 private slots:
     void repaintAnimation();
