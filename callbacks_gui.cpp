@@ -114,7 +114,7 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
         }
         m_frame->GetActions()->EndItems();
     }
-	m_frame->GetActions()->SetSelection(QSPGetSelActionIndex());
+    m_frame->GetActions()->SetSelection(QSPGetSelActionIndex());
 	m_frame->GetObjects()->SetIsHtml(m_isHtml);
     if (QSPIsObjectsChanged())
     {
@@ -294,7 +294,7 @@ int QSPCallBacks::ShowMenu()
 void QSPCallBacks::Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen)
 {
 	if (m_frame->IsQuit()) return;
-	RefreshInt(QSP_FALSE);
+    RefreshInt(QSP_FALSE);
 //	QSPInputDlg dialog(m_frame,
 //		wxID_ANY,
 //		m_frame->GetDesc()->GetBackgroundColor(),

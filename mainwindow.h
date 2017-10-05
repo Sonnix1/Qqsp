@@ -206,9 +206,11 @@ private:
     QString langid;
     bool disableVideo;
 
+public slots:
+    void OpenGameFile(const QString& path);
+
 private slots:
     void OnOpenGame();
-    void OpenGameFile(const QString& path);
     void OnRestartGame();
     void OnOpenSavedGame();
     void OnSaveGame();

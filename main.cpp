@@ -5,6 +5,8 @@
 #include <QTranslator>
 #include <QString>
 #include <QLocale>
+#include <QCommandLineParser>
+#include <QFileInfo>
 
 int main(int argc, char *argv[])
 {
@@ -25,7 +27,21 @@ int main(int argc, char *argv[])
         if(qtTranslator.load(QApplication::applicationName() + "." + langid, ":/translations/"))
             a.installTranslator(&qtTranslator);
 
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Qqsp");
+    parser.addPositionalArgument("file", QCoreApplication::translate("main", "Game file to open."));
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.process(a);
+
     MainWindow w;
+
+    if(parser.positionalArguments().size() != 0)
+    {
+        QFileInfo file(parser.positionalArguments().at(0));
+        w.OpenGameFile(file.filePath());
+    }
+
     w.show();
 
     return a.exec();
