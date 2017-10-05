@@ -88,9 +88,9 @@ public:
     QColor GetLinkColor() { return m_linkColor; }
     QColor GetBackgroundColor() { return m_backColor; }
     QColor GetForegroundColor() { return m_fontColor; }
-    void SetLinkColor(const QColor& new_color) { if(m_isUseLinkColor) ApplyLinkColor(new_color); }
-    void SetBackgroundColor(const QColor& new_color) { if(m_isUseBackColor) ApplyBackColor(new_color); }
-    void SetForegroundColor(const QColor& new_color) { if(m_isUseFontColor) ApplyFontColor(new_color); }
+    void SetLinkColor(const QColor& new_color) { m_settingsLinkColor = new_color; if(m_isUseLinkColor) ApplyLinkColor(new_color); }
+    void SetBackgroundColor(const QColor& new_color) { m_settingsBackColor = new_color; if(m_isUseBackColor) ApplyBackColor(new_color); }
+    void SetForegroundColor(const QColor& new_color) { m_settingsFontColor = new_color; if(m_isUseFontColor) ApplyFontColor(new_color); }
 
     void SetShowPlainText(bool isPlain);
 
@@ -182,6 +182,9 @@ private:
     QColor m_defaultBackColor;
     QColor m_defaultLinkColor;
     QColor m_defaultFontColor;
+    QColor m_settingsBackColor;
+    QColor m_settingsLinkColor;
+    QColor m_settingsFontColor;
     bool m_isUseBackColor;
     bool m_isUseLinkColor;
     bool m_isUseFontColor;

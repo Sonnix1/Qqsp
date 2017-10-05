@@ -158,34 +158,67 @@ void MainWindow::ApplyParams()
     setPalette(m_palette);
     // --------------
     if(!m_isUseBackColor)
+    {
         if(QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal))
         {
-            setBackColor = QColor::fromRgba(numVal);
-            col = setBackColor.red();
-            setBackColor.setRed(setBackColor.blue());
-            setBackColor.setBlue(col);
-            ApplyBackColor(setBackColor);
+            if(numVal == 0)
+                setBackColor = m_defaultBackColor;
+            else
+                setBackColor = QColor::fromRgba(numVal);
         }
+        else
+            setBackColor = m_defaultBackColor;
+    }
+    else
+    {
+        setBackColor = m_settingsBackColor;
+    }
+    col = setBackColor.red();
+    setBackColor.setRed(setBackColor.blue());
+    setBackColor.setBlue(col);
+    ApplyBackColor(setBackColor);
     // --------------
     if(!m_isUseFontColor)
+    {
         if(QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal))
         {
-            setFontColor = QColor::fromRgba(numVal);
-            col = setFontColor.red();
-            setFontColor.setRed(setFontColor.blue());
-            setFontColor.setBlue(col);
-            ApplyFontColor(setFontColor);
+            if(numVal == 0)
+                setFontColor = m_defaultFontColor;
+            else
+                setFontColor = QColor::fromRgba(numVal);
         }
+        else
+            setFontColor = m_defaultFontColor;
+    }
+    else
+    {
+        setFontColor = m_settingsFontColor;
+    }
+    col = setFontColor.red();
+    setFontColor.setRed(setFontColor.blue());
+    setFontColor.setBlue(col);
+    ApplyFontColor(setFontColor);
     // --------------
     if(!m_isUseLinkColor)
+    {
         if(QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal))
         {
-            setLinkColor = QColor::fromRgba(numVal);
-            col = setLinkColor.red();
-            setLinkColor.setRed(setLinkColor.blue());
-            setLinkColor.setBlue(col);
-            ApplyLinkColor(setLinkColor);
+            if(numVal == 0)
+                setLinkColor = m_defaultLinkColor;
+            else
+                setLinkColor = QColor::fromRgba(numVal);
         }
+        else
+            setLinkColor = m_defaultLinkColor;
+    }
+    else
+    {
+        setLinkColor = m_settingsLinkColor;
+    }
+    col = setLinkColor.red();
+    setLinkColor.setRed(setLinkColor.blue());
+    setLinkColor.setBlue(col);
+    ApplyLinkColor(setLinkColor);
     // --------------
     QFont new_font = m_font;
     if(!m_isUseFont)
@@ -412,6 +445,9 @@ void MainWindow::LoadSettings(QString filePath)
         ApplyLinkColor(qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor)));
     if(m_isUseFontColor)
         ApplyFontColor(qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor)));
+    m_settingsBackColor = qvariant_cast<QColor>(settings->value("application/backColor", m_backColor));
+    m_settingsLinkColor = qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor));
+    m_settingsFontColor = qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor));
 
     disableVideo = settings->value("application/disableVideo", disableVideo).toBool();
     SetDisableVideo(disableVideo);
@@ -459,9 +495,9 @@ void MainWindow::SaveSettings(QString filePath)
     settings->setValue("application/isUseBackColor", m_isUseBackColor);
     settings->setValue("application/isUseLinkColor", m_isUseLinkColor);
     settings->setValue("application/isUseFontColor", m_isUseFontColor);
-    settings->setValue("application/backColor", m_backColor);
-    settings->setValue("application/linkColor", m_linkColor);
-    settings->setValue("application/fontColor", m_fontColor);
+    settings->setValue("application/backColor", m_settingsBackColor);
+    settings->setValue("application/linkColor", m_settingsLinkColor);
+    settings->setValue("application/fontColor", m_settingsFontColor);
 
     settings->setValue("application/disableVideo", disableVideo);
 
