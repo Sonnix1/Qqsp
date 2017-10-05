@@ -104,10 +104,10 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
     {
         for(auto animationsItem : animations_gif)
         {
-            if(animationsItem.movieLabel != 0)
-                delete animationsItem.movieLabel;
             if(animationsItem.movie != 0)
                 delete animationsItem.movie;
+            if(animationsItem.movieLabel != 0)
+                delete animationsItem.movieLabel;
         }
         animations_gif.clear();
         for(auto animationsItem : animations_video)
@@ -275,11 +275,14 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
             videoL->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
             videoL->setAttribute(Qt::WA_TransparentForMouseEvents);
             videoL->setMovie(movie);
+            connect(movie, SIGNAL(started()), this, SLOT(resizeAnimations()));
+            connect(movie, SIGNAL(finished()), this, SLOT(resizeAnimations()));
             movie->start();
             videoL->raise();
             videoL->show();
             videoL->setGeometry(0,0, movie->frameRect().size().width(), movie->frameRect().size().height());
             animations_gif.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), {movie, videoL});
+
             QImage image(movie->frameRect().size(), QImage::Format_ARGB32);
             image.fill(qRgba(0,0,0,0));
             return QVariant(image);
