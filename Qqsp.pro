@@ -158,8 +158,12 @@ enable-webbox {
 enable-android {
   DEFINES += _ANDROIDQT
   QT += androidextras
-  SOURCES += androidfiledialog.cpp
-  HEADERS += androidfiledialog.h
+  SOURCES += androidfiledialog.cpp \
+    qspwebengineurlrequestinterceptor.cpp \
+    qspwebengineurlschemehandler.cpp
+  HEADERS += androidfiledialog.h \
+    qspwebengineurlrequestinterceptor.h \
+    qspwebengineurlschemehandler.h
 }
 
 isEmpty(TARGET_EXT) {

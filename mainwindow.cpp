@@ -37,6 +37,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setObjectName(QStringLiteral("MainWindow"));
     setAcceptDrops(true);
 
+#ifdef _WEBBOX
+//    qwuri = new QspWebEngineUrlRequestInterceptor();
+//    QWebEngineProfile::defaultProfile()->setRequestInterceptor(qwuri);
+//    QspWebEngineUrlSchemeHandler *qweush = new QspWebEngineUrlSchemeHandler();
+//    QWebEngineProfile::defaultProfile()->installUrlSchemeHandler(QByteArray("qsp"),qweush);
+#endif
+
     m_palette = palette();
 
     mainMenuBar = new QMenuBar(this);
@@ -124,7 +131,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 MainWindow::~MainWindow()
 {
-
+#ifdef _WEBBOX
+    delete qwuri;
+#endif
 }
 
 void MainWindow::EnableControls(bool status, bool isExtended)
@@ -359,8 +368,10 @@ void MainWindow::SetOverallVolume(float new_volume)
 void MainWindow::SetDisableVideo(bool isDisableVideo)
 {
     disableVideo = isDisableVideo;
+#ifndef _WEBBOX
     _mainDescTextBox->SetDisableVideo(disableVideo);
     _descTextBox->SetDisableVideo(disableVideo);
+#endif
 }
 
 void MainWindow::LoadSettings(QString filePath)
@@ -618,6 +629,17 @@ void MainWindow::CreateDockWindows()
     connect(_mainDescTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
 #else
     _mainDescTextBox = new QspWebBox(this);
+    qwuri = new QspWebEngineUrlRequestInterceptor(_mainDescTextBox);
+    QWebEngineProfile * profile = new QWebEngineProfile(_mainDescTextBox);
+    profile->setRequestInterceptor(qwuri);
+    QspWebEngineUrlSchemeHandler *qweush = new QspWebEngineUrlSchemeHandler(_mainDescTextBox);
+    profile->installUrlSchemeHandler(QByteArray("qsp"),qweush);
+    QWebEnginePage * page = new QWebEnginePage(profile, _mainDescTextBox);
+    _mainDescTextBox->setPage(page);
+    _mainDescTextBox->load(QUrl("qsp:"));
+    //_mainDescTextBox->setUrl(QUrl("qsp:///"));
+//    _mainDescTextBox->page()->profile()->setRequestInterceptor(qwuri);
+//    _mainDescTextBox->page()->load(QUrl("qsp:///"));
 #endif
     _mainDescTextBox->setObjectName(QStringLiteral("_mainDescTextBox"));
     _mainDescWidget = new QDockWidget(tr("Main desc"), this);
@@ -770,8 +792,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Escape)
         if(isFullScreen())
             showNormal();
+#ifndef _WEBBOX
     _descTextBox->keyPressEvent(event);
     _mainDescTextBox->keyPressEvent(event);
+#endif
     QMainWindow::keyPressEvent(event);
 }
 

@@ -24,7 +24,10 @@
 #include "qspinputbox.h"
 #include "qspimgcanvas.h"
 #ifdef _WEBBOX
+#include <QWebEngineProfile>
 #include "qspwebbox.h"
+#include "qspwebengineurlrequestinterceptor.h"
+#include "qspwebengineurlschemehandler.h"
 #endif
 
 #include <qsp_default.h>
@@ -149,6 +152,7 @@ private:
 #else
     QspWebBox*		_mainDescTextBox; //m_desc
     QspWebBox*		_descTextBox; //m_vars ID_VARSDESC
+    QspWebEngineUrlRequestInterceptor* qwuri;
 #endif
     QspListBox*		_objectsListBox; //m_objects
     QspListBox*		_actionsListBox; //m_actions

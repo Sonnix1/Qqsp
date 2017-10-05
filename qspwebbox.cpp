@@ -60,7 +60,7 @@ void QspWebBox::RefreshUI(bool isScroll)
     if(showPlainText)
         ;//setPlainText(text);
     else
-        setHtml(text, QUrl(m_path));
+        ;//setHtml(text, QUrl(m_path));
     //if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
