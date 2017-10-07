@@ -42,7 +42,6 @@ public:
 
     // Methods
     void RefreshUI(bool isScroll = false);
-    void LoadBackImage(const QString& fileName);
 
     // Accessors
     void SetIsHtml(bool isHtml);
@@ -53,7 +52,6 @@ public:
     bool SetLinkColor(const QColor &color);
     QColor GetLinkColor() { return m_linkColor; }
     void SetGamePath(const QString& path);
-    void SetBackgroundImage(const QImage& bmpBg);
     QColor GetBackgroundColor();
     QColor GetForegroundColor(); //text color
     bool SetBackgroundColor(const QColor& color);
@@ -61,14 +59,21 @@ public:
     void SetShowPlainText(bool isPlain);
     void SetDisableVideo(bool isDisableVideo) { disableVideo = isDisableVideo; }
     void keyPressEvent(QKeyEvent *event);
+#ifndef _WEBBOX
+    void SetBackgroundImage(const QImage& bmpBg);
+    void LoadBackImage(const QString& fileName);
+#endif
 
 private:
     // Internal methods
+    void wheelEvent(QWheelEvent *e);
+#ifndef _WEBBOX
     void CalcImageSize();
     void paintEvent(QPaintEvent *e);
-    void resizeEvent(QResizeEvent *e);
     QVariant loadResource(int type, const QUrl &name);
-    void wheelEvent(QWheelEvent *e);
+    void resizeEvent(QResizeEvent *e);
+    void clearManualResources();
+#endif
 
     // Fields
     bool m_isUseHtml;
@@ -77,8 +82,6 @@ private:
     QString m_imagePath;
     QFont m_font;
     QString m_text;
-    QImage m_bmpBg;
-    QImage m_bmpRealBg;
     int m_posX;
     int m_posY;
     QColor m_linkColor;
@@ -86,13 +89,19 @@ private:
     QColor m_fontColor;
     bool showPlainText;
     bool disableVideo;
+#ifndef _WEBBOX
+    QImage m_bmpBg;
+    QImage m_bmpRealBg;
     QMap<QString, animation_gif> animations_gif;
     QMap<QString, animation_video> animations_video;
     QMutex mutex;
+#endif
 
+#ifndef _WEBBOX
 private slots:
     void repaintAnimation();
     void resizeAnimations();
+#endif
 };
 
 #endif // QSPTEXTBOX_H

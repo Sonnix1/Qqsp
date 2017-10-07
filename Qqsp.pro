@@ -144,13 +144,19 @@ enable-debug {
   HEADERS += qsp/memwatch.h
 }
 
-#CONFIG += enable-webbox
+CONFIG += enable-webbox
 
 enable-webbox {
   DEFINES += _WEBBOX
   QT += webenginewidgets
-  SOURCES += qspwebbox.cpp
-  HEADERS += qspwebbox.h
+  SOURCES += qspwebbox.cpp \
+    qspwebengineurlrequestinterceptor.cpp \
+    qspwebengineurlschemehandler.cpp \
+    qspexecwebengineurlschemehandler.cpp
+  HEADERS += qspwebbox.h \
+    qspwebengineurlrequestinterceptor.h \
+    qspwebengineurlschemehandler.h \
+    qspexecwebengineurlschemehandler.h
 }
 
 #CONFIG += enable-android
@@ -158,12 +164,8 @@ enable-webbox {
 enable-android {
   DEFINES += _ANDROIDQT
   QT += androidextras
-  SOURCES += androidfiledialog.cpp \
-    qspwebengineurlrequestinterceptor.cpp \
-    qspwebengineurlschemehandler.cpp
-  HEADERS += androidfiledialog.h \
-    qspwebengineurlrequestinterceptor.h \
-    qspwebengineurlschemehandler.h
+  SOURCES += androidfiledialog.cpp
+  HEADERS += androidfiledialog.h
 }
 
 isEmpty(TARGET_EXT) {

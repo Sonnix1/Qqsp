@@ -131,9 +131,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 MainWindow::~MainWindow()
 {
-#ifdef _WEBBOX
-    delete qwuri;
-#endif
+
 }
 
 void MainWindow::EnableControls(bool status, bool isExtended)
@@ -665,17 +663,7 @@ void MainWindow::CreateDockWindows()
     connect(_mainDescTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
 #else
     _mainDescTextBox = new QspWebBox(this);
-    qwuri = new QspWebEngineUrlRequestInterceptor(_mainDescTextBox);
-    QWebEngineProfile * profile = new QWebEngineProfile(_mainDescTextBox);
-    profile->setRequestInterceptor(qwuri);
-    QspWebEngineUrlSchemeHandler *qweush = new QspWebEngineUrlSchemeHandler(_mainDescTextBox);
-    profile->installUrlSchemeHandler(QByteArray("qsp"),qweush);
-    QWebEnginePage * page = new QWebEnginePage(profile, _mainDescTextBox);
-    _mainDescTextBox->setPage(page);
-    _mainDescTextBox->load(QUrl("qsp:"));
-    //_mainDescTextBox->setUrl(QUrl("qsp:///"));
-//    _mainDescTextBox->page()->profile()->setRequestInterceptor(qwuri);
-//    _mainDescTextBox->page()->load(QUrl("qsp:///"));
+    _mainDescTextBox->page()->load(QUrl("qsp:"));
 #endif
     _mainDescTextBox->setObjectName(QStringLiteral("_mainDescTextBox"));
     _mainDescWidget = new QDockWidget(tr("Main desc"), this);
@@ -717,6 +705,7 @@ void MainWindow::CreateDockWindows()
     connect(_descTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
 #else
     _descTextBox = new QspWebBox(this);
+    _mainDescTextBox->page()->load(QUrl("qsp:"));
 #endif
     _descTextBox->setObjectName(QStringLiteral("_descTextBox"));
     _descWidget->setWidget(_descTextBox);

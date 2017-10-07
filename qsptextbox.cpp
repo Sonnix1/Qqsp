@@ -24,8 +24,10 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     //m_backColor = QColor(224, 224, 224);
     m_font = font();
     setOpenLinks(false);
+#ifndef _WEBBOX
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );
     connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );
+#endif
 //	m_font = *wxNORMAL_FONT;
 //	m_outFormat = wxString::Format(
 //		wxT("<HTML><META HTTP-EQUIV = \"Content-Type\" CONTENT = \"text/html; charset=%s\">")
@@ -36,7 +38,9 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
 
 QspTextBox::~QspTextBox()
 {
-
+#ifndef _WEBBOX
+    clearManualResources();
+#endif
 }
 
 void QspTextBox::SetIsHtml(bool isHtml)
@@ -76,46 +80,13 @@ void QspTextBox::RefreshUI(bool isScroll)
     if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
-void QspTextBox::LoadBackImage(const QString& fileName)
-{
-    QFileInfo file(m_path + fileName);
-    QString path(file.absoluteFilePath());
-    if (m_imagePath != path)
-    {
-        m_imagePath = path;
-        if (file.exists() && file.isFile())
-        {
-            QImage image;
-            if (image.load(path))
-            {
-                SetBackgroundImage(image);
-                //Refresh();
-                return;
-            }
-        }
-        SetBackgroundImage(QImage());
-        //Refresh();
-    }
-}
-
 void QspTextBox::SetText(const QString& text, bool isScroll)
 {
     if (m_text != text)
     {
-        for(auto animationsItem : animations_gif)
-        {
-            if(animationsItem.movie != 0)
-                delete animationsItem.movie;
-            if(animationsItem.movieLabel != 0)
-                delete animationsItem.movieLabel;
-        }
-        animations_gif.clear();
-        for(auto animationsItem : animations_video)
-        {
-            if(animationsItem.videoLabel != 0)
-                delete animationsItem.videoLabel;
-        }
-        animations_video.clear();
+#ifndef _WEBBOX
+        clearManualResources();
+#endif
         if (isScroll)
         {
             if (m_text.isEmpty() || !text.startsWith(m_text))
@@ -123,7 +94,9 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
         }
         m_text = text;
         RefreshUI(isScroll);
+#ifndef _WEBBOX
         resizeAnimations();
+#endif
     }
 }
 
@@ -159,12 +132,6 @@ void QspTextBox::SetGamePath(const QString &path)
 {
     m_path = path;
     setSearchPaths(QStringList(path));
-}
-
-void QspTextBox::SetBackgroundImage(const QImage& bmpBg)
-{
-    m_bmpBg = bmpBg;
-    CalcImageSize();
 }
 
 //Returns the background color of the window.
@@ -220,6 +187,47 @@ void QspTextBox::SetShowPlainText(bool isPlain)
     RefreshUI();
 }
 
+void QspTextBox::wheelEvent(QWheelEvent *e)
+{
+    if( e->modifiers() == Qt::ControlModifier )
+        return;
+    QTextBrowser::wheelEvent(e);
+}
+
+void QspTextBox::keyPressEvent(QKeyEvent *event)
+{
+    QTextBrowser::keyPressEvent(event);
+}
+
+#ifndef _WEBBOX
+void QspTextBox::SetBackgroundImage(const QImage& bmpBg)
+{
+    m_bmpBg = bmpBg;
+    CalcImageSize();
+}
+
+void QspTextBox::LoadBackImage(const QString& fileName)
+{
+    QFileInfo file(m_path + fileName);
+    QString path(file.absoluteFilePath());
+    if (m_imagePath != path)
+    {
+        m_imagePath = path;
+        if (file.exists() && file.isFile())
+        {
+            QImage image;
+            if (image.load(path))
+            {
+                SetBackgroundImage(image);
+                //Refresh();
+                return;
+            }
+        }
+        SetBackgroundImage(QImage());
+        //Refresh();
+    }
+}
+
 void QspTextBox::CalcImageSize()
 {
     if (!m_bmpBg.isNull())
@@ -262,6 +270,25 @@ void QspTextBox::resizeEvent(QResizeEvent *e)
     QTextBrowser::resizeEvent(e);
 }
 
+void QspTextBox::clearManualResources()
+{
+    for(auto animationsItem : animations_gif)
+    {
+        if(animationsItem.movie != 0)
+            delete animationsItem.movie;
+        if(animationsItem.movieLabel != 0)
+            delete animationsItem.movieLabel;
+    }
+    animations_gif.clear();
+    for(auto animationsItem : animations_video)
+    {
+        if(animationsItem.videoLabel != 0)
+            delete animationsItem.videoLabel;
+    }
+    animations_video.clear();
+}
+
+
 QVariant QspTextBox::loadResource(int type, const QUrl &name)
 {
     QString new_name = QSPTools::GetCaseInsensitiveFilePath(m_path, QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())));
@@ -289,11 +316,13 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         }
         else
         {
-            if(videoL != 0)
-                delete videoL;
             if(movie != 0)
                 delete movie;
-            return QTextBrowser::loadResource(type, QUrl(new_name));
+            if(videoL != 0)
+                delete videoL;
+            QImage image(1, 1, QImage::Format_ARGB32);
+            image.fill(qRgba(0,0,0,0));
+            return QVariant(image);
         }
     }
     if(new_name.endsWith(".mp4", Qt::CaseInsensitive) || new_name.endsWith(".avi", Qt::CaseInsensitive) || new_name.endsWith(".wmv", Qt::CaseInsensitive) || new_name.endsWith(".mkv", Qt::CaseInsensitive) || new_name.endsWith(".webm", Qt::CaseInsensitive) || new_name.endsWith(".m4v", Qt::CaseInsensitive) || new_name.endsWith(".ogv", Qt::CaseInsensitive))
@@ -318,18 +347,6 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         return QVariant(QImage(m_path + new_name));
     else
         return QTextBrowser::loadResource(type, QUrl(new_name));
-}
-
-void QspTextBox::wheelEvent(QWheelEvent *e)
-{
-    if( e->modifiers() == Qt::ControlModifier )
-        return;
-    QTextBrowser::wheelEvent(e);
-}
-
-void QspTextBox::keyPressEvent(QKeyEvent *event)
-{
-    QTextBrowser::keyPressEvent(event);
 }
 
 void QspTextBox::resizeAnimations()
@@ -409,4 +426,4 @@ void QspTextBox::repaintAnimation()
 {
     viewport()->update();
 }
-
+#endif

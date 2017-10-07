@@ -152,7 +152,6 @@ private:
 #else
     QspWebBox*		_mainDescTextBox; //m_desc
     QspWebBox*		_descTextBox; //m_vars ID_VARSDESC
-    QspWebEngineUrlRequestInterceptor* qwuri;
 #endif
     QspListBox*		_objectsListBox; //m_objects
     QspListBox*		_actionsListBox; //m_actions
