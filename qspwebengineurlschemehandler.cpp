@@ -5,7 +5,6 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QFile>
-#include <QDebug>
 
 #include "comtools.h"
 
@@ -18,7 +17,6 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
 {
     const QUrl url = request->requestUrl();
     QString url_str = QByteArray::fromPercentEncoding(url.toString().toUtf8());
-    qDebug() << "requestStarted: " << url;
     QBuffer *buffer = new QBuffer;
     connect(request, SIGNAL(destroyed()), buffer, SLOT(deleteLater()));
 
@@ -36,7 +34,6 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
     replystr.append("}\n</style></head>\n<body>\n");
     replystr.append(m_text);
     replystr.append("</body>\n</html>");
-    qDebug() << replystr;
 
     buffer->open(QIODevice::WriteOnly);
     if(url_str.compare("qsp:" , Qt::CaseInsensitive) == 0 || url_str.compare("qsp:/" , Qt::CaseInsensitive) == 0)
@@ -50,7 +47,6 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
         QString path = QSPTools::GetCaseInsensitiveFilePath(m_path, url_str.mid(5));
         QMimeDatabase db;
         QMimeType type = db.mimeTypeForFile(m_path + path);
-        qDebug() << "Mime type:" << type.name();
         QFile file( m_path + path );
         file.open(QIODevice::ReadOnly);
         buffer->write(file.readAll());
