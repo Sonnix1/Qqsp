@@ -53,6 +53,10 @@ QString QSPTools::HtmlizeWhitespaces(const QString& str)
                     {
                         out.append( QString("&amp;") );
                     }
+                    else if(ch == QChar('\n'))
+                    {
+                        out.append( QString("%0A") );
+                    }
                     else if(ch == QChar('<'))
                     {
                         out.append( QString("&lt;") );
