@@ -67,7 +67,27 @@ void QspWebBox::RefreshUI(bool isScroll)
 //    {
 //        text = str;
 //    }
-    text = QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str));
+
+    int copypos = 0;
+    int startIndex = str.indexOf("<video", 0, Qt::CaseInsensitive);
+    while (startIndex >= 0)
+    {
+        int endIndex = str.indexOf(">", startIndex, Qt::CaseInsensitive);
+        if(endIndex < 0)
+            break;
+        endIndex = endIndex + 1;
+        text.append(str.mid(copypos, startIndex + 6 - copypos));
+        if(!str.mid(startIndex, endIndex - startIndex).contains("autoplay", Qt::CaseInsensitive))
+            text.append(" autoplay");
+        if(!str.mid(startIndex, endIndex - startIndex).contains("loop", Qt::CaseInsensitive))
+            text.append(" loop");
+        text.append(str.mid(startIndex + 6, endIndex - startIndex - 6));
+        copypos = endIndex;
+        startIndex = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
+    }
+    text.append(str.mid(copypos));
+
+    text = QSPTools::HtmlizeWhitespaces(m_isUseHtml ? text : QSPTools::ProceedAsPlain(text));
     if(showPlainText)
         qweush->SetPlainText(text);
     else
