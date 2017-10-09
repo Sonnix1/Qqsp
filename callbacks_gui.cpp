@@ -155,7 +155,7 @@ void QSPCallBacks::SetInputStrText(const QSP_CHAR *text)
 QSP_BOOL QSPCallBacks::IsPlay(const QSP_CHAR *file)
 {
     QSP_BOOL playing = QSP_FALSE;
-    QSPSounds::iterator elem = m_sounds.find(m_gamePath + QFileInfo(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
+    QSPSounds::iterator elem = m_sounds.find(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
     if (elem != m_sounds.end())
         if(elem.value()->state() == QMediaPlayer::PlayingState)
             playing = QSP_TRUE;
@@ -166,7 +166,7 @@ void QSPCallBacks::CloseFile(const QSP_CHAR *file)
 {
     if (file)
 	{
-        QSPSounds::iterator elem = m_sounds.find(m_gamePath + QFileInfo(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
+        QSPSounds::iterator elem = m_sounds.find(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
 		if (elem != m_sounds.end())
 		{
             delete elem.value();
@@ -391,7 +391,7 @@ void QSPCallBacks::UpdateGamePath()
 bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)
 {
     if (!IsPlay(file)) return false;
-    QSPSounds::iterator elem = m_sounds.find(QString(m_gamePath + QFileInfo(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath()));
+    QSPSounds::iterator elem = m_sounds.find(QString(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath()));
     QMediaPlayer *snd = elem.value();
     snd->setVolume(volume*m_volumeCoeff);
 	return true;
