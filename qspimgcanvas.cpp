@@ -25,7 +25,7 @@ QspImgCanvas::~QspImgCanvas()
 bool QspImgCanvas::OpenFile(const QString &fileName)
 {
     bool ret;
-    QFileInfo file(fileName);
+    QFileInfo file(m_path + fileName);
     QString path(file.absoluteFilePath());
     setWindowTitle(path);
     if (!path.isEmpty())

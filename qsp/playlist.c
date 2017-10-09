@@ -46,7 +46,7 @@ static void qspPlayFile(QSP_CHAR *s, int volume, QSP_BOOL isAddToPlayList)
 		volume = 0;
 	else if (volume > 100)
 		volume = 100;
-	file = qspGetAbsFromRelPath(s);
+    file = qspGetPathAsIs(s);
 	qspCallPlayFile(file, volume);
 	free(file);
 	if (isAddToPlayList)
@@ -129,7 +129,7 @@ void qspRefreshPlayList()
 		if (pos) *pos = 0;
 		if (qspIsAnyString(str))
 		{
-			file = qspGetAbsFromRelPath(str);
+            file = qspGetPathAsIs(str);
 			if (qspSearchPlayList(str) < 0 && qspCallIsPlayingFile(file))
 			{
 				if (pos) *pos = QSP_PLVOLUMEDELIM[0];
@@ -161,7 +161,7 @@ QSP_BOOL qspStatementCloseFile(QSPVariant *args, int count, QSP_CHAR **jumpTo, i
 			pos = qspSearchPlayList(QSP_STR(args[0]));
 			if (pos >= 0)
 			{
-				file = qspGetAbsFromRelPath(QSP_STR(args[0]));
+                file = qspGetPathAsIs(QSP_STR(args[0]));
 				qspCallCloseFile(file);
 				free(file);
 				do

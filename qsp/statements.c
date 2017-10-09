@@ -1468,7 +1468,7 @@ static QSP_BOOL qspStatementView(QSPVariant *args, int count, QSP_CHAR **jumpTo,
 	if (count && qspIsAnyString(QSP_STR(args[0])))
 	{
 		qspViewPath = qspGetAddText(qspViewPath, QSP_STR(args[0]), 0, -1);
-		file = qspGetAbsFromRelPath(qspViewPath);
+        file = qspGetPathAsIs(qspViewPath);
 		qspCallShowPicture(file);
 		free(file);
 	}

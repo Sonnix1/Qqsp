@@ -99,6 +99,13 @@ QSP_CHAR *qspGetAbsFromRelPath(QSP_CHAR *path)
 	return qspGetAddText(absPath, path, qspQstPathLen, -1);
 }
 
+QSP_CHAR *qspGetPathAsIs(QSP_CHAR *path)
+{
+    QSP_CHAR *newPath;
+    qspAddText(&newPath, path, 0, -1, QSP_TRUE);
+    return newPath;
+}
+
 void qspClearIncludes(QSP_BOOL isFirst)
 {
 	int i, count;
@@ -553,7 +560,7 @@ void qspOpenGameStatusFromString(QSP_CHAR *str)
 		if (*strs[ind])
 		{
 			str = qspCodeReCode(strs[ind], QSP_FALSE);
-			qspCurActions[i].Image = qspGetAbsFromRelPath(str);
+            qspCurActions[i].Image = qspGetPathAsIs(str);
 			free(str);
 		}
 		else
@@ -583,7 +590,7 @@ void qspOpenGameStatusFromString(QSP_CHAR *str)
 		if (*strs[ind])
 		{
 			str = qspCodeReCode(strs[ind], QSP_FALSE);
-			qspCurObjects[i].Image = qspGetAbsFromRelPath(str);
+            qspCurObjects[i].Image = qspGetPathAsIs(str);
 			free(str);
 		}
 		else
@@ -633,7 +640,7 @@ void qspOpenGameStatusFromString(QSP_CHAR *str)
 	qspCallSetInputStrText(qspCurInput);
 	if (qspViewPath)
 	{
-		file = qspGetAbsFromRelPath(qspViewPath);
+        file = qspGetPathAsIs(qspViewPath);
 		qspCallShowPicture(file);
 		free(file);
 	}

@@ -66,7 +66,7 @@ QSP_BOOL qspStatementShowMenu(QSPVariant *args, int count, QSP_CHAR **jumpTo, in
 		if (pos = qspInStrRChars(str, QSP_MENUDELIM, pos2))
 		{
 			len = (int)(pos2 - pos) - 1;
-			imgPath = (qspIsAnyString(++pos2) ? qspGetAbsFromRelPath(pos2) : 0);
+            imgPath = (qspIsAnyString(++pos2) ? qspGetPathAsIs(pos2) : 0);
 		}
 		else
 		{

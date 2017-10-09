@@ -88,7 +88,7 @@ void qspAddAction(QSPVariant *args, int count, QSPLineOfCode *code, int start, i
 		return;
 	}
 	if (count == 2 && qspIsAnyString(QSP_STR(args[1])))
-		imgPath = qspGetAbsFromRelPath(QSP_STR(args[1]));
+        imgPath = qspGetPathAsIs(QSP_STR(args[1]));
 	else
 		imgPath = 0;
 	act = qspCurActions + qspCurActionsCount++;

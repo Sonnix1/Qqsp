@@ -60,6 +60,8 @@ public:
     //static void OpenGame(const QSP_CHAR *file, QSP_BOOL isNewGame);
     static void OpenGameStatus(const QSP_CHAR *file);
     static void SaveGameStatus(const QSP_CHAR *file);
+
+    static QString m_gamePath;
 private:
     // Internal methods
     static void UpdateGamePath();
@@ -67,7 +69,6 @@ private:
     static void UpdateSounds();
 
     // Fields
-    static QString m_gamePath;
     static MainWindow *m_frame;
     static bool m_isHtml;
     static QSPSounds m_sounds;

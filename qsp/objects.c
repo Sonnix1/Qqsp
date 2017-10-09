@@ -137,7 +137,7 @@ QSP_BOOL qspStatementAddObject(QSPVariant *args, int count, QSP_CHAR **jumpTo, i
 	}
 	if (qspCurSelObject >= objInd) qspCurSelObject = -1;
 	if (count >= 2 && qspIsAnyString(QSP_STR(args[1])))
-		imgPath = qspGetAbsFromRelPath(QSP_STR(args[1]));
+        imgPath = qspGetPathAsIs(QSP_STR(args[1]));
 	else
 		imgPath = 0;
 	for (i = qspCurObjectsCount; i > objInd; --i)

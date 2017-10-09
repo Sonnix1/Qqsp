@@ -828,6 +828,13 @@ void MainWindow::OpenGameFile(const QString &path)
 {
     if(!path.isEmpty())
     {
+        QFileInfo fileName(path);
+        QSPCallBacks::m_gamePath = fileName.canonicalPath();
+        if(!QSPCallBacks::m_gamePath.endsWith("/")) QSPCallBacks::m_gamePath+="/";
+        _mainDescTextBox->SetGamePath(QSPCallBacks::m_gamePath);
+        _objectsListBox->SetGamePath(QSPCallBacks::m_gamePath);
+        _actionsListBox->SetGamePath(QSPCallBacks::m_gamePath);
+        _descTextBox->SetGamePath(QSPCallBacks::m_gamePath);
         if (QSPLoadGameWorld(qspStringFromQString(path)))
         {
             m_isGameOpened = true;
