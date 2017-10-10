@@ -75,6 +75,11 @@ void QspImgCanvas::RefreshUI()
     //		Refresh();
 }
 
+void QspImgCanvas::SetGamePath(const QString &path)
+{
+    m_path = path;
+}
+
 bool QspImgCanvas::SetBackgroundColor(const QColor &color)
 {
     //wxWindow::SetBackgroundColor(color);

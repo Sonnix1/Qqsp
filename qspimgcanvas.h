@@ -26,6 +26,7 @@ public:
     // Methods
     bool OpenFile(const QString& fileName);
     void RefreshUI();
+    void SetGamePath(const QString& path);
 
     // Overloaded methods
     virtual bool SetBackgroundColor(const QColor& color);

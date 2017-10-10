@@ -386,6 +386,7 @@ void QSPCallBacks::UpdateGamePath()
     m_frame->GetObjects()->SetGamePath(m_gamePath);
     m_frame->GetActions()->SetGamePath(m_gamePath);
     m_frame->GetVars()->SetGamePath(m_gamePath);
+    m_frame->GetImgView()->SetGamePath(m_gamePath);
 }
 
 bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)

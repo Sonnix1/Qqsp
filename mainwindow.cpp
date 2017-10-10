@@ -299,6 +299,7 @@ void MainWindow::UpdateGamePath(const QString &path)
     _descTextBox->SetGamePath(new_path);
     _actionsListBox->SetGamePath(new_path);
     _objectsListBox->SetGamePath(new_path);
+    m_imgView->SetGamePath(new_path);
 }
 
 void MainWindow::ShowError()
