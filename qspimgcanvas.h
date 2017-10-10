@@ -10,6 +10,7 @@
 #include <QVBoxLayout>
 #include <QKeyEvent>
 #include <QCloseEvent>
+#include <QMovie>
 
 namespace Ui {
 class QspImgCanvas;
@@ -35,6 +36,7 @@ private:
     // Fields
     bool m_isAnim;
     QPixmap m_image;
+    QMovie m_movie;
     QLabel label_image;
     QVBoxLayout layout;
     QString m_path;

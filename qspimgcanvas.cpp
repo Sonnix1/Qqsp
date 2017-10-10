@@ -7,10 +7,16 @@ QspImgCanvas::QspImgCanvas(QWidget *parent) : QDialog(parent)
     m_posX = m_posY = 0;
     m_isAnim = false;
     setWindowTitle(tr("Image"));
+    setContentsMargins(0,0,0,0);
+    label_image.setFrameStyle(QFrame::NoFrame);
+    label_image.setFrameShadow(QFrame::Plain);
+    label_image.setContentsMargins(0,0,0,0);
+    layout.setContentsMargins(0,0,0,0);
     sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
     label_image.sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     label_image.sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
+    label_image.setScaledContents(true);
     layout.addWidget(&label_image);
     setLayout(&layout);
     setVisible(false);
@@ -28,41 +34,37 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
     QFileInfo file(m_path + fileName);
     QString path(file.absoluteFilePath());
     setWindowTitle(path);
+    m_isAnim = false;
     if (!path.isEmpty())
     {
         if (file.exists() && file.isFile())
         {
-            if ( false /* m_isAnim = m_animation->LoadFile(path) */)
+            if(path.endsWith(".gif", Qt::CaseInsensitive) || path.endsWith(".mng", Qt::CaseInsensitive))
             {
-                //m_animation->Show();
+                m_movie.stop();
+                m_movie.setFileName(path);
+                m_movie.start();
+                if(m_movie.isValid())
+                    m_isAnim = true;
+            }
+            if (m_isAnim)
+            {
+                label_image.setMovie(&m_movie);
                 ret = true;
             }
             else
             {
-                //m_animation->Hide();
                 ret = m_image.load(path);
                 if(ret)
                     label_image.setPixmap(m_image);
             }
             if (ret)
             {
-                if (m_isAnim)
-                {
-                    //m_animation->Play();
-                }
-                else
-                {
-                    //Refresh();
-                }
                 setVisible(true);
             }
             return ret;
         }
         return false;
-    }
-    if(!fileName.isEmpty())
-    {
-        setVisible(true);
     }
     return true;
 }
