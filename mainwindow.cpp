@@ -100,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_imgView->setObjectName(QStringLiteral("m_imgView"));
 
     disableVideo = false;
+    m_videoFix = true;
 
     perGameConfig = false;
     autostartLastGame = false;
@@ -407,6 +408,15 @@ void MainWindow::SetDisableVideo(bool isDisableVideo)
 #endif
 }
 
+void MainWindow::SetVideoFix(bool isFix)
+{
+    m_videoFix = isFix;
+#ifdef _WEBBOX
+    _mainDescTextBox->SetVideoFix(m_videoFix);
+    _descTextBox->SetVideoFix(m_videoFix);
+#endif
+}
+
 void MainWindow::LoadSettings(QString filePath)
 {
     QSettings *settings;
@@ -451,6 +461,8 @@ void MainWindow::LoadSettings(QString filePath)
 
     disableVideo = settings->value("application/disableVideo", disableVideo).toBool();
     SetDisableVideo(disableVideo);
+    m_videoFix = settings->value("application/videoFix", m_videoFix).toBool();
+    SetVideoFix(m_videoFix);
 
     lastGame = settings->value("application/lastGame", lastGame).toString();
     autostartLastGame = settings->value("application/autostartLastGame", autostartLastGame).toBool();
@@ -500,6 +512,7 @@ void MainWindow::SaveSettings(QString filePath)
     settings->setValue("application/fontColor", m_settingsFontColor);
 
     settings->setValue("application/disableVideo", disableVideo);
+    settings->setValue("application/videoFix", m_videoFix);
 
     settings->setValue("application/lastGame", lastGame);
     settings->setValue("application/autostartLastGame", autostartLastGame);

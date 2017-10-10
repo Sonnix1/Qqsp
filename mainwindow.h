@@ -118,6 +118,8 @@ public:
     void SetOverallVolume(float new_volume);
     bool GetDisableVideo() { return disableVideo; }
     void SetDisableVideo(bool isDisableVideo);
+    bool GetVideoFix() { return m_videoFix; }
+    void SetVideoFix(bool isFix);
 
 private:
     void CreateMenuBar();
@@ -204,6 +206,7 @@ private:
     bool autostartLastGame;
     QString langid;
     bool disableVideo;
+    bool m_videoFix;
 
 public slots:
     void OpenGameFile(const QString& path);

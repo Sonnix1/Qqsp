@@ -37,6 +37,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     ui->checkBox_perGameConfig->setChecked(mw->GetPerGameConfig());
     ui->checkBox_autostart->setChecked(mw->GetAutostart());
     ui->horizontalSlider_volume->setValue(mw->GetOverallVolume() * 100);
+    ui->checkBox_videoFix->setChecked(mw->GetVideoFix());
 
     QDirIterator qmIt(QCoreApplication::applicationDirPath(), QStringList() << "*.qm", QDir::Files);
     while(qmIt.hasNext())
@@ -140,6 +141,7 @@ void OptionsDialog::on_pushButton_ok_clicked()
     mw->SetDisableVideo(ui->checkBox_disableVideo->isChecked());
     mw->SetPerGameConfig(ui->checkBox_perGameConfig->isChecked());
     mw->SetAutostart(ui->checkBox_autostart->isChecked());
+    mw->SetVideoFix(ui->checkBox_videoFix->isChecked());
     if(ui->comboBox_language->count() > 0)
         mw->SetLangID(ui->comboBox_language->itemData(ui->comboBox_language->currentIndex()).toString());
     if(mw->GetOverallVolume() != ui->horizontalSlider_volume->value() / 100)

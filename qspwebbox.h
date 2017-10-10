@@ -41,6 +41,7 @@ public:
     bool SetBackgroundColor(const QColor& color);
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
+    void SetVideoFix(bool isFix);
 
 private:
     // Fields
@@ -56,6 +57,7 @@ private:
     QColor m_backColor;
     QColor m_fontColor;
     bool showPlainText;
+    bool m_videoFix;
     QspWebEngineUrlSchemeHandler *qweush;
 };
 

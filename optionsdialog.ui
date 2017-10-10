@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>375</width>
-    <height>340</height>
+    <width>420</width>
+    <height>370</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -284,6 +284,13 @@
       <widget class="QCheckBox" name="checkBox_disableVideo">
        <property name="text">
         <string>Disable video</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QCheckBox" name="checkBox_videoFix">
+       <property name="text">
+        <string>Force autoplay and loop for video</string>
        </property>
       </widget>
      </item>
