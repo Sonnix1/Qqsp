@@ -218,7 +218,7 @@ void MainWindow::ApplyParams()
     setLinkColor.setBlue(col);
     ApplyLinkColor(setLinkColor);
     // --------------
-    QFont new_font = m_font;
+    QFont new_font = m_defaultFont;
     if(!m_isUseFont)
     {
         if(QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal))
@@ -239,10 +239,11 @@ void MainWindow::ApplyParams()
             new_font.setPointSize(m_fontSize);
         }
     }
-    if(new_font != m_font)
+    else
     {
-        ApplyFont(new_font);
+        new_font = m_font;
     }
+    ApplyFont(new_font);
 }
 
 void MainWindow::DeleteMenu()

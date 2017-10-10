@@ -27,6 +27,7 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
     if(m_fontColor.isValid())
         replystr.append(QString("color: %1;\n").arg(m_fontColor.name()));
     replystr.append(QString("font-family: %1;\n").arg(m_font.family()));
+    replystr.append(QString("font-size: %1pt;\n").arg(m_font.pointSize()));
     if(!m_bmpBg.isEmpty())
         replystr.append(QString("background: url(%1) no-repeat center center fixed;\nbackground-size: cover;\n").arg(m_bmpBg));
     if(m_linkColor.isValid())
