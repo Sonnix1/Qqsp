@@ -83,6 +83,20 @@ void QspWebBox::RefreshUI(bool isScroll)
             text.append(" loop");
         text.append(str.mid(startIndex + 6, endIndex - startIndex - 6));
         copypos = endIndex;
+        int cloaseTegPos = str.indexOf("</video>", 0, Qt::CaseInsensitive);
+        if(cloaseTegPos == -1)
+            text.append("</video>");
+        else
+        {
+            int nextV = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
+            if(nextV == -1)
+                text.append("</video>");
+            else
+            {
+                if(cloaseTegPos > nextV)
+                    text.append("</video>");
+            }
+        }
         startIndex = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
     }
     text.append(str.mid(copypos));
