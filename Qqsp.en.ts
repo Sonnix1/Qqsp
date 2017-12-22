@@ -177,7 +177,8 @@
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1056"/>
-        <source>&lt;p&gt;Application version: %1&lt;br&gt;QSP library version: %2&lt;br&gt;Application compilation date: %3&lt;br&gt;Library compilation date: %4&lt;/p&gt;</source>
+        <source>&lt;p&gt;Application version: %1&lt;br&gt;QSP library version: %2&lt;br&gt;Qt library version: %3&lt;br&gt;Application compilation date: %4&lt;br&gt;Library compilation date: %5&lt;/p&gt;</source>
+        <oldsource>&lt;p&gt;Application version: %1&lt;br&gt;QSP library version: %2&lt;br&gt;Application compilation date: %3&lt;br&gt;Library compilation date: %4&lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>

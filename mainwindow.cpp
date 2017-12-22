@@ -1053,7 +1053,7 @@ void MainWindow::OnAbout()
     QString guiCompiledDate(tr(__DATE__) + tr(", ") + tr(__TIME__));
     QString text = (tr("<h2>Qqsp</h2>"
         "<p>Copyright &copy; 2017, S.</p>"));
-    text += tr("<p>Application version: %1<br>QSP library version: %2<br>Application compilation date: %3<br>Library compilation date: %4</p>").arg(QApplication::applicationVersion(), version, guiCompiledDate, libCompiledDate);
+    text += tr("<p>Application version: %1<br>QSP library version: %2<br>Qt library version: %3<br>Application compilation date: %4<br>Library compilation date: %5</p>").arg(QApplication::applicationVersion(), version, QT_VERSION_STR, guiCompiledDate, libCompiledDate);
     QMessageBox dlg(QMessageBox::NoIcon, tr("About"), text, QMessageBox::Ok);
     dlg.setIconPixmap(icon);
     dlg.exec();
