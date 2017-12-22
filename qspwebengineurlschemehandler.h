@@ -32,6 +32,7 @@ private:
     QColor m_backColor;
     QColor m_fontColor;
     QFont m_font;
+    bool m_isUseHtml = true;
 };
 
 #endif // QSPWEBENGINEURLSCHEMEHANDLER_H

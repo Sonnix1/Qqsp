@@ -6,6 +6,7 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QWebEngineProfile>
+#include <QWebEngineSettings>
 
 #include "comtools.h"
 
@@ -15,6 +16,7 @@
 
 QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
 {
+    settings()->setDefaultTextEncoding("utf-8");
     setFocusPolicy(Qt::NoFocus);
     //setFrameStyle(QFrame::NoFrame);
     //setFrameShadow(QFrame::Plain);

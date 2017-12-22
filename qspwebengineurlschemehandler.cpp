@@ -21,7 +21,7 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
     connect(request, SIGNAL(destroyed()), buffer, SLOT(deleteLater()));
 
     QString replystr;
-    replystr.append("<html>\n<head>\n<style>\nbody {\n");
+    replystr.append("<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n");
     if(m_backColor.isValid())
         replystr.append(QString("background-color: %1;\n").arg(m_backColor.name()));
     if(m_fontColor.isValid())
@@ -39,9 +39,18 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
     buffer->open(QIODevice::WriteOnly);
     if(url_str.compare("qsp:" , Qt::CaseInsensitive) == 0 || url_str.compare("qsp:/" , Qt::CaseInsensitive) == 0)
     {
-        buffer->write(replystr.toUtf8());
-        buffer->close();
-        request->reply("text/html", buffer);
+        if(m_isUseHtml)
+        {
+            buffer->write(replystr.toUtf8());
+            buffer->close();
+            request->reply("text/html", buffer);
+        }
+        else
+        {
+            buffer->write(m_text.toUtf8());
+            buffer->close();
+            request->reply("text/plain; charset=utf-8", buffer);
+        }
     }
     else
     {
@@ -59,11 +68,13 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
 
 void QspWebEngineUrlSchemeHandler::SetPlainText(const QString &text)
 {
+    m_isUseHtml = false;
     m_text= text;
 }
 
 void QspWebEngineUrlSchemeHandler::SetHtml(const QString &text)
 {
+    m_isUseHtml = true;
     m_text =text;
 }
 
