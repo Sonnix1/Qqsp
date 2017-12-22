@@ -94,9 +94,9 @@ static int qspCRC(void *data, int len)
 
 QSP_CHAR *qspGetAbsFromRelPath(QSP_CHAR *path)
 {
-	QSP_CHAR *absPath;
+    QSP_CHAR *absPath;
 	absPath = qspGetNewText(qspQstPath, qspQstPathLen);
-	return qspGetAddText(absPath, path, qspQstPathLen, -1);
+    return qspGetAddText(absPath, path, qspQstPathLen, -1);
 }
 
 QSP_CHAR *qspGetPathAsIs(QSP_CHAR *path)
