@@ -7,6 +7,9 @@
 #include <QLocale>
 #include <QCommandLineParser>
 #include <QFileInfo>
+#ifdef _WEBBOX
+#include <QtWebEngine>
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -14,6 +17,7 @@ int main(int argc, char *argv[])
     a.setApplicationName("Qqsp");
     a.setOrganizationName("Qqsp");
     a.setApplicationVersion("1.3");
+    a.setDoubleClickInterval(1);
 
     QObject::tr("__LANGNAME__");
     QObject::tr("__LANGID__");
@@ -33,6 +37,10 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.process(a);
+
+#ifdef _WEBBOX
+    QtWebEngine::initialize();
+#endif
 
     MainWindow w;
 
