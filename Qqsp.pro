@@ -159,8 +159,7 @@ enable-webbox {
 
 CONFIG += enable-webbox
 
-disable-nativedialog
-{
+disable-nativedialog {
   DEFINES += _NONATIVEDIALOG
 }
 
@@ -173,9 +172,11 @@ enable-android {
 
 #CONFIG += enable-android
 
-unix {
+unix:!macx {
     CONFIG += disable-nativedialog
 }
+
+ICON = icons/qsp-logo.icns
 
 isEmpty(TARGET_EXT) {
     win32 {

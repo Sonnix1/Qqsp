@@ -16,7 +16,6 @@
 */
 
 #include "../../qsp.h"
-#include "../../declarations.h"
 
 #ifndef QSP_DEFAULTDEFINES
 	#define QSP_DEFAULTDEFINES
