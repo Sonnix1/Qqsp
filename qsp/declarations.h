@@ -25,7 +25,13 @@
 #include <time.h>
 #include <limits.h>
 #include <string.h>
+#ifdef __APPLE__
+#include <stddef.h>
+#include <stdint.h>
+typedef uint16_t char16_t;
+#else
 #include <uchar.h>
+#endif
 
 /* MEMWATCH */
 

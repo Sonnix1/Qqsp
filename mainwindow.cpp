@@ -938,7 +938,11 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 void MainWindow::OnOpenGame()
 {
 #ifndef _ANDROIDQT
+    #ifndef _NONATIVEDIALOG
     QString path = QFileDialog::getOpenFileName(this, tr("Select game file"), GetLastPath(), tr("QSP games (*.qsp *.gam)"));
+    #else
+    QString path = QFileDialog::getOpenFileName(this, tr("Select game file"), GetLastPath(), tr("QSP games (*.qsp *.gam)"), nullptr, QFileDialog::DontUseNativeDialog);
+    #endif
     if (!path.isEmpty())
     {
         SetLastPath(QFileInfo(path).canonicalPath());
@@ -978,7 +982,11 @@ void MainWindow::OnOpenSavedGame()
 {
     if(!m_isGameOpened)
         return;
+#ifndef _NONATIVEDIALOG
     QString path = QFileDialog::getOpenFileName(this, tr("Select saved game file"), GetLastPath(), tr("Saved game files (*.sav)"));
+#else
+    QString path = QFileDialog::getOpenFileName(this, tr("Select saved game file"), GetLastPath(), tr("Saved game files (*.sav)"), nullptr, QFileDialog::DontUseNativeDialog);
+#endif
     if (!path.isEmpty())
     {
         SetLastPath(QFileInfo(path).canonicalPath());
@@ -993,7 +1001,11 @@ void MainWindow::OnSaveGame()
 {
     if(!m_isGameOpened)
         return;
+#ifndef _NONATIVEDIALOG
     QString path = QFileDialog::getSaveFileName(this, tr("Select file to save"), GetLastPath(), tr("Saved game files (*.sav)"));
+#else
+    QString path = QFileDialog::getSaveFileName(this, tr("Select file to save"), GetLastPath(), tr("Saved game files (*.sav)"), nullptr, QFileDialog::DontUseNativeDialog);
+#endif
     if (!path.isEmpty())
     {
         if(!path.endsWith(".sav"))

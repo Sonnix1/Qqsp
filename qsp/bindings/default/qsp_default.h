@@ -16,13 +16,19 @@
 */
 
 #include "../../qsp.h"
+#include "../../declarations.h"
 
 #ifndef QSP_DEFAULTDEFINES
 	#define QSP_DEFAULTDEFINES
 
 	#ifdef _UNICODE
-	#include <uchar.h>
-	typedef char16_t QSP_CHAR;
+        #ifdef __APPLE__
+        #include <stddef.h>
+        #include <stdint.h>
+        #else
+        #include <uchar.h>
+        #endif
+    typedef char16_t QSP_CHAR;
 	#endif
 
 	#ifdef __cplusplus

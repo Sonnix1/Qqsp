@@ -144,11 +144,9 @@ enable-debug {
   HEADERS += qsp/memwatch.h
 }
 
-CONFIG += enable-webbox
-
 enable-webbox {
   DEFINES += _WEBBOX
-  QT += webenginewidgets
+  QT += webengine webenginewidgets
   SOURCES += qspwebbox.cpp \
     qspwebengineurlrequestinterceptor.cpp \
     qspwebengineurlschemehandler.cpp \
@@ -159,13 +157,24 @@ enable-webbox {
     qspexecwebengineurlschemehandler.h
 }
 
-#CONFIG += enable-android
+CONFIG += enable-webbox
+
+disable-nativedialog
+{
+  DEFINES += _NONATIVEDIALOG
+}
 
 enable-android {
   DEFINES += _ANDROIDQT
   QT += androidextras
   SOURCES += androidfiledialog.cpp
   HEADERS += androidfiledialog.h
+}
+
+#CONFIG += enable-android
+
+unix {
+    CONFIG += disable-nativedialog
 }
 
 isEmpty(TARGET_EXT) {
@@ -181,17 +190,23 @@ isEmpty(TARGET_EXT) {
 
 win32 {
     DEPLOY_COMMAND = windeployqt
+    CONFIG( debug, debug|release ) {
+        # debug
+        DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/debug/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    } else {
+        # release
+        DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/release/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    }
 }
 macx {
     DEPLOY_COMMAND = macdeployqt
-}
-
-CONFIG( debug, debug|release ) {
-    # debug
-    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/debug/$${TARGET}$${TARGET_CUSTOM_EXT}))
-} else {
-    # release
-    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/release/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    CONFIG( debug, debug|release ) {
+        # debug
+        DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    } else {
+        # release
+        DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    }
 }
 
 #  # Uncomment the following line to help debug the deploy command when running qmake

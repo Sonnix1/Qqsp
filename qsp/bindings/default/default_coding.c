@@ -21,7 +21,12 @@
 
 #include "../../text.h"
 
+#ifdef __APPLE__
+#include <stddef.h>
+#include <stdint.h>
+#else
 #include <uchar.h>
+#endif
 
 char16_t* c16sncpy( char16_t* dest, const char16_t* src, size_t count )
 {
