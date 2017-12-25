@@ -144,6 +144,8 @@ enable-debug {
   HEADERS += qsp/memwatch.h
 }
 
+CONFIG += enable-webbox
+
 enable-webbox {
   DEFINES += _WEBBOX
   QT += webengine webenginewidgets
@@ -157,23 +159,21 @@ enable-webbox {
     qspexecwebengineurlschemehandler.h
 }
 
-CONFIG += enable-webbox
+unix:!macx {
+    CONFIG += disable-nativedialog
+}
 
 disable-nativedialog {
   DEFINES += _NONATIVEDIALOG
 }
+
+#CONFIG += enable-android
 
 enable-android {
   DEFINES += _ANDROIDQT
   QT += androidextras
   SOURCES += androidfiledialog.cpp
   HEADERS += androidfiledialog.h
-}
-
-#CONFIG += enable-android
-
-unix:!macx {
-    CONFIG += disable-nativedialog
 }
 
 ICON = icons/qsp-logo.icns
