@@ -4,6 +4,7 @@
 #include <QString>
 #include <QColor>
 #include <QHash>
+#include <QColor>
 #include <qsp_default.h>
 
 class QSPTools
@@ -16,6 +17,7 @@ public:
     static QString GetCaseInsensitiveFilePath(QString  searchDir, QString originalPath);
     static QString GetCaseInsensitiveAbsoluteFilePath(QString  searchDir, QString originalPath);
     static QString qspStrToQt(const QSP_CHAR *str);
+    static QColor wxtoQColor(int wxColor);
 private:
     static QHash<QString, QString> file_list;
     static QString file_path;

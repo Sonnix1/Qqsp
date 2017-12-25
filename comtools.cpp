@@ -215,3 +215,18 @@ QString QSPTools::qspStrToQt(const QSP_CHAR *str)
     else
         return QString::fromUtf16(str);
 }
+
+QColor QSPTools::wxtoQColor(int wxColor)
+{
+    QColor col;
+    if(wxColor == 0)
+    {
+        col = Qt::black;
+        return col;
+    }
+    col = QColor::fromRgba(wxColor);
+    int red = col.red();
+    col.setRed(col.blue());
+    col.setBlue(red);
+    return col;
+}

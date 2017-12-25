@@ -153,7 +153,6 @@ void MainWindow::ApplyParams()
     int numVal;
     QSP_CHAR *strVal;
     QColor setBackColor, setFontColor, setLinkColor;
-    int col;
     setPalette(m_palette);
     // --------------
     if(!m_isUseBackColor)
@@ -163,7 +162,7 @@ void MainWindow::ApplyParams()
             if(numVal == 0)
                 setBackColor = m_defaultBackColor;
             else
-                setBackColor = QColor::fromRgba(numVal);
+                setBackColor = QSPTools::wxtoQColor(numVal);
         }
         else
             setBackColor = m_defaultBackColor;
@@ -172,9 +171,6 @@ void MainWindow::ApplyParams()
     {
         setBackColor = m_settingsBackColor;
     }
-    col = setBackColor.red();
-    setBackColor.setRed(setBackColor.blue());
-    setBackColor.setBlue(col);
     ApplyBackColor(setBackColor);
     // --------------
     if(!m_isUseFontColor)
@@ -184,7 +180,7 @@ void MainWindow::ApplyParams()
             if(numVal == 0)
                 setFontColor = m_defaultFontColor;
             else
-                setFontColor = QColor::fromRgba(numVal);
+                setFontColor = QSPTools::wxtoQColor(numVal);
         }
         else
             setFontColor = m_defaultFontColor;
@@ -193,9 +189,6 @@ void MainWindow::ApplyParams()
     {
         setFontColor = m_settingsFontColor;
     }
-    col = setFontColor.red();
-    setFontColor.setRed(setFontColor.blue());
-    setFontColor.setBlue(col);
     ApplyFontColor(setFontColor);
     // --------------
     if(!m_isUseLinkColor)
@@ -205,7 +198,7 @@ void MainWindow::ApplyParams()
             if(numVal == 0)
                 setLinkColor = m_defaultLinkColor;
             else
-                setLinkColor = QColor::fromRgba(numVal);
+                setLinkColor = QSPTools::wxtoQColor(numVal);
         }
         else
             setLinkColor = m_defaultLinkColor;
@@ -214,9 +207,6 @@ void MainWindow::ApplyParams()
     {
         setLinkColor = m_settingsLinkColor;
     }
-    col = setLinkColor.red();
-    setLinkColor.setRed(setLinkColor.blue());
-    setLinkColor.setBlue(col);
     ApplyLinkColor(setLinkColor);
     // --------------
     QFont new_font = m_defaultFont;
