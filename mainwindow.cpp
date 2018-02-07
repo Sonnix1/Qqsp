@@ -14,6 +14,7 @@
 #include <QLocale>
 #include <QInputDialog>
 #include <QMimeData>
+#include <QDesktopWidget>
 
 #include "callbacks_gui.h"
 #include "comtools.h"
@@ -416,6 +417,8 @@ void MainWindow::LoadSettings(QString filePath)
         settings = new QSettings(filePath, QSettings::IniFormat);
 
     restoreGeometry(settings->value("mainWindow/geometry").toByteArray());
+    if ( isMaximized() )
+        setGeometry( QApplication::desktop()->availableGeometry( this ) );
     restoreState(settings->value("mainWindow/windowState").toByteArray());
 
     if (settings->value("mainWindow/isMaximized", isMaximized()).toBool())
