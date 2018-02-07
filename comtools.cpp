@@ -88,7 +88,7 @@ QString QSPTools::HtmlizeWhitespaces(const QString& str)
         else if(ch == QChar(' '))
         {
             if (isLastSpace)
-                out.append( QString("&nbsp;") );
+                out.append( QString("&ensp;") );
             else
                 out.append( QChar(' ') );
             isLastSpace = !isLastSpace;
@@ -109,7 +109,7 @@ QString QSPTools::HtmlizeWhitespaces(const QString& str)
             for (j = 4 - linepos % 4; j > 0; --j)
             {
                 if (isLastSpace)
-                    out.append( QString("&nbsp;") );
+                    out.append( QString("&emsp;") );
                 else
                     out.append( QChar(' ') );
                 isLastSpace = !isLastSpace;
