@@ -7,6 +7,8 @@
 #include <QPainter>
 #include <QWebEngineProfile>
 #include <QWebEngineSettings>
+//#include <QTimer>
+//#include <QEventLoop>
 
 #include "comtools.h"
 
@@ -115,6 +117,18 @@ void QspWebBox::RefreshUI(bool isScroll)
     else
         qweush->SetHtml(text);
     page()->load(QUrl("qsp:/"));
+
+    //QTimer wtimer;
+    //wtimer.setSingleShot(true);
+    //QEventLoop loop;
+    //connect(this,  SIGNAL(loadFinished(bool)), &loop, SLOT(quit()) );
+    //connect(&wtimer, SIGNAL(timeout()), &loop, SLOT(quit()));
+    //wtimer.start(400);
+    //loop.exec();
+    //if(!wtimer.isActive())
+    //{
+    //    qDebug() << "timeout";
+    //}
     //if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 

@@ -7,6 +7,8 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QLineEdit>
+#include <QTimer>
+#include <QEventLoop>
 
 #include "comtools.h"
 #include "qspmsgdlg.h"
@@ -94,8 +96,8 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 		oldFullRefreshCount = fullRefreshCount;
 	}
 	m_frame->GetDesc()->SetIsHtml(m_isHtml);
-	if (QSPIsMainDescChanged())
-	{
+    if (QSPIsMainDescChanged())
+    {
         m_frame->EnableControls(false, true);
         m_frame->GetDesc()->SetText(QSPTools::qspStrToQt(mainDesc), isScroll);
         m_frame->EnableControls(true, true);
@@ -216,14 +218,24 @@ void QSPCallBacks::ShowPane(int type, QSP_BOOL isShow)
 
 void QSPCallBacks::Sleep(int msecs)
 {
+    QTimer wtimer;
+    wtimer.setSingleShot(true);
+    QEventLoop loop;
+    QObject::connect(&wtimer, SIGNAL(timeout()), &loop, SLOT(quit()));
+    wtimer.start(50);
+    loop.exec();
+    //RefreshInt(QSP_TRUE);
 	if (m_frame->IsQuit()) return;
     bool isSave = m_frame->GetGameMenu()->isEnabled();
 	bool isBreak = false;
-	m_frame->EnableControls(false, true);
+    m_frame->EnableControls(false, true);
 	int i, count = msecs / 50;
 	for (i = 0; i < count; ++i)
-	{
-        QThread::msleep(50);
+    {
+        //QThread::msleep(50);
+        wtimer.start(50);
+        loop.exec();
+        //qDebug() << QSPTools::qspStrToQt(QSPGetMainDesc());
         //m_frame->Update();
         //QCoreApplication::processEvents();
 		if (m_frame->IsQuit() ||
@@ -234,11 +246,13 @@ void QSPCallBacks::Sleep(int msecs)
 		}
 	}
     if (!isBreak) //NOTE: no check in old code
-	{
-        QThread::msleep(msecs % 50);
+    {
+        //QThread::msleep(msecs % 50);
+        wtimer.start(msecs % 50);
+        loop.exec();
         //m_frame->Update();
         //QCoreApplication::processEvents();
-	}
+    }
 	m_frame->EnableControls(true, true);
     m_frame->GetGameMenu()->setEnabled(isSave);
 }
