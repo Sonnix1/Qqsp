@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     mainMenuBar = new QMenuBar(this);
     setMenuBar(mainMenuBar);
     mainMenuBar->setObjectName(QStringLiteral("mainMenuBar"));
+    mainMenuBar->setVisible(true);
     mainToolBar = new QToolBar(this);
     mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
     addToolBar(mainToolBar);
