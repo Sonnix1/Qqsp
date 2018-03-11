@@ -78,6 +78,7 @@ public:
     QDockWidget *GetInputDock() const { return _inputWidget; }
     QDockWidget *GetActionsDock() const { return _actionsWidget; }
     QDockWidget *GetObjectsDock() const { return _objectsWidget; }
+    QDockWidget *GetImageDock() const { return _imgViewWidget; }
 
     QString GetLastPath() { return lastPath; }
     void SetLastPath(const QString &path) { lastPath = path; }

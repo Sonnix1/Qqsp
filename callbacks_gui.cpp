@@ -339,6 +339,15 @@ void QSPCallBacks::ShowImage(const QSP_CHAR *file)
 {
 	if (m_frame->IsQuit()) return;
     m_frame->GetImgView()->OpenFile(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))); //NOTE: will not display image if file is not found
+    if(QSPTools::qspStrToQt(file) == "")
+    {
+        m_frame->GetImageDock()->setVisible(false);
+    }
+    else
+    {
+        m_frame->GetImageDock()->setVisible(true);
+    }
+
     //m_frame->GetImgView()->setVisible(true);
 }
 
