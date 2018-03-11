@@ -6,7 +6,6 @@
 #include <QString>
 #include <QColor>
 #include <QPixmap>
-#include <QDialog>
 #include <QVBoxLayout>
 #include <QKeyEvent>
 #include <QCloseEvent>
@@ -16,7 +15,7 @@ namespace Ui {
 class QspImgCanvas;
 }
 
-class QspImgCanvas : public QDialog
+class QspImgCanvas : public QWidget
 {
     Q_OBJECT
 
@@ -33,6 +32,7 @@ public:
     virtual bool SetBackgroundColor(const QColor& color);
 
 private:
+    void resizeEvent(QResizeEvent *event);
     // Fields
     bool m_isAnim;
     QPixmap m_image;
@@ -42,8 +42,10 @@ private:
     QString m_path;
     int m_posX;
     int m_posY;
-    void keyPressEvent(QKeyEvent *event);
-    void closeEvent(QCloseEvent *event);
+//    void keyPressEvent(QKeyEvent *event);
+//    void closeEvent(QCloseEvent *event);
+private slots:
+    void OnNewFrame(int frameNumber);
 };
 
 #endif // QSPIMGCANVAS_H

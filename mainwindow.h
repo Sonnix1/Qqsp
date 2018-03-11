@@ -178,6 +178,7 @@ private:
     QString m_path;
     QTimer *m_timer;
     QspImgCanvas *m_imgView;
+    QDockWidget*    _imgViewWidget;
     int m_menuItemId;
     QMenu *m_menu; //qsp callback menu
     QColor m_backColor;

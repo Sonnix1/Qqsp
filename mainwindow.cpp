@@ -99,9 +99,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_volume = 1.0f;
 
-    m_imgView = new QspImgCanvas(this);
-    m_imgView->setObjectName(QStringLiteral("m_imgView"));
-
     disableVideo = false;
     m_videoFix = true;
 
@@ -373,6 +370,7 @@ bool MainWindow::ApplyBackColor(const QColor &color)
     _descTextBox->SetBackgroundColor(color);
     _objectsListBox->SetBackgroundColor(color);
     _actionsListBox->SetBackgroundColor(color);
+    m_imgView->SetBackgroundColor(color);
     return false;
 }
 
@@ -599,6 +597,11 @@ void MainWindow::CreateMenuBar()
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
     _showHideMenu->addAction(action);
 
+    // Image item
+    action = _imgViewWidget->toggleViewAction();
+    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+    _showHideMenu->addAction(action);
+
     _showHideMenu->addSeparator();
 
     // Captions item
@@ -753,6 +756,13 @@ void MainWindow::CreateDockWindows()
     _inputWidget->setWidget(_inputTextBox);
     connect(_inputTextBox, SIGNAL(textChanged()), this, SLOT(OnInputTextChange()));
     connect(_inputTextBox, SIGNAL(InputTextEnter()), this, SLOT(OnInputTextEnter()));
+
+    m_imgView = new QspImgCanvas(this);
+    m_imgView->setObjectName(QStringLiteral("m_imgView"));
+    _imgViewWidget = new QDockWidget(tr("Image"), this);
+    _imgViewWidget->setObjectName(QStringLiteral("_imgViewWidget"));
+    _imgViewWidget->setWidget(m_imgView);
+    addDockWidget(Qt::BottomDockWidgetArea, _imgViewWidget, Qt::Vertical);
 
     splitDockWidget(_actionsWidget, _inputWidget, Qt::Vertical);
     splitDockWidget(_mainDescWidget, _objectsWidget, Qt::Horizontal);
