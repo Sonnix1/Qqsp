@@ -88,11 +88,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_defaultLinkColor = m_linkColor;
     m_defaultFontColor = m_fontColor;
 
-    m_font = font();
+    m_font = QFont( "Sans", 12 );
+    m_font.setStyleHint( QFont::SansSerif );
     m_defaultFont = m_font;
     m_isUseFontSize = false;
     m_isUseFont = false;
-    m_fontSize = m_font.pointSize();
+    m_fontSize = 12;
 
     showCaptions = true;
 
