@@ -16,7 +16,18 @@ QspExecWebEngineUrlSchemeHandler::QspExecWebEngineUrlSchemeHandler(QObject *pare
 
 void QspExecWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *request)
 {
-    const QUrl url = request->requestUrl();
+    url = request->requestUrl();
+    QTimer::singleShot(0, this, SLOT(QspLinkClicked()));
+}
+
+void QspExecWebEngineUrlSchemeHandler::QspLinkClicked()
+{
+    emit qspLinkClicked(url);
+}
+
+void QspExecWebEngineUrlSchemeHandler::legacyLinkClicked(QWebEngineUrlRequestJob *request)
+{
+    url = request->requestUrl();
     QString href;
     href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
     QString string = href.mid(5);
