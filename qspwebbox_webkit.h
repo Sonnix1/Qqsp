@@ -2,20 +2,20 @@
 #define QSPWEBBOX_H
 
 #include <QWidget>
-#include <QWebEngineView>
+#include <QWebView>
 #include <QString>
 #include <QFont>
 #include <QColor>
 #include <QVariant>
 #include <QUrl>
 
-#include "qspwebengineurlschemehandler.h"
+#include "qspnetworkaccessmanager.h"
 
 namespace Ui {
 class QspWebBox;
 }
 
-class QspWebBox : public QWebEngineView
+class QspWebBox : public QWebView
 {
     Q_OBJECT
 
@@ -58,13 +58,7 @@ private:
     QColor m_fontColor;
     bool showPlainText;
     bool m_videoFix;
-    QspWebEngineUrlSchemeHandler *qweush;
-
-signals:
-    void qspLinkClicked(QUrl url);
-
-private slots:
-    void OnQspLinkClicked(QUrl url);
+    QspNetworkAccessManager *qspManager;
 };
 
 #endif // QSPWEBBOX_H

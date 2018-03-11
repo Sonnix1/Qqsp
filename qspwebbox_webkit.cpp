@@ -1,22 +1,16 @@
-#include "qspwebbox.h"
+#include "qspwebbox_webkit.h"
 
 #include <QFileInfo>
 #include <QPalette>
 #include <QAbstractScrollArea>
 #include <QScrollBar>
 #include <QPainter>
-#include <QWebEngineProfile>
-#include <QWebEngineSettings>
-//#include <QTimer>
-//#include <QEventLoop>
+#include <QWebSettings>
+#include <QEventLoop>
 
 #include "comtools.h"
 
-#include "qspwebengineurlrequestinterceptor.h"
-#include "qspwebengineurlschemehandler.h"
-#include "qspexecwebengineurlschemehandler.h"
-
-QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
+QspWebBox::QspWebBox(QWidget *parent) : QWebView(parent)
 {
     settings()->setDefaultTextEncoding("utf-8");
     setFocusPolicy(Qt::NoFocus);
@@ -29,16 +23,12 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     m_videoFix = true;
     m_font = font();
     //setOpenLinks(false);
-    QWebEngineProfile *profile = new QWebEngineProfile(this);
-    //QspWebEngineUrlRequestInterceptor *qwuri = new QspWebEngineUrlRequestInterceptor(this);
-    //profile->setRequestInterceptor(qwuri);
-    qweush = new QspWebEngineUrlSchemeHandler(this);
-    profile->installUrlSchemeHandler(QByteArray("qsp"), qweush);
-    QspExecWebEngineUrlSchemeHandler *qeweush = new QspExecWebEngineUrlSchemeHandler(this);
-    profile->installUrlSchemeHandler(QByteArray("exec"), qeweush);
-    QWebEnginePage * page = new QWebEnginePage(profile, this);
-    setPage(page);
-    connect(qeweush, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnQspLinkClicked(QUrl)));
+    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    QNetworkAccessManager *oldManager = page()->networkAccessManager();
+    qspManager = new QspNetworkAccessManager(oldManager, this);
+    page()->setNetworkAccessManager(qspManager);
+    page()->setForwardUnsupportedContent(true);
+    load(QUrl("qsp:/"));
 }
 
 QspWebBox::~QspWebBox()
@@ -114,28 +104,23 @@ void QspWebBox::RefreshUI(bool isScroll)
 
     text = QSPTools::HtmlizeWhitespaces(m_isUseHtml ? text : QSPTools::ProceedAsPlain(text));
     if(showPlainText)
-        qweush->SetPlainText(text);
+        qspManager->SetPlainText(text);
     else
-        qweush->SetHtml(text);
-    page()->load(QUrl("qsp:/"));
-
-    //QTimer wtimer;
-    //wtimer.setSingleShot(true);
-    //QEventLoop loop;
-    //connect(this,  SIGNAL(loadFinished(bool)), &loop, SLOT(quit()) );
-    //connect(&wtimer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    //wtimer.start(400);
-    //loop.exec();
-    //if(!wtimer.isActive())
-    //{
-    //    qDebug() << "timeout";
-    //}
-    //if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+        qspManager->SetHtml(text);
+    QString url_str = QByteArray::fromPercentEncoding(url().toString().toUtf8());
+    if(url_str.compare("qsp:" , Qt::CaseInsensitive) != 0 || url_str.compare("qsp:/" , Qt::CaseInsensitive) != 0)
+    {
+        QEventLoop loop;
+        connect(this, SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+        load(QUrl("qsp:/"));
+        loop.exec();
+    }
+    triggerPageAction(QWebPage::ReloadAndBypassCache);
 }
 
 void QspWebBox::LoadBackImage(const QString& fileName)
 {
-    qweush->SetBackgroundImage(fileName);
+    qspManager->SetBackgroundImage(fileName);
     QFileInfo file(m_path + fileName);
     QString path(file.absoluteFilePath());
 }
@@ -159,7 +144,7 @@ void QspWebBox::SetTextFont(const QFont& new_font)
     if (m_font != new_font)
     {
         m_font = new_font;
-        qweush->SetTextFont(new_font);
+        qspManager->SetTextFont(new_font);
     }
 }
 
@@ -168,7 +153,7 @@ bool QspWebBox::SetLinkColor(const QColor &color)
     if(m_linkColor != color)
     {
         m_linkColor = color;
-        qweush->SetLinkColor(color);
+        qspManager->SetLinkColor(color);
         RefreshUI();
         return true;
     }
@@ -178,7 +163,7 @@ bool QspWebBox::SetLinkColor(const QColor &color)
 void QspWebBox::SetGamePath(const QString &path)
 {
     m_path = path;
-    qweush->SetGamePath(path);
+    qspManager->SetGamePath(path);
 }
 
 //Returns the background color of the window.
@@ -199,7 +184,7 @@ bool QspWebBox::SetBackgroundColor(const QColor &color)
     if(m_backColor != color)
     {
         m_backColor = color;
-        qweush->SetBackgroundColor(color);
+        qspManager->SetBackgroundColor(color);
         RefreshUI();
         return true;
     }
@@ -211,7 +196,7 @@ bool QspWebBox::SetForegroundColor(const QColor &color)
     if(m_fontColor != color)
     {
         m_fontColor = color;
-        qweush->SetForegroundColor(color);
+        qspManager->SetForegroundColor(color);
         RefreshUI();
         return true;
     }
@@ -227,9 +212,4 @@ void QspWebBox::SetShowPlainText(bool isPlain)
 void QspWebBox::SetVideoFix(bool isFix)
 {
     m_videoFix = isFix;
-}
-
-void QspWebBox::OnQspLinkClicked(QUrl url)
-{
-    emit qspLinkClicked(url);
 }

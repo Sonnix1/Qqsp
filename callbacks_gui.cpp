@@ -16,6 +16,9 @@
 #ifdef _WEBBOX
 #include "qspwebbox.h"
 #endif
+#ifdef _WEBBOX_WEBKIT
+#include "qspwebbox_webkit.h"
+#endif
 
 QString QSPCallBacks::m_gamePath;
 MainWindow *QSPCallBacks::m_frame;

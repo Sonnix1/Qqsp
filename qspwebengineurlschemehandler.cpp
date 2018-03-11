@@ -58,8 +58,10 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
         QMimeDatabase db;
         QMimeType type = db.mimeTypeForFile(m_path + path);
         QFile file( m_path + path );
-        file.open(QIODevice::ReadOnly);
-        buffer->write(file.readAll());
+        if(file.open(QIODevice::ReadOnly))
+        {
+            buffer->write(file.readAll());
+        }
         buffer->close();
         file.close();
         request->reply(type.name().toUtf8(), buffer);

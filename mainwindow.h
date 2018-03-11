@@ -29,6 +29,9 @@
 #include "qspwebengineurlrequestinterceptor.h"
 #include "qspwebengineurlschemehandler.h"
 #endif
+#ifdef _WEBBOX_WEBKIT
+#include "qspwebbox_webkit.h"
+#endif
 
 #include <qsp_default.h>
 
@@ -60,7 +63,7 @@ public:
 
     // Accessors
     QTimer *GetTimer() const { return m_timer; }
-#ifndef _WEBBOX
+#ifndef _WEBBOX_COMMON
     QspTextBox *GetDesc() const { return _mainDescTextBox; }
     QspTextBox *GetVars() const { return _descTextBox; }
 #else
@@ -148,7 +151,7 @@ private:
     QMenu*			_gameMenu; // was wxMenu *m_gameMenu;
     QMenu*			_settingsMenu; // was wxMenu *m_settingsMenu;
     QMenu*			_showHideMenu; //Show / Hide submenu
-#ifndef _WEBBOX
+#ifndef _WEBBOX_COMMON
     QspTextBox*		_mainDescTextBox; //m_desc
     QspTextBox*		_descTextBox; //m_vars ID_VARSDESC
 #else

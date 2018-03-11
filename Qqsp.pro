@@ -148,6 +148,7 @@ CONFIG += enable-webbox
 
 enable-webbox {
   DEFINES += _WEBBOX
+  DEFINES += _WEBBOX_COMMON
   QT += webengine webenginewidgets
   SOURCES += qspwebbox.cpp \
     qspwebengineurlrequestinterceptor.cpp \
@@ -157,6 +158,20 @@ enable-webbox {
     qspwebengineurlrequestinterceptor.h \
     qspwebengineurlschemehandler.h \
     qspexecwebengineurlschemehandler.h
+}
+
+#CONFIG += enable-webbox-webkit
+
+enable-webbox-webkit {
+  DEFINES += _WEBBOX_WEBKIT
+  DEFINES += _WEBBOX_COMMON
+  QT += webkitwidgets
+  SOURCES += qspwebbox_webkit.cpp \
+    qspnetworkaccessmanager.cpp \
+    qspreply.cpp
+  HEADERS += qspwebbox_webkit.h \
+    qspnetworkaccessmanager.h \
+    qspreply.h
 }
 
 unix:!macx {

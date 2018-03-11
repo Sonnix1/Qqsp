@@ -24,7 +24,7 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     //m_backColor = QColor(224, 224, 224);
     m_font = font();
     setOpenLinks(false);
-#ifndef _WEBBOX
+#ifndef _WEBBOX_COMMON
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );
     connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );
 #endif
@@ -38,7 +38,7 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
 
 QspTextBox::~QspTextBox()
 {
-#ifndef _WEBBOX
+#ifndef _WEBBOX_COMMON
     clearManualResources();
 #endif
 }
@@ -84,7 +84,7 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
 {
     if (m_text != text)
     {
-#ifndef _WEBBOX
+#ifndef _WEBBOX_COMMON
         clearManualResources();
 #endif
         if (isScroll)
@@ -94,7 +94,7 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
         }
         m_text = text;
         RefreshUI(isScroll);
-#ifndef _WEBBOX
+#ifndef _WEBBOX_COMMON
         resizeAnimations();
 #endif
     }
@@ -199,7 +199,7 @@ void QspTextBox::keyPressEvent(QKeyEvent *event)
     QTextBrowser::keyPressEvent(event);
 }
 
-#ifndef _WEBBOX
+#ifndef _WEBBOX_COMMON
 void QspTextBox::SetBackgroundImage(const QImage& bmpBg)
 {
     m_bmpBg = bmpBg;
