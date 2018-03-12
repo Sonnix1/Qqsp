@@ -53,5 +53,5 @@ void QspExecWebEngineUrlSchemeHandler::legacyLinkClicked(QWebEngineUrlRequestJob
         dialog.exec();
         QSPCallBacks::RefreshInt(QSP_FALSE);
     }
-    request->redirect(QUrl("qsp:/"));
+    //request->redirect(QUrl("qsp:/"));
 }

@@ -108,7 +108,7 @@ void QspWebBox::RefreshUI(bool isScroll)
     else
         qspManager->SetHtml(text);
     QString url_str = QByteArray::fromPercentEncoding(url().toString().toUtf8());
-    if(url_str.compare("qsp:" , Qt::CaseInsensitive) != 0 || url_str.compare("qsp:/" , Qt::CaseInsensitive) != 0)
+    if(url_str.compare("qsp:" , Qt::CaseInsensitive) != 0 && url_str.compare("qsp:/" , Qt::CaseInsensitive) != 0)
     {
         QEventLoop loop;
         connect(this, SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));

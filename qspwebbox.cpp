@@ -8,7 +8,7 @@
 #include <QWebEngineProfile>
 #include <QWebEngineSettings>
 //#include <QTimer>
-//#include <QEventLoop>
+#include <QEventLoop>
 
 #include "comtools.h"
 
@@ -117,7 +117,16 @@ void QspWebBox::RefreshUI(bool isScroll)
         qweush->SetPlainText(text);
     else
         qweush->SetHtml(text);
-    page()->load(QUrl("qsp:/"));
+
+    QString url_str = QByteArray::fromPercentEncoding(url().toString().toUtf8());
+    if(url_str.compare("qsp:" , Qt::CaseInsensitive) != 0 && url_str.compare("qsp:/" , Qt::CaseInsensitive) != 0)
+    {
+        QEventLoop loop;
+        connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+        page()->load(QUrl("qsp:/"));
+        loop.exec();
+    }
+    page()->triggerAction(QWebEnginePage::ReloadAndBypassCache);
 
     //QTimer wtimer;
     //wtimer.setSingleShot(true);
