@@ -100,7 +100,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_volume = 1.0f;
 
     disableVideo = false;
-    m_videoFix = true;
+    m_videoFix = false;
 
     perGameConfig = false;
     autostartLastGame = false;
