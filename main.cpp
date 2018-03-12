@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setApplicationName("Qqsp");
     a.setOrganizationName("Qqsp");
-    a.setApplicationVersion("1.5");
+    a.setApplicationVersion("1.5.1");
     a.setDoubleClickInterval(1);
 
     QObject::tr("__LANGNAME__");
