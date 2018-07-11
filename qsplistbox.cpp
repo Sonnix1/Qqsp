@@ -81,7 +81,6 @@ void QspListBox::SetIsHtml(bool isHtml)
 
 void QspListBox::SetIsShowNums(bool isShow)
 {
-    return;
     if (m_isShowNums != isShow)
     {
         m_isShowNums = isShow;
@@ -232,7 +231,8 @@ void QspListBox::createList()
         item_widget->setReadOnly(true);
         item_widget->setBackgroundRole(QPalette::NoRole);
         item_widget->setTextInteractionFlags(Qt::NoTextInteraction);
-        item_widget->setWordWrapMode(QTextOption::NoWrap);
+        //item_widget->setWordWrapMode(QTextOption::NoWrap);
+        item_widget->setWordWrapMode(QTextOption::WordWrap);
         //QFontMetrics font_metrics(item_widget->font());
         //item_widget->setFixedHeight(font_metrics.height() + 4* item_widget->frameWidth());
         item_widget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContentsOnFirstShow);
@@ -256,6 +256,7 @@ void QspListBox::createList()
         if (curItem != 0)
             qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
     }
+    resizeEvent(0);
     //blockSignals(oldState);
 }
 
@@ -277,13 +278,34 @@ QString QspListBox::formatItem(int itemIndex)
     }
     QString color(QSPTools::GetHexColor(GetForegroundColor()));
     QString formatedText;
-    if(isImage)
+    if (m_isShowNums && itemIndex < 9)
     {
-        formatedText.append(QString("<img src=\"%1\">").arg(m_images.at(itemIndex)));
+        if (isImage)
+        {
+            return QString("<table cellspacing = 4 cellpadding = 0><td>[%1]</td><td><img src=\"%2\"></td><td WIDTH = 100%>%3</td></table>")
+                    .arg(itemIndex+1)
+                    .arg(imgPath)
+                    .arg(m_descs.at(itemIndex));
+        }
+        else
+        {
+            return QString("<table cellspacing = 4 cellpadding = 0><tr><td>[%1]</td><td width = 100%>%2</td></td></table>")
+                    .arg(itemIndex+1)
+                    .arg(m_descs.at(itemIndex));
+        }
     }
-    if(!m_descs.at(itemIndex).isEmpty())
+    else
     {
-        formatedText.append(m_descs.at(itemIndex));
+        if(isImage)
+        {
+            return QString("<table cellspacing = 4 cellpadding = 0><td><img src=\"%2\"></td><td WIDTH = 100%>%3</td></table>")
+                    .arg(imgPath)
+                    .arg(m_descs.at(itemIndex));
+        }
+        if(!m_descs.at(itemIndex).isEmpty())
+        {
+            return m_descs.at(itemIndex);
+        }
     }
     return formatedText;
 

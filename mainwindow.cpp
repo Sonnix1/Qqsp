@@ -97,6 +97,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     showCaptions = true;
 
+    m_isShowHotkeys = false;
+
     m_volume = 1.0f;
 
     disableVideo = false;
@@ -463,6 +465,8 @@ void MainWindow::LoadSettings(QString filePath)
     m_volume = settings->value("application/volume", m_volume).toFloat();
     SetOverallVolume(m_volume);
 
+    m_isShowHotkeys = settings->value("application/m_isShowHotkeys", m_isShowHotkeys).toBool();
+
     langid = settings->value("application/language", langid).toString();
 
     RefreshUI();
@@ -511,6 +515,8 @@ void MainWindow::SaveSettings(QString filePath)
     settings->setValue("application/autostartLastGame", autostartLastGame);
 
     settings->setValue("application/volume", m_volume);
+
+    settings->setValue("application/m_isShowHotkeys", m_isShowHotkeys);
 
     settings->setValue("application/language", langid);
 
@@ -631,8 +637,11 @@ void MainWindow::CreateMenuBar()
     //connect(action, SIGNAL(toggled(bool)), this, SLOT(OnToggleMenuBar(bool)));
 
     // Hotkeys for actions item
-    //_showHideMenu->addAction(tr("Hotkeys for actions"), this, SLOT(OnToggleHotkeys()),
-    //    QKeySequence(Qt::CTRL + Qt::Key_6));
+    action = _showHideMenu->addAction(tr("Hotkeys for actions"));
+    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
+    action->setCheckable(true);
+    action->setChecked(m_isShowHotkeys);
+    connect(action, SIGNAL(toggled(bool)), this, SLOT(OnToggleHotkeys(bool)));
 
     // Window / Fullscreen mode item
     action = _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"),
@@ -1154,6 +1163,12 @@ void MainWindow::OnToggleCaptions(bool checked)
 void MainWindow::OnToggleMenuBar(bool checked)
 {
     mainMenuBar->setVisible(checked);
+}
+
+void MainWindow::OnToggleHotkeys(bool checked)
+{
+    m_isShowHotkeys = checked;
+    RefreshUI();
 }
 
 void MainWindow::OnToggleWinMode()
