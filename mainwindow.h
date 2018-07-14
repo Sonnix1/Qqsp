@@ -124,6 +124,8 @@ public:
     void SetDisableVideo(bool isDisableVideo);
     bool GetVideoFix() { return m_videoFix; }
     void SetVideoFix(bool isFix);
+    void SetAllowHTML5Extras(bool HTML5Extras);
+    bool GetAllowHTML5Extras() { return m_isAllowHTML5Extras; }
 
 private:
     void CreateMenuBar();
@@ -212,6 +214,7 @@ private:
     QString langid;
     bool disableVideo;
     bool m_videoFix;
+    bool m_isAllowHTML5Extras;
 
 public slots:
     void OpenGameFile(const QString& path);

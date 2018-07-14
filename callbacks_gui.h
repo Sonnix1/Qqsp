@@ -40,6 +40,7 @@ public:
     static void Init(MainWindow *frame);
     static void DeInit();
     static void SetOverallVolume(float coeff);
+    static void SetAllowHTML5Extras(bool HTML5Extras);
 
     // CallBacks
     static void RefreshInt(QSP_BOOL isRedraw);
@@ -73,6 +74,7 @@ private:
     static bool m_isHtml;
     static QSPSounds m_sounds;
     static float m_volumeCoeff;
+    static bool m_isAllowHTML5Extras;
 };
 
 #endif

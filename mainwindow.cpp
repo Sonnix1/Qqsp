@@ -88,7 +88,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_defaultLinkColor = m_linkColor;
     m_defaultFontColor = m_fontColor;
 
-    m_font = QFont( "Sans", 12 );
+    m_font = QFont( "Sans", 12 , QFont::Normal );
+    m_font.setStyle(QFont::StyleNormal);
     m_font.setStyleHint( QFont::SansSerif );
     m_defaultFont = m_font;
     m_isUseFontSize = false;
@@ -106,6 +107,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     perGameConfig = false;
     autostartLastGame = false;
+
+    m_isAllowHTML5Extras = false;
 
     langid = QObject::tr("__LANGID__");
     if(langid == QStringLiteral("__LANGID__"))
@@ -127,6 +130,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     QSPInit();
     QSPCallBacks::Init(this);
+    QSPCallBacks::SetAllowHTML5Extras(m_isAllowHTML5Extras);
 
     if(autostartLastGame)
         OpenGameFile(lastGame);
@@ -410,6 +414,12 @@ void MainWindow::SetVideoFix(bool isFix)
 #endif
 }
 
+void MainWindow::SetAllowHTML5Extras(bool HTML5Extras)
+{
+    m_isAllowHTML5Extras = HTML5Extras;
+    QSPCallBacks::SetAllowHTML5Extras(m_isAllowHTML5Extras);
+}
+
 void MainWindow::LoadSettings(QString filePath)
 {
     QSettings *settings;
@@ -465,7 +475,9 @@ void MainWindow::LoadSettings(QString filePath)
     m_volume = settings->value("application/volume", m_volume).toFloat();
     SetOverallVolume(m_volume);
 
-    m_isShowHotkeys = settings->value("application/m_isShowHotkeys", m_isShowHotkeys).toBool();
+    m_isShowHotkeys = settings->value("application/isShowHotkeys", m_isShowHotkeys).toBool();
+
+    m_isAllowHTML5Extras = settings->value("application/isAllowHTML5Extras", m_isAllowHTML5Extras).toBool();
 
     langid = settings->value("application/language", langid).toString();
 
@@ -516,7 +528,9 @@ void MainWindow::SaveSettings(QString filePath)
 
     settings->setValue("application/volume", m_volume);
 
-    settings->setValue("application/m_isShowHotkeys", m_isShowHotkeys);
+    settings->setValue("application/isShowHotkeys", m_isShowHotkeys);
+
+    settings->setValue("application/isAllowHTML5Extras", m_isAllowHTML5Extras);
 
     settings->setValue("application/language", langid);
 

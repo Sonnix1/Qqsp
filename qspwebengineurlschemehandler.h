@@ -23,11 +23,13 @@ public:
     void SetForegroundColor(const QColor& color);
     void SetBackgroundImage(const QString &path);
     void SetTextFont(const QFont& new_font);
+    void SetHead(const QString &head);
 
 private:
     QString  m_text;
     QString m_path;
     QString m_bmpBg;
+    QString m_head;
     QColor m_linkColor;
     QColor m_backColor;
     QColor m_fontColor;

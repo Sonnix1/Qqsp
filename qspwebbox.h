@@ -42,6 +42,7 @@ public:
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
     void SetVideoFix(bool isFix);
+    void SetHead(const QString &head);
 
 private:
     // Fields
@@ -51,6 +52,7 @@ private:
     QString m_imagePath;
     QFont m_font;
     QString m_text;
+    QString m_head;
     int m_posX;
     int m_posY;
     QColor m_linkColor;

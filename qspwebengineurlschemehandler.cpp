@@ -32,7 +32,9 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
         replystr.append(QString("background: url(%1) no-repeat center center fixed;\nbackground-size: cover;\n").arg(m_bmpBg));
     if(m_linkColor.isValid())
         replystr.append(QString("}\na:link {\ncolor: %1;\n").arg(m_linkColor.name()));
-    replystr.append("}\n</style></head>\n<body>\n");
+    replystr.append("}\n</style>\n");
+    replystr.append(m_head);
+    replystr.append("</head>\n<body>\n");
     replystr.append(m_text);
     replystr.append("</body>\n</html>");
 
@@ -108,4 +110,9 @@ void QspWebEngineUrlSchemeHandler::SetBackgroundImage(const QString &path)
 void QspWebEngineUrlSchemeHandler::SetTextFont(const QFont &new_font)
 {
     m_font = new_font;
+}
+
+void QspWebEngineUrlSchemeHandler::SetHead(const QString &head)
+{
+    m_head = head;
 }

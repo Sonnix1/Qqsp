@@ -238,6 +238,16 @@ void QspWebBox::SetVideoFix(bool isFix)
     m_videoFix = isFix;
 }
 
+void QspWebBox::SetHead(const QString &head)
+{
+    if(m_head != head)
+    {
+        m_head = head;
+        qweush->SetHead(head);
+        RefreshUI();
+    }
+}
+
 void QspWebBox::OnQspLinkClicked(QUrl url)
 {
     emit qspLinkClicked(url);

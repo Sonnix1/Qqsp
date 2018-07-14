@@ -25,11 +25,14 @@ MainWindow *QSPCallBacks::m_frame;
 bool QSPCallBacks::m_isHtml;
 QSPSounds QSPCallBacks::m_sounds;
 float QSPCallBacks::m_volumeCoeff;
+bool QSPCallBacks::m_isAllowHTML5Extras;
 
 void QSPCallBacks::Init(MainWindow *frame)
 {
 	m_frame = frame;
     m_volumeCoeff = 1.0f;
+
+    m_isAllowHTML5Extras = false;
 
 	QSPSetCallBack(QSP_CALL_SETTIMER, (QSP_CALLBACK)&SetTimer);
 	QSPSetCallBack(QSP_CALL_REFRESHINT, (QSP_CALLBACK)&RefreshInt);
@@ -88,6 +91,13 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	if (QSPIsVarsDescChanged())
 	{
         m_frame->EnableControls(false, true);
+        if(m_isAllowHTML5Extras)
+        {
+            if (QSPGetVarValues(QSP_FMT("SETSTATHEAD"), 0, &numVal, &strVal) && strVal)
+                m_frame->GetVars()->SetHead(QSPTools::qspStrToQt(strVal));
+            else
+                 m_frame->GetVars()->SetHead(QString(""));
+        }
         m_frame->GetVars()->SetText(QSPTools::qspStrToQt(varsDesc), isScroll);
         m_frame->EnableControls(true, true);
 	}
@@ -102,6 +112,13 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
     if (QSPIsMainDescChanged())
     {
         m_frame->EnableControls(false, true);
+        if(m_isAllowHTML5Extras)
+        {
+            if (QSPGetVarValues(QSP_FMT("SETMAINDESCHEAD"), 0, &numVal, &strVal) && strVal)
+                m_frame->GetDesc()->SetHead(QSPTools::qspStrToQt(strVal));
+            else
+                 m_frame->GetDesc()->SetHead(QString(""));
+        }
         m_frame->GetDesc()->SetText(QSPTools::qspStrToQt(mainDesc), isScroll);
         m_frame->EnableControls(true, true);
 	}
@@ -438,6 +455,11 @@ void QSPCallBacks::SetOverallVolume(float coeff)
         if (snd->state() == QMediaPlayer::PlayingState)
             snd->setVolume(snd->volume()*m_volumeCoeff);
     }
+}
+
+void QSPCallBacks::SetAllowHTML5Extras(bool HTML5Extras)
+{
+    m_isAllowHTML5Extras = HTML5Extras;
 }
 
 void QSPCallBacks::UpdateSounds()

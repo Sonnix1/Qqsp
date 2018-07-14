@@ -62,6 +62,7 @@ public:
 #ifndef _WEBBOX_COMMON
     void SetBackgroundImage(const QImage& bmpBg);
     void LoadBackImage(const QString& fileName);
+    void SetHead(const QString &head) {};
 #endif
 
 private:

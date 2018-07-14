@@ -42,6 +42,7 @@ public:
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
     void SetVideoFix(bool isFix);
+    void SetHead(const QString &head) {};
 
 private:
     // Fields
