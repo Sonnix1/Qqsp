@@ -256,7 +256,8 @@ void QspListBox::createList()
         if (curItem != 0)
             qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
     }
-    resizeEvent(0);
+    adjustSize();
+    //resizeEvent(0);
     //blockSignals(oldState);
 }
 
