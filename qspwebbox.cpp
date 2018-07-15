@@ -29,7 +29,7 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     m_videoFix = true;
     m_font = font();
     //setOpenLinks(false);
-    QWebEngineProfile *profile = new QWebEngineProfile(this);
+    profile = new QWebEngineProfile(this);
     //QspWebEngineUrlRequestInterceptor *qwuri = new QspWebEngineUrlRequestInterceptor(this);
     //profile->setRequestInterceptor(qwuri);
     qweush = new QspWebEngineUrlSchemeHandler(this);
@@ -121,6 +121,8 @@ void QspWebBox::RefreshUI(bool isScroll)
     QString url_str = QByteArray::fromPercentEncoding(url().toString().toUtf8());
     if(url_str.compare("qsp:" , Qt::CaseInsensitive) != 0 && url_str.compare("qsp:/" , Qt::CaseInsensitive) != 0)
     {
+        QWebEnginePage * newpage = new QWebEnginePage(profile, this);
+        setPage(newpage);
         QEventLoop loop;
         connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
         page()->load(QUrl("qsp:/"));

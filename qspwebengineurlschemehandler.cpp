@@ -16,33 +16,33 @@ QspWebEngineUrlSchemeHandler::QspWebEngineUrlSchemeHandler(QObject *parent) : QW
 void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *request)
 {
     const QUrl url = request->requestUrl();
-    QString url_str = QByteArray::fromPercentEncoding(url.toString().toUtf8());
+    QString url_str = url.toString();
     QBuffer *buffer = new QBuffer;
     connect(request, SIGNAL(destroyed()), buffer, SLOT(deleteLater()));
-
-    QString replystr;
-    replystr.append("<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n");
-    if(m_backColor.isValid())
-        replystr.append(QString("background-color: %1;\n").arg(m_backColor.name()));
-    if(m_fontColor.isValid())
-        replystr.append(QString("color: %1;\n").arg(m_fontColor.name()));
-    replystr.append(QString("font-family: %1;\n").arg(m_font.family()));
-    replystr.append(QString("font-size: %1pt;\n").arg(m_font.pointSize()));
-    if(!m_bmpBg.isEmpty())
-        replystr.append(QString("background: url(%1) no-repeat center center fixed;\nbackground-size: cover;\n").arg(m_bmpBg));
-    if(m_linkColor.isValid())
-        replystr.append(QString("}\na:link {\ncolor: %1;\n").arg(m_linkColor.name()));
-    replystr.append("}\n</style>\n");
-    replystr.append(m_head);
-    replystr.append("</head>\n<body>\n");
-    replystr.append(m_text);
-    replystr.append("</body>\n</html>");
 
     buffer->open(QIODevice::WriteOnly);
     if(url_str.compare("qsp:" , Qt::CaseInsensitive) == 0 || url_str.compare("qsp:/" , Qt::CaseInsensitive) == 0)
     {
         if(m_isUseHtml)
         {
+            QString replystr;
+            replystr.append("<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n");
+            if(m_backColor.isValid())
+                replystr.append(QString("background-color: %1;\n").arg(m_backColor.name()));
+            if(m_fontColor.isValid())
+                replystr.append(QString("color: %1;\n").arg(m_fontColor.name()));
+            replystr.append(QString("font-family: %1;\n").arg(m_font.family()));
+            replystr.append(QString("font-size: %1pt;\n").arg(m_font.pointSize()));
+            if(!m_bmpBg.isEmpty())
+                replystr.append(QString("background: url(%1) no-repeat center center fixed;\nbackground-size: cover;\n").arg(m_bmpBg));
+            if(m_linkColor.isValid())
+                replystr.append(QString("}\na:link {\ncolor: %1;\n").arg(m_linkColor.name()));
+            replystr.append("}\n</style>\n");
+            replystr.append(m_head);
+            replystr.append("</head>\n<body>\n");
+            replystr.append(m_text);
+            replystr.append("</body>\n</html>");
+
             buffer->write(replystr.toUtf8());
             buffer->close();
             request->reply("text/html", buffer);
@@ -56,7 +56,13 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
     }
     else
     {
-        QString path = QSPTools::GetCaseInsensitiveFilePath(m_path, url_str.mid(5));
+        QString tmpurl = url_str.mid(5);
+        if(tmpurl.contains('#') && !tmpurl.isEmpty())
+        {
+            tmpurl = tmpurl.split('#').at(0);
+        }
+        tmpurl = QByteArray::fromPercentEncoding(tmpurl.toUtf8());
+        QString path = QSPTools::GetCaseInsensitiveFilePath(m_path, tmpurl);
         QMimeDatabase db;
         QMimeType type = db.mimeTypeForFile(m_path + path);
         QFile file( m_path + path );

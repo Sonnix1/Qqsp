@@ -61,6 +61,7 @@ private:
     bool showPlainText;
     bool m_videoFix;
     QspWebEngineUrlSchemeHandler *qweush;
+    QWebEngineProfile *profile;
 
 signals:
     void qspLinkClicked(QUrl url);
