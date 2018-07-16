@@ -30,7 +30,8 @@ QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *paren
     connect(&okButton, SIGNAL(clicked()), this, SLOT(close()));
     okButton.setGeometry(QRect(10, 130, 100, 20));
     okButton.setText(tr("OK"));
-    resize(320,240);
+    m_desc.document()->setTextWidth(400);
+    resize(450, m_desc.document()->size().height() + 65);
     layout.addWidget(&m_desc);
     layout.addWidget(&okButton);
     setLayout(&layout);
@@ -71,7 +72,8 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
     okButton.setFont(new_font);
     okButton.setFocus(Qt::PopupFocusReason);
 
-    resize(450,100);
+    m_desc.document()->setTextWidth(400);
+    resize(450, m_desc.document()->size().height() + 65);
 
     layout.addWidget(&m_desc);
     layout.addWidget(&okButton);
