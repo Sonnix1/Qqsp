@@ -35,8 +35,8 @@
 
 #include <qsp_default.h>
 
-#define QSP_LOGO "Quest Soft Player 5"
-#define QSP_APPNAME "qspgui"
+#define QSP_LOGO "Qt Quest Soft Player"
+#define QSP_APPNAME "Qqsp"
 #define QSP_CONFIG "qqsp.ini"
 #define QSP_QUICKSAVE "quicksave.sav"
 
