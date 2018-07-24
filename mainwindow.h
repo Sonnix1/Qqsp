@@ -105,7 +105,7 @@ public:
     bool GetUseFont() { return m_isUseFont; }
     void SetUseFont(bool isUseFont) { m_isUseFont = isUseFont; }
     QFont GetFont() { return m_font; }
-    void SetFont(const QFont& new_font) { m_font = new_font; if(m_isUseFont) ApplyFont(new_font); }
+    void SetFont(const QFont& new_font) { m_font = new_font; if(m_isUseFont) ApplyFont(new_font, 2, 2); }
     bool GetAutostart() { return autostartLastGame; }
     void SetAutostart(bool isAutostart) { autostartLastGame = isAutostart; }
     bool GetPerGameConfig() { return perGameConfig; }
@@ -142,7 +142,7 @@ private:
     void UpdateTitle();
     void ReCreateGUI();
     void RefreshUI();
-    void ApplyFont(const QFont& new_font);
+    void ApplyFont(const QFont& new_font, int fontType, int sizeType);
     bool ApplyFontColor(const QColor& color);
     bool ApplyBackColor(const QColor& color);
     bool ApplyLinkColor(const QColor& color);

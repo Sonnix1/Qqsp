@@ -24,6 +24,8 @@ public:
     void SetBackgroundImage(const QString &path);
     void SetTextFont(const QFont& new_font);
     void SetHead(const QString &head);
+    void SetFontType(const int fontType);
+    void SetSizeType(const int sizeType);
 
 private:
     QString  m_text;
@@ -35,6 +37,8 @@ private:
     QColor m_fontColor;
     QFont m_font;
     bool m_isUseHtml = true;
+    int m_fontType = 0;
+    int m_sizeType = 0;
 };
 
 #endif // QSPWEBENGINEURLSCHEMEHANDLER_H

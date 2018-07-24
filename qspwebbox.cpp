@@ -250,6 +250,26 @@ void QspWebBox::SetHead(const QString &head)
     }
 }
 
+void QspWebBox::SetFontType(const int fontType)
+{
+    if(m_fontType != fontType)
+    {
+        m_fontType = fontType;
+        qweush->SetFontType(fontType);
+        RefreshUI();
+    }
+}
+
+void QspWebBox::SetSizeType(const int sizeType)
+{
+    if(m_sizeType != sizeType)
+    {
+        m_sizeType = sizeType;
+        qweush->SetSizeType(sizeType);
+        RefreshUI();
+    }
+}
+
 void QspWebBox::OnQspLinkClicked(QUrl url)
 {
     emit qspLinkClicked(url);

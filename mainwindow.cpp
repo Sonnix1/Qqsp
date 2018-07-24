@@ -119,7 +119,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ApplyBackColor(m_backColor);
     ApplyFontColor(m_fontColor);
     ApplyLinkColor(m_linkColor);
-    ApplyFont(m_font);
+    ApplyFont(m_font, 0 , 0);
 
     LoadSettings();
     CreateMenuBar();
@@ -216,31 +216,49 @@ void MainWindow::ApplyParams()
     ApplyLinkColor(setLinkColor);
     // --------------
     QFont new_font = m_defaultFont;
+    int fontType = 0;
+    int sizeType = 0;
     if(!m_isUseFont)
     {
         if(QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal))
+        {
             if(strVal != 0)
             {
-                new_font.setFamily(QSPTools::qspStrToQt(strVal));
+                if(!QSPTools::qspStrToQt(strVal).isEmpty())
+                {
+                    new_font.setFamily(QSPTools::qspStrToQt(strVal));
+                    fontType = 1;
+                }
             }
+        }
         if(!m_isUseFontSize)
         {
             if(QSPGetVarValues(QSP_FMT("FSIZE"), 0, &numVal, &strVal))
+            {
                 if(numVal != 0)
                 {
                     new_font.setPointSize(numVal);
+                    sizeType = 1;
                 }
+            }
         }
         else
         {
             new_font.setPointSize(m_fontSize);
+            sizeType = 2;
         }
     }
     else
     {
         new_font = m_font;
+        fontType = 2;
+        if(m_isUseFontSize)
+        {
+            new_font.setPointSize(m_fontSize);
+            sizeType = 2;
+        }
     }
-    ApplyFont(new_font);
+    ApplyFont(new_font, fontType, sizeType);
 }
 
 void MainWindow::DeleteMenu()
@@ -347,11 +365,15 @@ void MainWindow::RefreshUI()
     m_imgView->RefreshUI();
 }
 
-void MainWindow::ApplyFont(const QFont &new_font)
+void MainWindow::ApplyFont(const QFont &new_font, int fontType, int sizeType)
 {
     m_font = new_font;
     _mainDescTextBox->SetTextFont(new_font);
+    _mainDescTextBox->SetFontType(fontType);
+    _mainDescTextBox->SetSizeType(sizeType);
     _descTextBox->SetTextFont(new_font);
+    _descTextBox->SetFontType(fontType);
+    _descTextBox->SetSizeType(sizeType);
     _objectsListBox->SetTextFont(new_font);
     _actionsListBox->SetTextFont(new_font);
 }
@@ -449,7 +471,7 @@ void MainWindow::LoadSettings(QString filePath)
     m_fontSize = settings->value("application/fontSize", m_fontSize).toInt();
     m_isUseFont = settings->value("application/isUseFont", m_isUseFont).toBool();
     if(m_isUseFont)
-        ApplyFont(qvariant_cast<QFont>(settings->value("application/font", m_font)));
+        ApplyFont(qvariant_cast<QFont>(settings->value("application/font", m_font)), 2, 2);
 
     m_isUseBackColor = settings->value("application/isUseBackColor", m_isUseBackColor).toBool();
     m_isUseLinkColor = settings->value("application/isUseLinkColor", m_isUseLinkColor).toBool();
@@ -938,7 +960,7 @@ void MainWindow::OpenGameFile(const QString &path)
             if(!m_isUseFontColor)
                 ApplyFontColor(m_defaultFontColor);
             if(!m_isUseFont)
-                ApplyFont(m_defaultFont);
+                ApplyFont(m_defaultFont, 0, 0);
             UpdateGamePath(filePath);
             OnNewGame();
             if (m_isQuit) return;

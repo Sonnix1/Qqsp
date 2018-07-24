@@ -126,7 +126,8 @@ void OptionsDialog::on_pushButton_ok_clicked()
     MainWindow *mw = qobject_cast<MainWindow*>(this->parent());
 
     mw->SetUseFontSize(ui->checkBox_fontSize->isChecked());
-    mw->SetFontSize(ui->spinBox_fontSize->value());
+    if(ui->checkBox_fontSize->isChecked())
+        mw->SetFontSize(ui->spinBox_fontSize->value());
     mw->SetUseFont(ui->checkBox_font->isChecked());
     if(ui->checkBox_font->isChecked())
         mw->SetFont(m_font);

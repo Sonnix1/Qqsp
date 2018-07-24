@@ -43,6 +43,8 @@ public:
     void SetShowPlainText(bool isPlain);
     void SetVideoFix(bool isFix);
     void SetHead(const QString &head);
+    void SetFontType(const int fontType);
+    void SetSizeType(const int sizeType);
 
 private:
     // Fields
@@ -60,6 +62,8 @@ private:
     QColor m_fontColor;
     bool showPlainText;
     bool m_videoFix;
+    int m_fontType;
+    int m_sizeType;
     QspWebEngineUrlSchemeHandler *qweush;
     QWebEngineProfile *profile;
 
