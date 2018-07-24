@@ -36,7 +36,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     ui->checkBox_disableVideo->setChecked(mw->GetDisableVideo());
     ui->checkBox_perGameConfig->setChecked(mw->GetPerGameConfig());
     ui->checkBox_autostart->setChecked(mw->GetAutostart());
-    ui->horizontalSlider_volume->setValue(mw->GetOverallVolume() * 100);
+    ui->horizontalSlider_volume->setValue((int)(mw->GetOverallVolume() * 100));
     ui->checkBox_videoFix->setChecked(mw->GetVideoFix());
     ui->checkBox_HTML5Extras->setChecked(mw->GetAllowHTML5Extras());
 
@@ -146,8 +146,8 @@ void OptionsDialog::on_pushButton_ok_clicked()
     mw->SetAllowHTML5Extras(ui->checkBox_HTML5Extras->isChecked());
     if(ui->comboBox_language->count() > 0)
         mw->SetLangID(ui->comboBox_language->itemData(ui->comboBox_language->currentIndex()).toString());
-    if(mw->GetOverallVolume() != ui->horizontalSlider_volume->value() / 100)
-        mw->SetOverallVolume(ui->horizontalSlider_volume->value() / 100);
+    if(mw->GetOverallVolume() != ui->horizontalSlider_volume->value() / 100.0f)
+        mw->SetOverallVolume(ui->horizontalSlider_volume->value() / 100.0f);
 
     close();
 }
