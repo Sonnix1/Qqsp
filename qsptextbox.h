@@ -66,6 +66,7 @@ public:
     void SetHead(const QString &head) {};
     void SetFontType(const int fontType) {};
     void SetSizeType(const int sizeType) {};
+    void SetCustomCSS(bool customCSS) {};
 #endif
 
 private:

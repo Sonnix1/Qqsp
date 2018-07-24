@@ -270,6 +270,11 @@ void QspWebBox::SetSizeType(const int sizeType)
     }
 }
 
+void QspWebBox::SetCustomCSS(bool customCSS)
+{
+    qweush->SetCustomCSS(customCSS);
+}
+
 void QspWebBox::OnQspLinkClicked(QUrl url)
 {
     emit qspLinkClicked(url);

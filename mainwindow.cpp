@@ -961,6 +961,17 @@ void MainWindow::OpenGameFile(const QString &path)
                 ApplyFontColor(m_defaultFontColor);
             if(!m_isUseFont)
                 ApplyFont(m_defaultFont, 0, 0);
+            QFileInfo cssFile(filePath + "custom.css");
+            if(cssFile.exists() && cssFile.isFile())
+            {
+                _mainDescTextBox->SetCustomCSS(true);
+                _descTextBox->SetCustomCSS(true);
+            }
+            else
+            {
+                _mainDescTextBox->SetCustomCSS(false);
+                _descTextBox->SetCustomCSS(false);
+            }
             UpdateGamePath(filePath);
             OnNewGame();
             if (m_isQuit) return;
