@@ -26,7 +26,7 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
         if(m_isUseHtml)
         {
             QString replystr;
-            replystr.append("<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n");
+            replystr.append("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n");
             if(m_backColor.isValid())
                 replystr.append(QString("background-color: %1;\n").arg(m_backColor.name()));
             if(m_fontColor.isValid())

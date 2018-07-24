@@ -100,7 +100,7 @@ QString QSPTools::HtmlizeWhitespaces(const QString& str)
         }
         else if(ch == QChar('\n'))
         {
-            out.append( QString("<br />") );
+            out.append( QString("<br>") );
             isLastSpace = true;
             linepos = 0;
         }
