@@ -38,6 +38,7 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
             if(m_linkColor.isValid())
                 replystr.append(QString("}\na:link {\ncolor: %1;\n").arg(m_linkColor.name()));
             replystr.append("}\n</style>\n");
+            replystr.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"custom.css\">");
             replystr.append(m_head);
             replystr.append("</head>\n<body>\n");
             replystr.append(m_text);
