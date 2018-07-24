@@ -149,15 +149,17 @@ CONFIG += enable-webbox
 enable-webbox {
   DEFINES += _WEBBOX
   DEFINES += _WEBBOX_COMMON
-  QT += webengine webenginewidgets
+  QT += webengine webenginewidgets webchannel
   SOURCES += qspwebbox.cpp \
     qspwebengineurlrequestinterceptor.cpp \
     qspwebengineurlschemehandler.cpp \
-    qspexecwebengineurlschemehandler.cpp
+    qspexecwebengineurlschemehandler.cpp \
+    qspwebchannel.cpp
   HEADERS += qspwebbox.h \
     qspwebengineurlrequestinterceptor.h \
     qspwebengineurlschemehandler.h \
-    qspexecwebengineurlschemehandler.h
+    qspexecwebengineurlschemehandler.h \
+    qspwebchannel.h
 }
 
 #CONFIG += enable-webbox-webkit

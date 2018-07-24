@@ -38,6 +38,9 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     profile->installUrlSchemeHandler(QByteArray("exec"), qeweush);
     QWebEnginePage * page = new QWebEnginePage(profile, this);
     setPage(page);
+    QWebChannel *channel = new QWebChannel(page);
+    channel->registerObject(QStringLiteral("qsp"), &qspJS);
+    page->setWebChannel(channel);
     connect(qeweush, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnQspLinkClicked(QUrl)));
 }
 
@@ -126,6 +129,9 @@ void QspWebBox::RefreshUI(bool isScroll)
         QEventLoop loop;
         connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
         page()->load(QUrl("qsp:/"));
+        QWebChannel *channel = new QWebChannel(newpage);
+        channel->registerObject(QStringLiteral("qsp"), &qspJS);
+        newpage->setWebChannel(channel);
         loop.exec();
     }
     page()->triggerAction(QWebEnginePage::ReloadAndBypassCache);

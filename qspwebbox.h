@@ -8,8 +8,10 @@
 #include <QColor>
 #include <QVariant>
 #include <QUrl>
+#include <QWebChannel>
 
 #include "qspwebengineurlschemehandler.h"
+#include "qspwebchannel.h"
 
 namespace Ui {
 class QspWebBox;
@@ -67,6 +69,8 @@ private:
     int m_sizeType;
     QspWebEngineUrlSchemeHandler *qweush;
     QWebEngineProfile *profile;
+    QWebChannel *channel;
+    QspWebChannel qspJS;
 
 signals:
     void qspLinkClicked(QUrl url);

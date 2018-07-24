@@ -45,7 +45,9 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
                 replystr.append(QString("}\na:link {\ncolor: %1;\n").arg(m_linkColor.name()));
             replystr.append("}\n</style>\n");
             if(m_isCustomCSS)
-                replystr.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"custom.css\">");
+                replystr.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"custom.css\">\n");
+            replystr.append("<script src=\"qrc:///qtwebchannel/qwebchannel.js\"></script>\n");
+            replystr.append("<script type=\"text/javascript\"> \nvar qsp; \ndocument.addEventListener(\"DOMContentLoaded\", function () { \nnew QWebChannel(qt.webChannelTransport, function(channel) { \nqsp = channel.objects.qsp; \n}); \n});\n</script>\n");
             replystr.append(m_head);
             replystr.append("</head>\n<body>\n");
             replystr.append(m_text);
