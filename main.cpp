@@ -24,9 +24,20 @@ int main(int argc, char *argv[])
     QObject::tr("__LANGNAME__");
     QObject::tr("__LANGID__");
 
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName());
+    QString langid;
+    QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+    if(settingsFile.exists() && settingsFile.isFile())
+    {
+        QSettings settings(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG, QSettings::IniFormat);
+        langid = settings.value("application/language", QLocale::system().name()).toString();
+    }
+    else
+    {
+        QSettings settings(QSettings::IniFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName());
+        langid = settings.value("application/language", QLocale::system().name()).toString();
+    }
     QTranslator qtTranslator;
-    QString langid = settings.value("application/language", QLocale::system().name()).toString();
+
     if(qtTranslator.load(QApplication::applicationName() + "." + langid, QApplication::applicationDirPath()))
         a.installTranslator(&qtTranslator);
     else

@@ -121,7 +121,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ApplyLinkColor(m_linkColor);
     ApplyFont(m_font, 0 , 0);
 
-    LoadSettings();
+    QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+    if(settingsFile.exists() && settingsFile.isFile())
+    {
+        LoadSettings(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+    }
+    else
+    {
+        LoadSettings();
+    }
     CreateMenuBar();
 
     m_menu = new QMenu(this);
@@ -827,7 +835,15 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(!m_configPath.isEmpty())
         SaveSettings(m_configPath);
-    SaveSettings();
+    QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+    if(settingsFile.exists() && settingsFile.isFile())
+    {
+        SaveSettings(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+    }
+    else
+    {
+        SaveSettings();
+    }
     EnableControls(false, true);
     setVisible(false);
     m_isQuit = true;
@@ -945,9 +961,21 @@ void MainWindow::OpenGameFile(const QString &path)
             if (configString != m_configPath && perGameConfig)
             {
                 if(m_configPath.isEmpty())
-                    SaveSettings();
+                {
+                    QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+                    if(settingsFile.exists() && settingsFile.isFile())
+                    {
+                        SaveSettings(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+                    }
+                    else
+                    {
+                        SaveSettings();
+                    }
+                }
                 else
+                {
                     SaveSettings(m_configPath);
+                }
                 m_configPath = configString;
                 QFileInfo configFile(configString);
                 if(configFile.exists() && configFile.isFile())
@@ -1148,7 +1176,15 @@ void MainWindow::OnOptions()
     optdlg.exec();
     if(!m_configPath.isEmpty())
         SaveSettings(m_configPath);
-    SaveSettings();
+    QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+    if(settingsFile.exists() && settingsFile.isFile())
+    {
+        SaveSettings(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
+    }
+    else
+    {
+        SaveSettings();
+    }
 }
 
 void MainWindow::OnAbout()
