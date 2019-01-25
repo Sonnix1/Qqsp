@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
-    <height>438</height>
+    <width>509</width>
+    <height>568</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -301,6 +301,9 @@
       <widget class="QCheckBox" name="checkBox_HTML5Extras">
        <property name="text">
         <string>HTML5 Extras (experimental)</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

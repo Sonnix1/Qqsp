@@ -105,10 +105,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     disableVideo = false;
     m_videoFix = false;
 
-    perGameConfig = false;
+    perGameConfig = true;
     autostartLastGame = false;
 
-    m_isAllowHTML5Extras = false;
+    m_isAllowHTML5Extras = true;
 
     langid = QObject::tr("__LANGID__");
     if(langid == QStringLiteral("__LANGID__"))
@@ -139,6 +139,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QSPInit();
     QSPCallBacks::Init(this);
     QSPCallBacks::SetAllowHTML5Extras(m_isAllowHTML5Extras);
+    SetOverallVolume(m_volume);
 
     if(autostartLastGame)
         OpenGameFile(lastGame);
