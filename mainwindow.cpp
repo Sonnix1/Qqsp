@@ -732,12 +732,6 @@ void MainWindow::CreateDockWindows()
 #ifdef _WEBBOX
     _mainDescTextBox = new QspWebBox(this);
     connect(_mainDescTextBox, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
-    _mainDescTextBox->page()->load(QUrl("qsp:/"));
-    {
-        QEventLoop loop;
-        connect(_mainDescTextBox->page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
-        loop.exec();
-    }
 #endif
 #ifdef _WEBBOX_WEBKIT
     _mainDescTextBox = new QspWebBox(this);
@@ -791,12 +785,6 @@ void MainWindow::CreateDockWindows()
 #ifdef _WEBBOX
     _descTextBox = new QspWebBox(this);
     connect(_descTextBox, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
-    _descTextBox->page()->load(QUrl("qsp:/"));
-    {
-        QEventLoop loop;
-        connect(_descTextBox->page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
-        loop.exec();
-    }
 #endif
 #ifdef _WEBBOX_WEBKIT
     _descTextBox = new QspWebBox(this);
@@ -834,6 +822,12 @@ void MainWindow::CreateDockWindows()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+#ifdef _WEBBOX
+    _mainDescTextBox->Quit();
+    _descTextBox->Quit();
+    //delete _mainDescTextBox;
+    //delete _descTextBox;
+#endif
     if(!m_configPath.isEmpty())
         SaveSettings(m_configPath);
     QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);

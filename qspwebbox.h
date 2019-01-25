@@ -9,8 +9,10 @@
 #include <QVariant>
 #include <QUrl>
 #include <QWebChannel>
+#include <QWebEngineProfile>
 
 #include "qspwebengineurlschemehandler.h"
+#include "qspexecwebengineurlschemehandler.h"
 #include "qspwebchannel.h"
 
 namespace Ui {
@@ -48,6 +50,7 @@ public:
     void SetFontType(const int fontType);
     void SetSizeType(const int sizeType);
     void SetCustomCSS(bool customCSS);
+    void Quit();
 
 private:
     // Fields
@@ -67,10 +70,12 @@ private:
     bool m_videoFix;
     int m_fontType;
     int m_sizeType;
-    QspWebEngineUrlSchemeHandler *qweush;
-    QWebEngineProfile *profile;
+    QspWebEngineUrlSchemeHandler qweush;
+    QspExecWebEngineUrlSchemeHandler qeweush;
+    QWebEngineProfile profile;
     QWebChannel *channel;
     QspWebChannel qspJS;
+    bool m_isQuit;
 
 signals:
     void qspLinkClicked(QUrl url);

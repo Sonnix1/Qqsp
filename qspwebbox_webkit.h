@@ -47,6 +47,7 @@ public:
     void SetFontType(const int fontType) {};
     void SetSizeType(const int sizeType) {};
     void SetCustomCSS(bool customCSS) {};
+    void Quit();
 
 private:
     // Fields
