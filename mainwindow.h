@@ -40,6 +40,7 @@
 #define QSP_CONFIG "qqsp.ini"
 #define QSP_CUSTOM_CONFIG "custom.ini"
 #define QSP_QUICKSAVE "quicksave.sav"
+#define QSP_GAME "game.qsp"
 
 namespace Ui {
 class MainWindow;

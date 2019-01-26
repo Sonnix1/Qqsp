@@ -141,8 +141,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QSPCallBacks::SetAllowHTML5Extras(m_isAllowHTML5Extras);
     SetOverallVolume(m_volume);
 
-    if(autostartLastGame)
-        OpenGameFile(lastGame);
+    QFileInfo gameFile(QApplication::applicationDirPath() + "/standalone_content/" + QSP_GAME);
+    if(gameFile.exists() && gameFile.isFile())
+    {
+        OpenGameFile(QApplication::applicationDirPath() + "/standalone_content/" + QSP_GAME);
+    }
+    else
+    {
+        if(autostartLastGame)
+            OpenGameFile(lastGame);
+    }
 }
 
 MainWindow::~MainWindow()
