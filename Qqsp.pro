@@ -154,11 +154,13 @@ enable-webbox {
     qspwebengineurlrequestinterceptor.cpp \
     qspwebengineurlschemehandler.cpp \
     qspexecwebengineurlschemehandler.cpp \
+    url_schemes.cpp \
     qspwebchannel.cpp
   HEADERS += qspwebbox.h \
     qspwebengineurlrequestinterceptor.h \
     qspwebengineurlschemehandler.h \
     qspexecwebengineurlschemehandler.h \
+    url_schemes.h \
     qspwebchannel.h
 }
 

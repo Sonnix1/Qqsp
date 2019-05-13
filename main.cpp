@@ -10,6 +10,7 @@
 #include <QFileInfo>
 #ifdef _WEBBOX
 #include <QtWebEngine>
+#include "url_schemes.h"
 #endif
 
 int main(int argc, char *argv[])
@@ -52,6 +53,7 @@ int main(int argc, char *argv[])
     parser.process(a);
 
 #ifdef _WEBBOX
+    register_url_schemes();
     QtWebEngine::initialize();
 #endif
 
