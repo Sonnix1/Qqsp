@@ -307,6 +307,16 @@
        </property>
       </widget>
      </item>
+     <item row="12" column="0">
+      <widget class="QCheckBox" name="checkBox_CaseInsensitiveFilePath">
+       <property name="text">
+        <string>Use case insensitive paths</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

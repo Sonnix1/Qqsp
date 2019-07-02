@@ -39,6 +39,10 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     ui->horizontalSlider_volume->setValue((int)(mw->GetOverallVolume() * 100));
     ui->checkBox_videoFix->setChecked(mw->GetVideoFix());
     ui->checkBox_HTML5Extras->setChecked(mw->GetAllowHTML5Extras());
+    ui->checkBox_CaseInsensitiveFilePath->setChecked(mw->GetUseCaseInsensitiveFilePath());
+#ifdef _WIN32
+    ui->checkBox_CaseInsensitiveFilePath->setVisible(false);
+#endif
 
     QDirIterator qmIt(QCoreApplication::applicationDirPath(), QStringList() << "*.qm", QDir::Files);
     while(qmIt.hasNext())
@@ -145,6 +149,7 @@ void OptionsDialog::on_pushButton_ok_clicked()
     mw->SetAutostart(ui->checkBox_autostart->isChecked());
     mw->SetVideoFix(ui->checkBox_videoFix->isChecked());
     mw->SetAllowHTML5Extras(ui->checkBox_HTML5Extras->isChecked());
+    mw->SetUseCaseInsensitiveFilePath(ui->checkBox_CaseInsensitiveFilePath->isChecked());
     if(ui->comboBox_language->count() > 0)
         mw->SetLangID(ui->comboBox_language->itemData(ui->comboBox_language->currentIndex()).toString());
     if(mw->GetOverallVolume() != ui->horizontalSlider_volume->value() / 100.0f)

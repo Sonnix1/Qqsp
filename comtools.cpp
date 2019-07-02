@@ -6,6 +6,7 @@
 
 QHash<QString, QString> QSPTools::file_list;
 QString QSPTools::file_path;
+bool QSPTools::useCaseInsensitiveFilePath = true;
 
 QString QSPTools::GetHexColor(const QColor color)
 {
@@ -165,20 +166,23 @@ QString QSPTools::GetCaseInsensitiveFilePath(QString  searchDir, QString origina
     if(new_name.startsWith("/"))
         new_name = new_name.remove(0, 1);
 #ifndef _WIN32
-    QDir itDir(searchDir);
-    if(file_path != searchDir && !searchDir.isEmpty())
+    if(useCaseInsensitiveFilePath)
     {
-        file_list.clear();
-        QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext())
+        QDir itDir(searchDir);
+        if(file_path != searchDir && !searchDir.isEmpty())
         {
-            it.next();
-            file_list.insert(itDir.relativeFilePath(it.filePath()).toLower(), itDir.relativeFilePath(it.filePath()));
+            file_list.clear();
+            QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
+            while (it.hasNext())
+            {
+                it.next();
+                file_list.insert(itDir.relativeFilePath(it.filePath()).toLower(), itDir.relativeFilePath(it.filePath()));
+            }
+            file_path = searchDir;
         }
-        file_path = searchDir;
+        if (file_list.contains(new_name.toLower()))
+            return itDir.relativeFilePath(file_list.value(new_name.toLower()));
     }
-    if (file_list.contains(new_name.toLower()))
-        return itDir.relativeFilePath(file_list.value(new_name.toLower()));
 #endif
     return new_name;
 }
@@ -187,22 +191,25 @@ QString QSPTools::GetCaseInsensitiveAbsoluteFilePath(QString  searchDir, QString
 {
     QString new_name = originalPath.replace("\\", "/");
 #ifndef _WIN32
-    QDir itDir(searchDir);
-    if(originalPath.startsWith(searchDir))
-        new_name = new_name.remove(0, searchDir.length());
-    if(file_path != searchDir && !searchDir.isEmpty())
+    if(useCaseInsensitiveFilePath)
     {
-        file_list.clear();
-        QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext())
+        QDir itDir(searchDir);
+        if(originalPath.startsWith(searchDir))
+            new_name = new_name.remove(0, searchDir.length());
+        if(file_path != searchDir && !searchDir.isEmpty())
         {
-            it.next();
-            file_list.insert(itDir.relativeFilePath(it.filePath()).toLower(), itDir.relativeFilePath(it.filePath()));
+            file_list.clear();
+            QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
+            while (it.hasNext())
+            {
+                it.next();
+                file_list.insert(itDir.relativeFilePath(it.filePath()).toLower(), itDir.relativeFilePath(it.filePath()));
+            }
+            file_path = searchDir;
         }
-        file_path = searchDir;
+        if (file_list.contains(new_name.toLower()))
+            return itDir.absoluteFilePath(file_list.value(new_name.toLower()));
     }
-    if (file_list.contains(new_name.toLower()))
-        return itDir.absoluteFilePath(file_list.value(new_name.toLower()));
 #endif
     return new_name;
 }

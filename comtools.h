@@ -18,6 +18,8 @@ public:
     static QString GetCaseInsensitiveAbsoluteFilePath(QString  searchDir, QString originalPath);
     static QString qspStrToQt(const QSP_CHAR *str);
     static QColor wxtoQColor(int wxColor);
+
+    static bool useCaseInsensitiveFilePath;
 private:
     static QHash<QString, QString> file_list;
     static QString file_path;

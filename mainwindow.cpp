@@ -459,6 +459,16 @@ void MainWindow::SetAllowHTML5Extras(bool HTML5Extras)
     QSPCallBacks::SetAllowHTML5Extras(m_isAllowHTML5Extras);
 }
 
+void MainWindow::SetUseCaseInsensitiveFilePath(bool CaseInsensitiveFilePath)
+{
+    QSPTools::useCaseInsensitiveFilePath = CaseInsensitiveFilePath;
+}
+
+bool MainWindow::GetUseCaseInsensitiveFilePath()
+{
+    return QSPTools::useCaseInsensitiveFilePath;
+}
+
 void MainWindow::LoadSettings(QString filePath)
 {
     QSettings *settings;
@@ -518,6 +528,8 @@ void MainWindow::LoadSettings(QString filePath)
 
     m_isAllowHTML5Extras = settings->value("application/isAllowHTML5Extras", m_isAllowHTML5Extras).toBool();
 
+    QSPTools::useCaseInsensitiveFilePath = settings->value("application/useCaseInsensitiveFilePath", QSPTools::useCaseInsensitiveFilePath).toBool();
+
     langid = settings->value("application/language", langid).toString();
 
     RefreshUI();
@@ -570,6 +582,8 @@ void MainWindow::SaveSettings(QString filePath)
     settings->setValue("application/isShowHotkeys", m_isShowHotkeys);
 
     settings->setValue("application/isAllowHTML5Extras", m_isAllowHTML5Extras);
+
+    settings->setValue("application/useCaseInsensitiveFilePath", QSPTools::useCaseInsensitiveFilePath);
 
     settings->setValue("application/language", langid);
 

@@ -128,6 +128,8 @@ public:
     void SetVideoFix(bool isFix);
     void SetAllowHTML5Extras(bool HTML5Extras);
     bool GetAllowHTML5Extras() { return m_isAllowHTML5Extras; }
+    void SetUseCaseInsensitiveFilePath(bool CaseInsensitiveFilePath);
+    bool GetUseCaseInsensitiveFilePath();
 
 private:
     void CreateMenuBar();
