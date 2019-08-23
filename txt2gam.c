@@ -1,24 +1,7 @@
-/* Copyright (C) 2005-2010 Valeriy Argunov (nporep AT mail DOT ru) */
-/*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-*/
-
-#include "main.h"
-#include "coding.h"
-#include "locations.h"
-#include "text.h"
+#include "txt2gam.h"
+#include "qsp/coding.h"
+#include "t2g_locations.h"
+#include "qsp/text.h"
 
 static int qspAddCharToBuffer(QSP_CHAR **, QSP_CHAR, int *, int);
 static int qspGetLocsStrings(QSP_CHAR *, QSP_CHAR, QSP_CHAR, QSP_BOOL, QSP_CHAR **);
@@ -172,7 +155,7 @@ static int qspGetLocs(QSP_CHAR *data, QSP_CHAR locStart, QSP_CHAR locEnd, QSP_BO
 				if (isFill)
 				{
 					locCode[codeLen] = 0;
-					qspLocs[curLoc].OnVisit = locCode;
+                    t2g_qspLocs[curLoc].OnVisit = locCode;
 				}
 				++curLoc;
 				pos = QSP_STRSTR(line + 1, QSP_STRSDELIM);
@@ -224,12 +207,12 @@ static int qspGetLocs(QSP_CHAR *data, QSP_CHAR locStart, QSP_CHAR locEnd, QSP_BO
 					if (pos)
 					{
 						*pos = 0;
-						qspLocs[curLoc].Name = qspDelSpc(line);
+                        t2g_qspLocs[curLoc].Name = qspDelSpc(line);
 						*pos = QSP_STRSDELIM[0];
 					}
 					else
-						qspLocs[curLoc].Name = qspDelSpc(line);
-					name = qspFromQSPString(qspLocs[curLoc].Name);
+                        t2g_qspLocs[curLoc].Name = qspDelSpc(line);
+                    name = qspFromQSPString(t2g_qspLocs[curLoc].Name);
 					printf("Location: %s\n", name);
 					free(name);
 					codeLen = 0;
@@ -253,7 +236,7 @@ static int qspGetLocs(QSP_CHAR *data, QSP_CHAR locStart, QSP_CHAR locEnd, QSP_BO
 		if (isFill)
 		{
 			locCode[codeLen] = 0;
-			qspLocs[curLoc].OnVisit = locCode;
+            t2g_qspLocs[curLoc].OnVisit = locCode;
 		}
 		++curLoc;
 	}
@@ -321,7 +304,7 @@ static QSP_BOOL qspOpenQuestFromText(char *file, QSP_CHAR locStart, QSP_CHAR loc
 	QSP_CHAR *data;
 	if (!qspLoadFileContents(file, &data)) return QSP_FALSE;
 	locsCount = qspGetLocs(data, locStart, locEnd, QSP_FALSE);
-	qspCreateWorld(locsCount);
+    t2g_qspCreateWorld(locsCount);
 	qspGetLocs(data, locStart, locEnd, QSP_TRUE);
 	free(data);
 	return QSP_TRUE;
@@ -336,7 +319,7 @@ static QSP_BOOL qspSaveQuest(char *file, QSP_BOOL isOldFormat, QSP_BOOL isUCS2, 
 	buf = 0;
 	if (isOldFormat)
 	{
-		len = qspGameCodeWriteIntVal(&buf, 0, qspLocsCount, isUCS2, QSP_FALSE);
+        len = qspGameCodeWriteIntVal(&buf, 0, t2g_qspLocsCount, isUCS2, QSP_FALSE);
 		len = qspGameCodeWriteVal(&buf, len, passwd, isUCS2, QSP_TRUE);
 		len = qspGameCodeWriteVal(&buf, len, QSP_VER, isUCS2, QSP_FALSE);
 		for (i = 0; i < 27; ++i) len = qspGameCodeWriteVal(&buf, len, 0, isUCS2, QSP_FALSE);
@@ -346,13 +329,13 @@ static QSP_BOOL qspSaveQuest(char *file, QSP_BOOL isOldFormat, QSP_BOOL isUCS2, 
 		len = qspGameCodeWriteVal(&buf, 0, QSP_GAMEID, isUCS2, QSP_FALSE);
 		len = qspGameCodeWriteVal(&buf, len, QSP_VER, isUCS2, QSP_FALSE);
 		len = qspGameCodeWriteVal(&buf, len, passwd, isUCS2, QSP_TRUE);
-		len = qspGameCodeWriteIntVal(&buf, len, qspLocsCount, isUCS2, QSP_TRUE);
+        len = qspGameCodeWriteIntVal(&buf, len, t2g_qspLocsCount, isUCS2, QSP_TRUE);
 	}
-	for (i = 0; i < qspLocsCount; ++i)
+    for (i = 0; i < t2g_qspLocsCount; ++i)
 	{
-		len = qspGameCodeWriteVal(&buf, len, qspLocs[i].Name, isUCS2, QSP_TRUE);
+        len = qspGameCodeWriteVal(&buf, len, t2g_qspLocs[i].Name, isUCS2, QSP_TRUE);
 		len = qspGameCodeWriteVal(&buf, len, 0, isUCS2, QSP_FALSE);
-		len = qspGameCodeWriteVal(&buf, len, qspLocs[i].OnVisit, isUCS2, QSP_TRUE);
+        len = qspGameCodeWriteVal(&buf, len, t2g_qspLocs[i].OnVisit, isUCS2, QSP_TRUE);
 		if (isOldFormat)
 			for (j = 0; j < 40; ++j) len = qspGameCodeWriteVal(&buf, len, 0, isUCS2, QSP_FALSE);
 		else
@@ -374,8 +357,8 @@ void ShowHelp()
 	printf("Options:\n");
 	printf("  a, A - ANSI mode, default is Unicode (UCS-2 / UTF-16) mode\n");
 	printf("  o, O - Save game in old format, default is new format\n");
-	printf("  s[char], S[char] - 'Begin of loc' character, default is '%c'\n", QSP_FROM_OS_CHAR(QSP_STARTLOC[0]));
-	printf("  e[char], E[char] - 'End of loc' character, default is '%c'\n", QSP_FROM_OS_CHAR(QSP_ENDLOC[0]));
+    //printf("  s[char], S[char] - 'Begin of loc' character, default is '%c'\n", QSP_FROM_OS_CHAR(QSP_STARTLOC[0]));
+    //printf("  e[char], E[char] - 'End of loc' character, default is '%c'\n", QSP_FROM_OS_CHAR(QSP_ENDLOC[0]));
 	temp = qspFromQSPString(QSP_PASSWD);
 	printf("  p[pass], P[pass] - Password, default is '%s'\n", temp);
 	free(temp);
@@ -396,7 +379,7 @@ void ShowHelp()
 	printf("  txt2gam file.txt strsfile.txt t u\n");
 }
 
-int main(int argc, char **argv)
+int main_o(int argc, char **argv)
 {
 	int i;
 	QSP_BOOL isFreePass, isOldFormat, isUCS2, isErr, isExtractStrs, isGetQStrings;
@@ -433,11 +416,11 @@ int main(int argc, char **argv)
 				switch (*argv[i])
 				{
 				case 's': case 'S':
-					ch = QSP_TO_OS_CHAR(argv[i][1]);
+                    //ch = QSP_TO_OS_CHAR(argv[i][1]);
 					if (ch != locEnd) locStart = ch;
 					break;
 				case 'e': case 'E':
-					ch = QSP_TO_OS_CHAR(argv[i][1]);
+                    //ch = QSP_TO_OS_CHAR(argv[i][1]);
 					if (ch != locStart) locEnd = ch;
 					break;
 				case 'p': case 'P':
@@ -464,14 +447,14 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		qspLocs = 0;
-		qspLocsCount = 0;
+        t2g_qspLocs = 0;
+        t2g_qspLocsCount = 0;
 		if (isErr = !qspOpenQuestFromText(argv[1], locStart, locEnd))
 			printf("Loading game failed!\n");
 		else
 			if (isErr = !qspSaveQuest(argv[2], isOldFormat, isUCS2, passwd))
 				printf("Saving game failed!\n");
-		qspCreateWorld(0);
+        t2g_qspCreateWorld(0);
 	}
 	if (isFreePass) free(passwd);
 	return (isErr == QSP_TRUE);

@@ -103,6 +103,8 @@ SOURCES += \
     qsp/bindings/default/default_callbacks.c \
     qsp/bindings/default/default_coding.c \
     qsp/bindings/default/default_control.c
+#    t2g_locations.c \
+#    txt2gam.c
 
 HEADERS += \
     qsp/actions.h \
@@ -132,6 +134,8 @@ HEADERS += \
     qsp/onig/st.h \
     qsp/bindings/bindings_config.h \
     qsp/bindings/default/qsp_default.h
+#    t2g_locations.h \
+#    txt2gam.h
 
 RESOURCES += \
     qqsp.qrc
