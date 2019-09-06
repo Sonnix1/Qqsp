@@ -1,6 +1,6 @@
 pkgname=qqsp
 _pkgname=Qqsp
-pkgver=1.8
+pkgver=1.9
 pkgrel=1
 pkgdesc="Qt Quest Soft Player"
 arch=(i686 x86_64)

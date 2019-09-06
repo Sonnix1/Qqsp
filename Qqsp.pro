@@ -240,7 +240,7 @@ win32|macx {
     QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
 }
 
-VERSION = 1.8.0.0
+VERSION = 1.9.0.0
 
 win32:RC_ICONS += icons/logo.ico
 
